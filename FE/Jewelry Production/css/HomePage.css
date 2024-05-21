@@ -1,0 +1,278 @@
+/*Reset styles CSS*/
+body,
+h1,
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+body {
+    background-color: #FCFAF9;
+}
+
+/*Header CSS*/
+.header {
+    color: black;
+    padding: 20px;
+
+    h1 {
+        font-weight: 200;
+        font-size: 2em;
+    }
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+        margin-left: 10%;
+    }
+
+    .tools_header {
+        display: inline-flex;
+        gap: 2em;
+        margin-right: 10%;
+    }
+}
+
+.home_categories {
+    display: flex;
+    justify-content: center;
+
+    li {
+        display: inline-block;
+        margin: 0 120px 120px 0;
+        align-items: center;
+
+        a:hover {
+            color: #F7B050;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        font-size: 1.2em;
+    }
+}
+
+/*About Us CSS*/
+#about {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 50px;
+}
+
+#achievement {
+    display: flex;
+    text-align: center;
+    padding: 50px;
+
+    h5 {
+        padding-bottom: 40px;
+    }
+}
+
+/*Special Collection CSS*/
+#collection {
+    padding: 50px;
+    background-image: url(/img/hp_collection/bg_img.svg);
+    background-size: cover;
+
+    #introduce {
+        text-align: center;
+        padding-bottom: 40px;
+    }
+
+    .col-md-6 {
+        display: flex;
+        justify-content: center;
+    }
+
+    .explore_more {
+        text-align: center;
+        padding-top: 40px;
+
+
+    }
+}
+
+/*Blogs CSS*/
+#blogs {
+    display: flex;
+    padding: 50px;
+    justify-content: center;
+
+
+
+    #introduce {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    #link {
+        text-align: end;
+        padding: 0 100px 40px 0;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+
+    }
+
+}
+
+/*InsDesign CSS*/
+#design {
+    padding: 50px;
+    background-image: url(/img/inspire.svg/bg_img.svg);
+    background-size: cover;
+    display: flex;
+
+    h1 {
+        text-align: center;
+        padding-bottom: 50px;
+    }
+
+    ul {
+        display: flex;
+        justify-content: center;
+
+        li {
+            display: flex;
+            display: inline-block;
+            margin: 0 120px 120px 0;
+            align-items: center;
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+            }
+
+            font-size: 1.2em;
+        }
+    }
+
+    #img {
+        display: flex;
+        justify-content: center;
+    }
+
+    #link {
+        text-align: center;
+        padding: 50px 0 0 40px;
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+    }
+}
+
+/*Order CSS*/
+#order {
+    display: flex;
+    padding: 70px;
+    justify-content: space-around;
+
+    h1 {
+        text-align: center;
+        padding-bottom: 50px;
+    }
+
+
+    #order_form {
+        #material {
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+
+    #img_container {
+        display: flex;
+        justify-content: space-around;
+
+        #img {
+            margin: 10px;
+        }
+    }
+
+}
+
+/*Advertise CSS*/
+#advertise {
+    background-color: #D9D9D9;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    #img {
+        display: flex;
+        justify-content: space-around;
+
+        #inner_img_1 {
+            margin-bottom: 10px;
+        }
+
+        #inner_img_2 {
+            margin-top: 10px;
+        }
+    }
+}
+
+/*Footer CSS*/
+footer {
+    padding: 30px 100px 10px 100px;
+    display: flex;
+    color: white;
+    background-color: black;
+    justify-content: center;
+}
+
+#others_info {
+    a:hover {
+        color: #F7B050;
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
+    }
+
+}
+
+#sercurity_contact {
+    padding: 40px 0 0 0;
+}
+
+#sercurity {
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+
+    a {
+        color: white;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #F7B050;
+    }
+}
+
+#contact {
+    text-align: center;
+}
