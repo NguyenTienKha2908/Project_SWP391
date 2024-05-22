@@ -62,13 +62,10 @@ body {
 #header_container {
     display: flex;
     justify-content: center;
-    background-image: url(/img/collection/bg.svg);
+    background-image: url(/img/collection/wedding/header_img.svg);
     background-size: cover;
 
     #header_intro {
-        background-image: url(/img/collection/inner_bg.svg);
-        background-size: 500px 900px;
-        background-repeat: no-repeat;
         padding-bottom: 0;
         display: flex;
         flex-flow: column;
@@ -83,84 +80,23 @@ body {
             font-size: 7em;
             width: 700px;
         }
-    }
 
-}
-
-/*Page info CSS*/
-
-#page_info {
-    display: flex;
-    justify-content: space-around;
-
-    #introduce {
-        display: flex;
-        justify-content: space-evenly;
-    }
-
-    #left {
-        width: 450px;
-        padding-top: 50px;
-
-        #inner_left {
-            width: 200px;
-            margin: 70px 20px 20px 0;
+        h4 {
             padding: 10px;
+            border: solid 1px #F7DBB7;
+            border-radius: 50%;
         }
     }
-
-    #right {
-        width: 450px;
-        padding: 50px 0 40px 0;
-
-    }
-
 
 }
 
-#u_introduce {
-    margin-bottom: 5%;
-
-    .container {
-        position: relative;
-    }
-
-    img {
-        display: block;
-
-        &:nth-child(1) {
-            width: 100%;
-            position: relative;
-        }
-
-        &:nth-child(2) {
-            display: inline;
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            border: solid 1px #000;
-            z-index: 2;
-        }
-    }
-
-    #description {
-        height: 150px;
-        display: flex;
-        justify-content: end;
-        margin: 50px 450px 0 0;
-
-        p {
-            height: 100px;
-            width: 300px;
-        }
-    }
-}
-
+/*Page body CSS*/
 #collection1 {
     height: 90%;
+    margin-top: 50px;
 
     div:nth-child(1) {
-        margin: 5% 0 5% 10%;
+        margin: 2% 0 5% 10%;
         height: 300px;
         width: 30%;
         display: flex;
@@ -186,16 +122,16 @@ body {
         width: 50%;
         display: flex;
         justify-content: start;
-        margin-left: 2%;
+        margin-left: 7%;
 
         img {
-            width: 90%;
-            height: 50%;
+            width: 70%;
+            height: 70%;
         }
     }
 
     div:nth-child(2) {
-        margin: 5% 10% 5% 0;
+        margin: 2% 0 0 0;
         height: 300px;
         width: 35%;
         display: flex;
@@ -203,6 +139,17 @@ body {
     }
 }
 
+#collection3 {
+    background-image: url(/img/collection/wedding/footer_img.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    height: auto;
+
+
+}
 
 /*Footer CSS*/
 footer {
