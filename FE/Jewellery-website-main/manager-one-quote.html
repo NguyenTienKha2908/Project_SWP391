@@ -25,27 +25,21 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="/salesStaff/profile.html" class="sidebar-link">
+                    <a href="managerProfile.html" class="sidebar-link">
                         <img src="icon-fig/profile.svg" alt="profile">
                         <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/salesStaff/request.html" class="sidebar-link">
-                        <img src="icon-fig/request.svg" alt="request">
-                        <span>Requests</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="/salesStaff/quotes.html" class="active sidebar-link">
+                    <a href="manager-quotes.html" class="active sidebar-link">
                         <img src="icon-fig/quote.svg" alt="quote">
                         <span>Quotes</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/salesStaff/orders.html" class="sidebar-link">
-                        <img src="icon-fig/order.svg" alt="order">
-                        <span>Orders</span>
+                    <a href="manager-dashboard.html" class="sidebar-link">
+                        <img src="icon-fig/dashboard.svg" alt="quote">
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -74,12 +68,12 @@
             </div>
             <div class="one-page-content">
                 <div class="left">
-                    <h1>Request ID: O0000001</h1>
+                    <h1>Quote ID: O0000001</h1>
                 </div>
 
                 <div class="right">
                     <h2>Status</h2>
-                    <a href="#">Not Start</a>
+                    <a href="#">Processing</a>
                 </div>
             </div>
             <hr>
@@ -185,8 +179,35 @@
 
 
                                 <div class="btn-group">
-                                    <a href="edit-one-quote.html">Edit</a>
-                                    <a href="quotes.html">Back</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#myModal">Approve</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#myModal">Reject</a>
+                                </div>
+                
+                                <!-- The Modal -->
+                                <div class="modal fade" id="myModal">
+                                    <div class="modal-dialog modal-xl">
+                                        <form action="">
+                                            <div class="modal-content">
+                
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Reason</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                    
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <textarea name="textareaContent" placeholder="Please leave your reason here"></textarea>
+                                                </div>
+                    
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <input type="submit" name="btnSubmit" class="design-btn">
+                                                </div>
+                    
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                             </div>

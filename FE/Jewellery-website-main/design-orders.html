@@ -25,25 +25,13 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="profile.html" class="sidebar-link">
+                    <a href="designProfile.html" class="sidebar-link">
                         <img src="icon-fig/profile.svg" alt="profile">
                         <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="request.html" class="sidebar-link">
-                        <img src="icon-fig/request.svg" alt="request">
-                        <span>Requests</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="quotes.html" class="active sidebar-link">
-                        <img src="icon-fig/quote.svg" alt="quote">
-                        <span>Quotes</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="orders.html" class="sidebar-link">
+                    <a href="design-orders.html" class="active sidebar-link">
                         <img src="icon-fig/order.svg" alt="order">
                         <span>Orders</span>
                     </a>
@@ -73,21 +61,21 @@
                 </div>
             </div>
             <div class="content">
-                <h1>All Quotes</h1>
+                <h1>All Orders</h1>
                 <hr>
                 <div class="sort">
                     <p>Sort by</p>
                     <select name="cars" id="cars">
                         <option value="date">Date</option>
                         <option value="status">Status</option>
-                        <option value="request">requestID</option>
+                        <option value="request">Order ID</option>
                     </select>
                 </div>
                 <div class="container mt-3">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Quote ID</th>
+                                <th>Order ID</th>
                                 <th>Customer Name</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -100,35 +88,35 @@
                                 <td>Doe Martinez</td>
                                 <td>18/05/2024</td>
                                 <td>
-                                    <p class="not-start">Reject</p>
+                                    <select class="slStatus" id="not-start"
+                                        onchange="this.className=this.options[this.selectedIndex].className"
+                                        class="processing">
+                                        <option class="not-start" value="not-start">Designing</option>
+                                        <option class="processing" value="processing">Processing</option>
+                                        <option class="done" value="done">Done</option>
+                                    </select>
                                 </td>
                                 <td>
-                                    <a href="one-quote.html">View</a>
+                                    <a href="design-one-order.html">View</a>
+                                    <a href="#">Update</a>
+                                </td>
 
-                                    <a href="edit-one-quote.html">Edit</a>
-
-                                </td>
-
                             </tr>
                             <tr>
                                 <td>O0000001</td>
                                 <td>Doe Martinez</td>
                                 <td>18/05/2024</td>
                                 <td>
-                                    <p class="not-start">Reject</p>
-                                <td><a href="one-quote.html">View</a>
-                                    <a href="edit-one-quote.html">Edit</a>
+                                    <select class="slStatus" id="not-start"
+                                        onchange="this.className=this.options[this.selectedIndex].className"
+                                        class="processing">
+                                        <option class="not-start" value="not-start">Designing</option>
+                                        <option class="processing" value="processing">Processing</option>
+                                        <option class="done" value="done">Done</option>
+                                    </select>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>O0000001</td>
-                                <td>Doe Martinez</td>
-                                <td>18/05/2024</td>
-                                <td>
-                                    <p class="processing">Processing</p>
-                                </td>
-                                <td><a href="one-quote.html">View</a>
-                                    <a href="edit-one-quote.html">Edit</a>
+                                <td><a href="design-one-order.html">View</a>
+                                    <a href="#">Update</a>
                                 </td>
                             </tr>
                             <tr>
@@ -136,10 +124,16 @@
                                 <td>Doe Martinez</td>
                                 <td>18/05/2024</td>
                                 <td>
-                                    <p class="done">Approved</p>
+                                    <select class="slStatus" id="not-start"
+                                        onchange="this.className=this.options[this.selectedIndex].className"
+                                        class="processing">
+                                        <option class="not-start" value="not-start">Designing</option>
+                                        <option class="processing" value="processing">Processing</option>
+                                        <option class="done" value="done">Done</option>
+                                    </select>
                                 </td>
-                                <td><a href="one-quote.html">View</a>
-                                    <a href="edit-one-quote.html">Edit</a>
+                                <td><a href="design-one-order.html">View</a>
+                                    <a href="#">Update</a>
                                 </td>
                             </tr>
                             <tr>
@@ -147,10 +141,33 @@
                                 <td>Doe Martinez</td>
                                 <td>18/05/2024</td>
                                 <td>
-                                    <p class="not-start">Reject</p>
+                                    <select class="slStatus" id="not-start"
+                                        onchange="this.className=this.options[this.selectedIndex].className"
+                                        class="processing">
+                                        <option class="not-start" value="not-start">Designing</option>
+                                        <option class="processing" value="processing">Processing</option>
+                                        <option class="done" value="done">Done</option>
+                                    </select>
                                 </td>
-                                <td><a href="one-quote.html">View</a>
-                                    <a href="edit-one-quote.html">Edit</a>
+                                <td><a href="design-one-order.html">View</a>
+                                    <a href="#">Update</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>O0000001</td>
+                                <td>Doe Martinez</td>
+                                <td>18/05/2024</td>
+                                <td>
+                                    <select class="slStatus" id="not-start"
+                                        onchange="this.className=this.options[this.selectedIndex].className"
+                                        class="processing">
+                                        <option class="not-start" value="not-start">Designing</option>
+                                        <option class="processing" value="processing">Processing</option>
+                                        <option class="done" value="done">Done</option>
+                                    </select>
+                                </td>
+                                <td><a href="design-one-order.html">View</a>
+                                    <a href="#">Update</a>
                                 </td>
                             </tr>
                         </tbody>
