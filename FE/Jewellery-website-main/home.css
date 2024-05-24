@@ -31,6 +31,11 @@ hr {
     margin-bottom: 20px;
 }
 
+.sidebar-item a {
+    margin: 2%;
+    border-radius: 4px;
+}
+
 .wrapper {
     display: flex;
 }
@@ -1117,5 +1122,19 @@ tr td input {
 .transaction-content {
     h1 {
         font-size: 1.75rem;
+    }
+}
+
+/* ADMIN PROFILE */
+
+#auth, #auth1 {
+
+    .sidebar-item a {
+        color: #565E6C;
+        font-size: 1.5rem;
+    }
+
+    .sidebar-item a:hover {
+        color: #00BDD6;
     }
 }
