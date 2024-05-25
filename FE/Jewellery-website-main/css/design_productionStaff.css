@@ -1,0 +1,66 @@
+/* DESIGN STAFF - ORDER -ONE */
+.design-order-table {
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+
+    th,
+    td {
+        &:nth-child(1) {
+            width: 900px;
+            height: 60px;
+        }
+    }
+}
+
+.design-order-table tr th {
+    font-size: 1.5rem;
+}
+
+/* DESIGN STAFF - ORDER -ONE */
+.design-note {
+    margin: 5% 10%;
+    display: inline-flex;
+    width: 100%;
+
+    .file-box {
+        width: 100%;
+
+        p {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        margin-bottom: 5%;
+    }
+}
+
+.design-btn {
+    width: auto;
+    padding: 2% 7%;
+    outline: none;
+    border: none;
+    background-color: #A11A33;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1.5rem;
+    transition: 0.25s ease-in-out;
+}
+
+.design-btn:hover {
+    background-color: #383838;
+}
+
+.feedback-status {
+    font-weight: 700;
+    font-size: 1.25rem;
+
+    span {
+        color: #A11A33;
+    }
+}

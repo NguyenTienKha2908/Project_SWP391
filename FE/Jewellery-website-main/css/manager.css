@@ -1,0 +1,142 @@
+/* Manager Quotes */
+.manager-quotes {
+    table {
+        margin: 0;
+        margin: 5% 2% 2% 2%;
+
+        thead {
+            font-size: 1.5rem;
+        }
+
+        td {
+            font-size: 1.25rem;
+            vertical-align: middle;
+        }
+
+        td a {
+            margin: 4%;
+
+            &:nth-child(1) {
+                padding-right: 20px;
+                border-right: none;
+            }
+        }
+    }
+}
+
+/* MANAGER ASSIGN TASK */
+
+.manager-task {
+    text-align: center;
+    margin: 5%;
+
+    .task {
+        margin: 7%;
+
+        h2 {
+            margin-left: 20%;
+            text-align: left;
+        }
+
+        img {
+            margin-right: 7%;
+        }
+    }
+
+    .dropdown button {
+        font-size: 1.5rem;
+        width: auto;
+        padding: 2% 20%;
+        background-color: #FFFFFF;
+        color: #1D2128;
+        outline: none;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        width: 53%;
+        right: 0;
+        left: auto;
+    }
+
+    .dropdown-menu-end {
+        right: 0;
+        left: auto;
+    }
+
+    .push-down1,
+    .push-down2,
+    .push-down3 {
+        transition: margin-top 0.3s ease-in-out;
+    }
+}
+
+.manager-btn {
+    a {
+        margin: 4%;
+        padding: 1% 5%;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #FFFFFF;
+
+        &:nth-child(1) {
+            background-color: #383838;
+        }
+
+        &:nth-child(2) {
+            background-color: #A11A33;
+            border-radius: 4px;
+        }
+    }
+}
+
+/* MANAGER DASHBOARD */
+.dashboard {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+    margin: auto;
+
+    .col-md-6 {
+        width: 45%;
+        margin: 2%;
+        background-color: #FFFFFF;
+        text-align: left;
+        padding: 2%;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 8px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 10px;
+
+        .content-col {
+            margin-top: 5%;
+
+            h4 {
+                font-size: 1.1rem;
+                color: #99958D;
+            }
+
+            p {
+                font-size: 1.75rem;
+                font-weight: 700;
+            }
+
+            span {
+                float: right;
+                font-size: 1.5rem;
+                border-radius: 10px;
+                border: solid 1px #2CA14D;
+                padding: 1% 2%;
+                color: #2CA14D;
+                background-color: #FCFAF9;
+            }
+        }
+    }
+}
+
+.transaction-content {
+    h1 {
+        font-size: 1.75rem;
+    }
+}
