@@ -155,9 +155,20 @@ header {
   }
 }
 
-/* #bottom_content {
-    
-} */
+#bottom_content {
+  display: grid;
+  grid-template-areas:
+    "main main main main img3 img3"
+    "main main main main img3 img3"
+    "img1 img1 img2 img2 img3 img3"
+    "img1 img1 img2 img2 img3 img3";
+  gap: 10px;
+  .main_content {
+    text-align: center;
+    height: 100%;
+  }
+}
+/*
 .item2 {
   grid-area: menu;
 }
@@ -183,9 +194,9 @@ header {
 .bottom-content > div {
   background-color: rgb(255, 255, 255);
   text-align: center;
-  /* padding: 20px 0; */
+  padding: 20px 0; 
   font-size: 50px;
-}
+}*/
 
 /*Footer CSS*/
 footer {
