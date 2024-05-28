@@ -75,33 +75,10 @@ header {
     font-size: 1.2em;
   }
 }
-
 /*Main CSS*/
 .main_content {
   padding: 120px;
-  text-align: center;
-  .table {
-    padding: 3% 5% 0 5%;
-    table {
-      border: 3px solid #222222;
-      th {
-        text-align: center;
-        color: white;
-        background-color: #003468;
-        border: 2px solid #222222;
-      }
-      td {
-        text-align: center;
-        color: black;
-        border: 2px solid #222222;
-      }
-      tr {
-        height: 50px;
-      }
-    }
-  }
 }
-
 /*Footer CSS*/
 footer {
   padding: 30px 100px 10px 100px;
