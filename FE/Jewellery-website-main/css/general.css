@@ -17,7 +17,7 @@ li {
 
 h1 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 1.5rem;
 }
 
 body {
@@ -185,7 +185,7 @@ a.sidebar-link:hover,
     p {
         margin: 0;
         text-align: left;
-        font-size: 1rem;
+        font-size: 0.75rem;
         font-weight: 600;
         width: 300px;
     }
@@ -203,11 +203,11 @@ table {
     margin: 5% 2% 2% 2%;
 
     thead {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     td {
-        font-size: 1.25rem;
+        font-size: 0.75rem;
         vertical-align: middle;
     }
 
@@ -221,28 +221,29 @@ table {
     }
 
     .not-start {
-        width: 80%;
+        width: 70%;
         background-color: none;
         border: 1px solid #A11A33;
-        border-radius: 50px;
+        border-radius: 30px;
         color: #A11A33;
         text-align: center;
     }
 
     .processing {
-        width: 80%;
+        width: 70%;
+        ;
         background-color: none;
         border: 1px solid #F7B050;
-        border-radius: 50px;
+        border-radius: 30px;
         color: #F7B050;
         text-align: center;
     }
 
     .done {
-        width: 80%;
+        width: 70%;
         background-color: none;
         border: 1px solid #1B8633;
-        border-radius: 50px;
+        border-radius: 30px;
         color: #1B8633;
         text-align: center;
     }
@@ -256,9 +257,10 @@ table {
 }
 
 .pagination a {
+    font-size: 0.75rem;
     color: black;
     float: left;
-    padding: 8px 16px;
+    padding: 8px 15px;
     text-decoration: none;
 }
 
@@ -275,17 +277,18 @@ table {
 
 .slStatus {
     appearance: none;
-    font-size: 1.15rem;
-    width: 80%;
-    background-color: #F9F9FA;
+    font-size: 0.75rem;
+    width: 70%;
+    background-color: none;
     border: 1px solid #A11A33;
-    border-radius: 50px;
+    border-radius: 30px;
     color: #A11A33;
+    text-align: center;
     cursor: pointer;
 }
 
 .information {
-    margin: 1% 5%;
+    margin: 1% 10%;
     display: inline-flex;
     width: 100%;
     justify-content: start;
@@ -294,16 +297,17 @@ table {
     p {
         margin: 0;
         text-align: left;
-        font-size: 1.25rem;
+        font-size: 0.8rem;
         font-weight: 100;
         width: 200px;
     }
 
     h2 {
         display: inline-block;
-        font-size: 1.5rem;
-        width: 300px;
+        font-size: 1rem;
+        width: 200px;
         font-weight: 700;
+        margin: 0;
     }
 }
 
@@ -316,13 +320,13 @@ table {
     p {
         display: inline-block;
         font-weight: 300;
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
 
     select {
         appearance: none;
-        font-size: 1.15rem;
-        padding: 0.375em 6em 0.375em 1em;
+        font-size: 1rem;
+        padding: 0.2em 6em 0.2em 1em;
         background-color: #fff;
         border: 1px solid #caced1;
         border-radius: 0.5rem;
@@ -343,8 +347,8 @@ table {
 
     h1 {
         display: inline-block;
-        font-size: 2.5rem;
-        margin: 3% 2% 2% 2%;
+        font-size: 1.5rem;
+        margin: 2% 2% 2% 2%;
 
         &:nth-of-type(1) {
             width: 100%;
@@ -363,12 +367,12 @@ table {
 
         h2 {
             font-weight: 400;
-            font-size: 2rem;
+            font-size: 1.5rem;
         }
 
         a {
             width: 100%;
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 600;
             background-color: #A11A33;
             color: #FFFFFF;
@@ -386,8 +390,8 @@ table {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     h1 {
-        margin: 3%;
-        font-size: 2.5rem;
+        margin: 2%;
+        font-size: 1.5rem;
         text-align: center;
     }
 
@@ -396,7 +400,7 @@ table {
     }
 
     .icon-pen {
-        width: 30px;
+        width: 20px;
         float: right;
         margin-right: 5%;
 
@@ -412,11 +416,11 @@ table {
 
     p {
         font-weight: 700;
-        font-size: 1.25rem;
+        font-size: 0.8rem;
         ;
 
         &:nth-child(1) {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             ;
         }
     }
