@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+<<<<<<< HEAD
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,3 +18,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.email = :email AND u.password = :password")
     User findByEmailAndPassword(@Param("email") String email, @Param("password") String password);
 }
+=======
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByEmail(String email);
+}
+>>>>>>> 61c9e9129b22293c5ceba01d13895817a0aa0aca
