@@ -1,12 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Home</title>
+    <title>Customer Dashboard</title>
 </head>
+
 <body>
-    <h1>Welcome, Customer!</h1>
-    <p>Welcome, <span th:text="${#authentication.name}">User</span>!</p>
+    <h1>Welcome, <span th:text="${session.customerName}">User</span></h1>
+    <a th:href="@{/logout}">Logout</a>
+    <hr />
+    <form th:action="@{request}" method="post">
+        <div>Form Order Jewelry</div>
+
+        <div>
+            <label for="full_Name">Your name</label><br />
+            <input type="text" name="full_Name" id="full_Name">
+        </div>
+        <div>
+            <label for="phoneNumber">Phone number</label><br />
+            <input type="number" name="phoneNumber" id="phoneNumber">
+        </div>
+        <div>
+            <label for="category">Category</label>
+            <select name="category" id="category">
+                <option value="ring">Ring</option>
+                <option value="bracelet">Bracelet</option>
+                <option value="necklace">Necklace</option>
+                <option value="earings">Earings</option>
+                <option value="cufflink">Cufflink</option>
+            </select>
+        </div>
+        <div>
+            <label for="productSize">Product size</label>
+            <input type="number" name="productSize" id="productSize">
+        </div>
+        <div>
+            <div>
+                <div>
+                    <label for="material">Material</label><br />
+                    <input type="text" name="material" id="material">
+                </div>
+                <div>
+                    <label for="color">Color</label><br />
+                    <input type="text" name="color" id="color">
+                </div>
+                <div>
+                    <label for="weight">Weight</label><br />
+                    <input type="number" name="weight" id="weight">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <label for="gemstone">Gemstone</label><br />
+                    <input type="text" name="gemstone" id="gemstone">
+                </div>
+                <div>
+                    <label for="color">Color</label><br />
+                    <input type="text" name="color" id="color">
+                </div>
+                <div>
+                    <label for="weight">Weight</label><br />
+                    <input type="number" name="weight" id="weight">
+                </div>
+            </div>
+        </div>
+        <div>
+            <label for="">Anything else we need to know</label>
+            <textarea rows="3" cols="10"></textarea>
+        </div>
+        <div>
+            <button type="submit">Send message</button>
+        </div>
+    </form>
 </body>
-</html>
+
+</html> -->

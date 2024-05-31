@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Home</title>
+    <title>Staff Dashboard</title>
 </head>
+
 <body>
-    <h1>Welcome, Staff!</h1>
-    <p>Welcome, <span th:text="${#authentication.name}">User</span>!</p>
+    <h1>Welcome, <span th:text="${session.employeeName}">User</span></h1>
+    <a th:href="@{/logout}">Logout</a>
+
 </body>
+
 </html>

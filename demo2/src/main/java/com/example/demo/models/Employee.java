@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,10 +22,10 @@ public class Employee {
     @Column(name = "EmployeeId")
     private String employeeId;
     
-    @Column(name = "FullName")
-    private String fullName;
+    @Column(name = "Full_Name")
+    private String full_Name;
 
     @OneToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_Id")
     private User user;
 }

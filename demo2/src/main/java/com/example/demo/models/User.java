@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,9 +19,9 @@ import lombok.Setter;
 @Table(name = "Users")
 public class User {
     @Id
-	@Column(name = "UserId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
+    @Column(name = "user_Id")
+	private int user_Id;
     @Column(name = "Email")
     private String email;
     @Column(name = "Password")
@@ -31,5 +31,5 @@ public class User {
     @Column(name = "Status")
     private boolean status;
 
-    
+     
 }
