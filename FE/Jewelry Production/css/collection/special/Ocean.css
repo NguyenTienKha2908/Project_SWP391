@@ -8,7 +8,7 @@ ul {
 }
 
 body {
-  background-color: #ffdcdc;
+  background-color: #44affc;
 }
 
 /*Header CSS*/
@@ -66,9 +66,9 @@ body {
 
   .top-cover {
     padding: 30% 25%;
-    background-color: #ffffff;
+    background-color: #069;
     position: absolute;
-    right: 0px;
+    left: 0px;
     top: 0px;
     opacity: 0.25;
     z-index: -2;
@@ -76,7 +76,7 @@ body {
 
   .bottom-cover {
     padding: 12% 30%;
-    background-color: #ad5254;
+    background-color: #0697ff;
     position: absolute;
     right: 50px;
     top: 150%;
@@ -86,6 +86,7 @@ body {
 
   .top_img {
     width: 60%;
+
     position: absolute;
     left: 0px;
     top: 0px;
@@ -106,7 +107,7 @@ body {
     }
 
     p {
-      margin-top: 2%;
+      margin-top: 3%;
       font-size: 1.75rem;
       display: inline-block;
       border-radius: 50%;
@@ -161,7 +162,7 @@ footer {
 }
 /*Main CSS*/
 .spring-col-content {
-  margin-top: 55%;
+  margin-top: 80%;
   .container {
     display: grid;
     grid-template-areas:
@@ -173,10 +174,10 @@ footer {
     .spring-header {
       height: 20%;
       text-align: end;
-      margin: 9% 0;
+      margin: 10.5% 0;
       padding-top: 5%;
     }
-    .long-img {
+    #under-img {
       margin-top: -17%;
     }
   }

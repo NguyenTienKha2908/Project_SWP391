@@ -78,8 +78,11 @@ header {
 
 /*Main CSS*/
 .main_content {
-  padding: 120px;
+  padding: 120px 0;
   text-align: center;
+  img {
+    margin-bottom: 4%;
+  }
   .table {
     padding: 3% 5% 0 5%;
     table {

@@ -34,6 +34,10 @@ body {
     gap: 2em;
     margin-right: 10%;
   }
+  a {
+    text-decoration: none;
+    color: black;
+  }
 }
 
 .home_categories {
@@ -57,50 +61,6 @@ body {
     font-size: 1.2em;
   }
 }
-
-/*Footer CSS*/
-footer {
-  padding: 30px 100px 10px 100px;
-  display: flex;
-  color: white;
-  background-color: black;
-  justify-content: center;
-}
-
-#others_info {
-  a:hover {
-    color: #f7b050;
-  }
-
-  a {
-    color: white;
-    text-decoration: none;
-  }
-}
-
-#sercurity_contact {
-  padding: 40px 0 0 0;
-}
-
-#sercurity {
-  display: flex;
-  justify-content: space-evenly;
-  text-align: center;
-
-  a {
-    color: white;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: #f7b050;
-  }
-}
-
-#contact {
-  text-align: center;
-}
-
 .wrapper {
   position: relative;
 
@@ -155,6 +115,51 @@ footer {
     }
   }
 }
+
+/*Footer CSS*/
+footer {
+  padding: 30px 100px 10px 100px;
+  display: flex;
+  color: white;
+  background-color: black;
+  justify-content: center;
+}
+
+#others_info {
+  a:hover {
+    color: #f7b050;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+#sercurity_contact {
+  padding: 40px 0 0 0;
+}
+
+#sercurity {
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #f7b050;
+  }
+}
+
+#contact {
+  text-align: center;
+}
+
+/*Main CSS*/
 
 .summer-col-content {
   .summer-header {
@@ -228,7 +233,7 @@ details .btn-group {
 
 .sect-content {
   top: 40%;
-  left: 20%;
+  left: 15%;
   position: absolute;
 
   h1 {
