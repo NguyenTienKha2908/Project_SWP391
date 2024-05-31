@@ -8,6 +8,7 @@ import com.example.demo.repository.CustomerRepository;
 
 @Service
 public class CustomerService {
+    
     @Autowired
     private CustomerRepository customerRepository;
 

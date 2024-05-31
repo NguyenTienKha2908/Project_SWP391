@@ -30,6 +30,4 @@ public class User {
     private int roleId;
     @Column(name = "Status")
     private boolean status;
-
-     
 }

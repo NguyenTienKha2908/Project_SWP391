@@ -9,5 +9,4 @@ import com.example.demo.models.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
     @Query("SELECT e.full_Name FROM Employee e WHERE e.user.user_Id = :user_Id")
     String findEmployeeNameByUserId(@Param("user_Id") int user_Id);
-
 }
