@@ -31,14 +31,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Users](
-	[UserId] [int] IDENTITY(1,1),
+	[User_Id] [int] IDENTITY(1,1),
 	[Email] [varchar](255) NOT NULL,
 	[Password] [char](64) NOT NULL,
-	[RoleID] [int] NOT NULL,
+	[Role_Id] [int] NOT NULL,
 	[Status] bit NOT NULL,
 CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
-	[UserId] ASC
+	[User_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -50,12 +50,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Employee](
-	[EmployeeId] [nvarchar] (255) NOT NULL,
-	[FullName] [nvarchar](255) NOT NULL,
-	[UserId] [int] REFERENCES [Users](UserId),
+	[Employee_Id] [nvarchar] (255) NOT NULL,
+	[Full_Name] [nvarchar](255) NOT NULL,
+	[User_Id] [int] REFERENCES [Users]([User_Id]),
 CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
 (
-	[EmployeeId] ASC
+	[Employee_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -66,14 +66,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Customer](
-	[CustomerId] [nvarchar] (255) NOT NULL,
-	[FullName] [nvarchar](255) NOT NULL,
+	[Customer_Id] [nvarchar] (255) NOT NULL,
+	[Full_Name] [nvarchar](255) NOT NULL,
 	[Address] [nvarchar](max) NOT NULL,
-	[PhoneNumber] [varchar](10) NOT NULL,
-	[UserId] [int] REFERENCES [Users](UserId),
+	[Phone_Number] [varchar](10) NOT NULL,
+	[User_Id] [int] REFERENCES [Users]([User_Id]),
 CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
 (
-	[CustomerId] ASC
+	[Customer_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -84,12 +84,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Category](
-	[CategoryId] int identity(1,1) NOT NULL,
-	[CategoryName] [nvarchar](255) NOT NULL,
+	[Category_Id] int identity(1,1) NOT NULL,
+	[Category_Name] [nvarchar](255) NOT NULL,
 	[Status] [bit] 
 CONSTRAINT [PK_Category] PRIMARY KEY CLUSTERED 
 (
-	[CategoryId] ASC
+	[Category_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -100,12 +100,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Collections](
-	[CollectionId] int IDENTITY(1,1),
-	[CollectionName] [nvarchar](255) NOT NULL,
+	[Collection_Id] int IDENTITY(1,1),
+	[Collection_Name] [nvarchar](255) NOT NULL,
 	[Status] [bit] 
 CONSTRAINT [PK_Collections] PRIMARY KEY CLUSTERED 
 (
-	[CollectionId] ASC
+	[Collection_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -116,14 +116,15 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Blogs](
-    [BlogId] [int] IDENTITY(1,1),
+    [Blog_Id] [int] IDENTITY(1,1),
 	[Title] varchar(100) NOT NULL,
 	[Content] [nvarchar](max) NOT NULL,
 	[Date] [date] NOT NULL,
-	[EmployeeId] [nvarchar] (255) REFERENCES [Employee]([EmployeeId])
+	[Employee_Id] [nvarchar] (255) REFERENCES [Employee]([Employee_Id]),
+	[status] bit NOT NULL,
 CONSTRAINT [PK_Blogs] PRIMARY KEY CLUSTERED 
 (
-	[BlogId] ASC
+	[Blog_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -134,12 +135,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Material](
-	[MaterialId] int IDENTITY(1,1),
-	[MaterialCode] [nvarchar] (255) NOT NULL,
-	[MaterialName] [nvarchar](255) NOT NULL,
+	[Material_Id] int IDENTITY(1,1),
+	[Material_Code] [nvarchar] (255) NOT NULL,
+	[Material_Name] [nvarchar](255) NOT NULL,
+	[status] bit NOT NULL,
 CONSTRAINT [PK_Material] PRIMARY KEY CLUSTERED 
 (
-	[MaterialId] ASC
+	[Material_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -152,11 +154,36 @@ GO
 CREATE TABLE [dbo].[MaterialPriceList](
 	[id] int IDENTITY(1,1),
 	[Price] [float] NOT NULL,
-	[EffDate] [date] NOT NULL,
-	[MaterialId] int REFERENCES [Material]([MaterialId])
+	[Eff_Date] [date] NOT NULL,
+	[Material_Id] int REFERENCES [Material]([Material_Id])
 CONSTRAINT [PK_MaterialPriceList] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/* Table [Product] */ 
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Product](
+	[Product_Id] [int] IDENTITY(1,1),
+	[Product_Code] [nvarchar] (max) NOT NULL,
+	[Product_Name] [nvarchar](255) NOT NULL,
+	[Category_Id] int REFERENCES [Category](Category_Id),
+	[Collection_Id] int REFERENCES [Collections](Collection_Id),
+	[Description] [nvarchar](max),
+
+	[Gender] [nvarchar](50) NOT NULL,
+	[Size] [int] NOT NULL,
+
+	[Status] bit NOT NULL,
+	
+CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
+(
+	[Product_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -167,12 +194,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProductMaterial](
-	ProductId int REFERENCES Product([ProductId]),
-	MaterialId int REFERENCES Material([MaterialId]),
-	MaterialWeight int,
+	Product_Id int REFERENCES Product([Product_Id]),
+	Material_Id int REFERENCES Material([Material_Id]),
+	Material_Weight int,
 CONSTRAINT [PK_ProductMaterial] PRIMARY KEY CLUSTERED 
 (
-	ProductId ASC, MaterialId ASC
+	Product_Id ASC, Material_Id ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -186,12 +213,12 @@ GO
 CREATE TABLE [dbo].[GemPriceList] (
     [Id] [int] IDENTITY(1,1),
 	[Origin] [nvarchar] (255) NOT NULL,
-    [CaratWeight] [float] NOT NULL,
+    [Carat_Weight] [float] NOT NULL,
 	[Color] [char](10) NOT NULL,
 	[Clarity] [char](10) NOT NULL,
 	[Cut] [nvarchar] (255) NOT NULL,
 	[Price] [float] NOT NULL,
-	[EffDate] [date] NOT NULL,
+	[Eff_Date] [date] NOT NULL,
 CONSTRAINT [PK_GemPriceList] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -206,12 +233,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Gemstone](
-	[GemId] [int] IDENTITY(1,1),
-	[GemCode] [nvarchar](255) NOT NULL,
-	[GemName] [nvarchar](255) NOT NULL,
+	[Gem_Id] [int] IDENTITY(1,1),
+	[Gem_Code] [nvarchar](255) NOT NULL,
+	[Gem_Name] [nvarchar](255) NOT NULL,
 
 	[Origin] [nvarchar] (255) NOT NULL,
-    [CaratWeight] [float] NOT NULL,
+    [Carat_Weight] [float] NOT NULL,
 	[Color] [char](10) NOT NULL,
 	[Clarity] [char](10) NOT NULL,
 	[Cut] [nvarchar] (255) NOT NULL,
@@ -222,38 +249,12 @@ CREATE TABLE [dbo].[Gemstone](
 	[Fluorescence] [char](10) NOT NULL,
 	[Status] [bit] NOT NULL, -- 1/Active | 0/Inactive (Used by some Pro)
 
-	[ProductId] int,
+	[Product_Id] int,
 CONSTRAINT [PK_Gemstone] PRIMARY KEY CLUSTERED 
 	(
-		[GemId] ASC
+		[Gem_Id] ASC
 	) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
-	CONSTRAINT [FK_Gemstone_Product] FOREIGN KEY ([ProductId]) REFERENCES [dbo].[Product] ([ProductId])
-) ON [PRIMARY]
-GO
-
-
-/* Table [Product] */ 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Product](
-	[ProductId] [int] IDENTITY(1,1),
-	[ProductCode] [nvarchar] (max) NOT NULL,
-	[ProductName] [nvarchar](255) NOT NULL,
-	[CategoryId] int REFERENCES [Category](CategoryId),
-	[CollectionId] int REFERENCES [Collections](CollectionId),
-	[Description] [nvarchar](max),
-
-	[Gender] [nvarchar](50) NOT NULL,
-	[Size] [int] NOT NULL,
-
-	[Status] bit NOT NULL,
-	
-CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
-(
-	[ProductId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	CONSTRAINT [FK_Gemstone_Product] FOREIGN KEY ([Product_Id]) REFERENCES [dbo].[Product] ([Product_Id])
 ) ON [PRIMARY]
 GO
 
@@ -263,44 +264,44 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProductionOrder](
-	[ProductionOrderId] [int] IDENTITY(1,1), --R001, Q001, -O001
+	[Production_Order_Id] nvarchar(255),
 	[Date] [date] NOT NULL,
 
-	[CustomerId] [nvarchar] (255) REFERENCES [Customer](CustomerId),
-	[CategoryId] int REFERENCES [Category]([CategoryId]),
+	[Customer_Id] [nvarchar] (255) REFERENCES [Customer](Customer_Id),
+	[Category_Id] int REFERENCES [Category]([Category_Id]),
 	
-	[MaterialName] [nvarchar](255),
-	[MaterialColor] [nvarchar](100),
-	[MaterialWeight] float,
-	[MaterialId] int,
+	[Material_Name] [nvarchar](255),
+	[Material_Color] [nvarchar](100),
+	[Material_Weight] float,
+	[Material_Id] int,
 
-	[GemName] [nvarchar](255),
-	[GemColor] [nvarchar](100),
-	[GemWeight] float,
-	[GemId] int,
+	[Gem_Name] [nvarchar](255),
+	[Gem_Color] [nvarchar](100),
+	[Gem_Weight] float,
+	[Gem_Id] int,
 
-	[ProductSize] [int],
+	[Product_Size] [int],
 	[Description] [nvarchar](max),
 
-	[DiamondAmount] float,
-	[MaterialAmount] float,
-	[ProductionAmount] float,
+	[Diamond_Amount] float,
+	[Material_Amount] float,
+	[Production_Amount] float,
 
-	[SideMaterialCost] float,
-	[SideGemCost] float,
+	[Side_Material_Cost] float,
+	[Side_Gem_Cost] float,
 
-	[TotalAmount] float,
+	[Total_Amount] float,
 
-	[SalesStaffName] [nvarchar](255),
-	[DesignStaffName] [nvarchar](255),
-	[ProductionStaffName] [nvarchar](255),
+	[Sales_Staff_Name] [nvarchar](255),
+	[Design_Staff_Name] [nvarchar](255),
+	[Production_Staff_Name] [nvarchar](255),
 
 	[Status] [nvarchar](10),  --created, requested, quoted, ordered, confirmed, delivered
 
-	[ProductId] [int] REFERENCES Product([ProductId]), 
+	[Product_Id] [int] REFERENCES Product([Product_Id]), 
 CONSTRAINT [PK_ProductionOrder] PRIMARY KEY CLUSTERED 
 (
-	[ProductionOrderId] ASC
+	[Production_Order_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -311,26 +312,27 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[ProductDesign](
-	[PDId] [int] IDENTITY(1,1),
-	[PDCode] [nvarchar] (max) NOT NULL,
-	[PDName] [nvarchar](255) NOT NULL,
-	[CategoryId] int REFERENCES [Category](CategoryId),
-	[CollectionId] int REFERENCES [Collections](CollectionId),
+CREATE TABLE [dbo].[Product_Design](
+	[Product_Design_Id] [int] IDENTITY(1,1),
+	[Product_Design_Code] [nvarchar] (max) NOT NULL,
+	[Product_Design_Name] [nvarchar](255) NOT NULL,
+	[Category_Id] int REFERENCES [Category](Category_Id),
+	[Collection_Id] int REFERENCES [Collections](Collection_Id),
 	[Description] [nvarchar](max),
 
 	[Gender] [nvarchar](50) NOT NULL,
-	[PDSize] [int] NOT NULL,
+	[Product_Size] [int] NOT NULL,
 
-	[PDSId] int REFERENCES [ProductDesignShell]([PDSId]),
-	[GemMinSize] float,
-	[GemMaxSize] float,
+	[Product_Design_Shell_Id] int REFERENCES [ProductDesignShell]([Product_Design_Shell_Id]),
+	[Product_Design_Diamond_Id] int REFERENCES [ProductDesignDiamond]([Product_Design_Diamond_Id]),
+	[Gem_Min_Size] float,
+	[Gem_Max_Size] float,
 
 	[Status] bit NOT NULL,
 	
 CONSTRAINT [PK_ProductDesign] PRIMARY KEY CLUSTERED 
 (
-	[PDId] ASC
+	[Product_Design_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -342,13 +344,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProductDesignShell](
-	[PDSId] int IDENTITY(1,1),
-	[MaterialId] int,
+	[Product_Design_Shell_Id] int IDENTITY(1,1),
+	[Material_Id] int,
 	[Weight] int,
 	
 CONSTRAINT [PK_ProductDesignShell] PRIMARY KEY CLUSTERED 
 (
-	[PDSId] ASC
+	[Product_Design_Shell_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -360,14 +362,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProductDesignDiamond](
-	[PDDId] int IDENTITY(1,1),
+	[Product_Design_Diamond_Id] int IDENTITY(1,1),
 	[GemId] int,
 	[GemMinSize] float,
 	[GemMaxSize] float,
 	
 CONSTRAINT [PK_ProductDesignDiamond] PRIMARY KEY CLUSTERED 
 (
-	[PDDId] ASC
+	[Product_Design_Diamond_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -376,7 +378,7 @@ GO
 /*================ INSERT DATA ================*/
 
 -- Insert data into the Users table
-INSERT INTO [dbo].[Users] (Email, Password, RoleID, Status)
+INSERT INTO [dbo].[Users] (Email, Password, Role_ID, Status)
 VALUES 
 -- 10 Customers
 ('customer1@example.com', 'Cust1#Secure', 1, 1),
@@ -416,7 +418,7 @@ VALUES
 ('prod4@example.com', 'Prod4%Forge', 6, 1);
 
 -- Insert data into the Employee table
-INSERT INTO [dbo].[Employee] (EmployeeId, FullName, UserId)
+INSERT INTO [dbo].[Employee] (Employee_Id, Full_Name, [User_Id])
 VALUES 
 -- Admins
 ('AD001', 'Alice Johnson', 11),
@@ -445,7 +447,7 @@ VALUES
 ('PR004', 'Tina Flores', 30);
 
 -- Insert data into the Customer table
-INSERT INTO [dbo].[Customer] (CustomerId, FullName, Address, PhoneNumber, UserId)
+INSERT INTO [dbo].[Customer] (Customer_Id, Full_Name, Address, Phone_Number, [User_Id])
 VALUES 
 ('CUS001', 'Ursula Grey', '123 Maple St', '5551110001', 1),
 ('CUS002', 'Victor Hale', '456 Oak St', '5551110002', 2),
@@ -459,36 +461,36 @@ VALUES
 ('CUS010', 'David Evans', '707 Ash St', '5551110010', 10);
 
 -- Insert data into Category table
-INSERT INTO [dbo].[Category] (CategoryName, Status) VALUES
+INSERT INTO [dbo].[Category] (Category_Name, Status) VALUES
 ('ring', 1),
 ('necklace', 1),
 ('earrings', 1),
 ('bracelet', 1),
 ('cufflink', 1);
 
-INSERT INTO [dbo].[Blogs] ([Title], [Content], [Date], [EmployeeId]) VALUES
+INSERT INTO [dbo].[Blogs] ([Title], [Content], [Date], [Employee_Id], status) VALUES
 ('The Brilliance of Diamonds', 
  'Explore the mesmerizing brilliance of diamonds, discussing their formation, characteristics, and symbolism in various cultures. Highlight the unique features that make diamonds a timeless choice for jewelry.', 
- '2024-05-27', 'SS001'),
+ '2024-05-27', 'SS001', 1),
 
 ('Crafting Beauty: The Art of Gold Jewelry Making', 
  'Delve into the craftsmanship behind gold jewelry, showcasing the intricate techniques used by artisans to create stunning pieces. Discuss the versatility of gold and its significance in different jewelry designs.', 
- '2024-05-28', 'DE001'),
+ '2024-05-28', 'DE001', 1),
 
 ('Unveiling the Mystique of Precious Gemstones', 
  'Take your readers on a journey through the world of precious gemstones, including sapphires, rubies, and emeralds. Explore their origins, colors, and cultural meanings, offering insights into why these gems are treasured.', 
- '2024-05-29', 'SS003'),
+ '2024-05-29', 'SS003', 1),
 
 ('From Mine to Market: The Diamond Supply Chain', 
  'Shed light on the journey of diamonds from the mines to the market, discussing ethical sourcing practices, sustainability efforts, and the role of certification in ensuring transparency and integrity.', 
- '2024-05-30', 'PR001'),
+ '2024-05-30', 'PR001', 1),
 
 ('The Language of Jewelry: Symbols and Meanings', 
  'Explore the symbolic meanings behind common jewelry motifs such as hearts, infinity symbols, and flowers. Discuss how these symbols resonate with individuals and convey messages of love, hope, and empowerment.', 
- '2024-06-01', 'DE003');
+ '2024-06-01', 'DE003', 1);
 
  -- Insert collections into the Collection table
-INSERT INTO [dbo].[Collections] ([CollectionName], [Status]) VALUES
+INSERT INTO [dbo].[Collections] ([Collection_Name], [Status]) VALUES
 ('Summer Collection', 1),
 ('Spring Collection', 1),
 ('Winter Collection', 1),
@@ -501,27 +503,27 @@ INSERT INTO [dbo].[Collections] ([CollectionName], [Status]) VALUES
 ('Disney Collection', 1);
 
 -- Insert data into Material table
-INSERT INTO [dbo].[Material] ([MaterialCode], [MaterialName])
+INSERT INTO [dbo].[Material] ([Material_Code], [Material_Name], [status])
 VALUES
-    ('Gold8K', 'Gold 8K'),
-    ('Gold9K', 'Gold 9K'),
-    ('Gold10K', 'Gold 10K'),
-    ('Gold14K', 'Gold 14K'),
-    ('Gold15.6K', 'Gold 15.6K'),
-    ('Gold16.3K', 'Gold 16.3K'),
-    ('Gold18K', 'Gold 18K'),
-    ('Gold22K', 'Gold 22K'),
-    ('SJC', 'SJC Gold Piece'),
-    ('PNJ24K', 'PNJ Ring Gold 24K');
+    ('Gold8K', 'Gold 8K', 1),
+    ('Gold9K', 'Gold 9K', 1),
+    ('Gold10K', 'Gold 10K', 1),
+    ('Gold14K', 'Gold 14K', 1),
+    ('Gold15.6K', 'Gold 15.6K', 1),
+    ('Gold16.3K', 'Gold 16.3K', 1),
+    ('Gold18K', 'Gold 18K', 1),
+    ('Gold22K', 'Gold 22K', 1),
+    ('SJC', 'SJC Gold Piece', 1),
+    ('PNJ24K', 'PNJ Ring Gold 24K', 1);
 
 -- Insert data into MaterialPriceList table
-DECLARE @StartDate DATE = '2024-05-28'; -- Start date for generating data
-DECLARE @EndDate DATE = '2024-05-28';   -- End date for generating data
+DECLARE @StartDate DATE = '2024-06-1'; -- Start date for generating data
+DECLARE @EndDate DATE = '2024-06-1';   -- End date for generating data
 
 WHILE @StartDate <= @EndDate
 BEGIN
     -- Gold prices for each type of gold on the current date
-    INSERT INTO [dbo].[MaterialPriceList] ([Price], [EffDate], [MaterialId])
+    INSERT INTO [dbo].[MaterialPriceList] ([Price], [Eff_Date], [Material_Id])
     VALUES
         (92.65, @StartDate, 1),  -- Gold8K
         (105.96, @StartDate, 2), -- Gold9K
@@ -538,13 +540,13 @@ BEGIN
 END;
 
 -- Insert data for [GemPriceList] table (Diamond prices for different dates)
-DECLARE @StartDateGem DATE = '2024-05-29'; -- Start date for generating data
-DECLARE @EndDateGem DATE = '2024-5-29';   -- End date for generating data
+DECLARE @StartDateGem DATE = '2024-06-01'; -- Start date for generating data
+DECLARE @EndDateGem DATE = '2024-06-01';   -- End date for generating data
 -- Loop through dates to generate data for each day
 WHILE @StartDateGem <= @EndDateGem
 BEGIN
     -- Generate data for GemPriceList table (Diamond prices for different dates)
-INSERT INTO [dbo].[GemPriceList] ([Origin], [CaratWeight], [Color], [Clarity], [Cut], [Price], [EffDate])
+INSERT INTO [dbo].[GemPriceList] ([Origin], [Carat_Weight], [Color], [Clarity], [Cut], [Price], [Eff_Date])
 VALUES
 		-- 3.6mm
 		-- D Color
@@ -806,7 +808,7 @@ VALUES
 END;
 
 -- Insert data into the Gemstone table
-INSERT INTO [dbo].[Gemstone] ([GemCode], [GemName], [Origin], [CaratWeight], [Color], [Clarity], [Cut], [Proportions], [Polish], [Symmetry], [Fluorescence], [Status])
+INSERT INTO [dbo].[Gemstone] ([Gem_Code], [Gem_Name], [Origin], [Carat_Weight], [Color], [Clarity], [Cut], [Proportions], [Polish], [Symmetry], [Fluorescence], [Status])
 VALUES
 -- Gemstones with D Color
 ('DIA001', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.17, 'D', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 0),
@@ -1089,7 +1091,7 @@ VALUES
 ('DIA200', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 1.33, 'J', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1);
 
 -- Insert data into the Product table
-INSERT INTO [dbo].[Product] ([ProductCode], [ProductName], [CategoryId], [CollectionId], [Description], [Gender], [Size], [Status])
+INSERT INTO [dbo].[Product] ([Product_Code], [Product_Name], [Category_Id], [Collection_Id], [Description], [Gender], [Size], [Status])
 VALUES
 ('PO001', 'Radiant Sunburst Diamond Ring', 1, NULL, 'Radiant sunburst design featuring a brilliant round cut diamond center stone.', 'Unisex', 7, 1),
 ('PO002', 'Ethereal Dream Diamond Necklace', 2, NULL, 'An ethereal dream necklace showcasing a mesmerizing round brilliant cut diamond pendant.', 'Women', 18, 1),
@@ -1113,7 +1115,7 @@ VALUES
 ('PO020', 'Cosmic Charm Diamond Cufflinks', 5, NULL, 'Add cosmic charm to your attire with these exquisite diamond cufflinks.', 'Men', 10, 1);
 
 -- Insert data into the ProductMaterial table
-INSERT INTO [dbo].[ProductMaterial] (ProductId, MaterialId, MaterialWeight)
+INSERT INTO [dbo].[ProductMaterial] (Product_Id, Material_Id, Material_Weight)
 VALUES
 -- Combining products with materials and assigning weights
 (1, 7, 1),   -- Product PO001 with Gold18K, weight 1
@@ -1137,53 +1139,52 @@ VALUES
 (19, 9, 7),  -- Product PO019 with SJC, weight 7
 (20, 10, 1); -- Product PO020 with PNJ24K, weight 1
 
-
-INSERT INTO [dbo].[ProductionOrder] ([Date], [CustomerId], [CategoryId], [MaterialName], [MaterialColor], [MaterialWeight], [MaterialId], [GemName], [GemColor], [GemWeight], [GemId], [ProductSize], [Description], [DiamondAmount], [MaterialAmount], [ProductionAmount], [SideMaterialCost], [SideGemCost], [TotalAmount], [SalesStaffName], [DesignStaffName], [ProductionStaffName], [Status], [ProductId])
+INSERT INTO [dbo].[ProductionOrder] ([Production_Order_Id], [Date], [Customer_Id], [Category_Id], [Material_Name], [Material_Color], [Material_Weight], [Material_Id], [Gem_Name], [Gem_Color], [Gem_Weight], [Gem_Id], [Product_Size], [Description], [Diamond_Amount], [Material_Amount], [Production_Amount], [Side_Material_Cost], [Side_Gem_Cost], [Total_Amount], [Sales_Staff_Name], [Design_Staff_Name], [Production_Staff_Name], [Status], [Product_Id])
 VALUES 
-('2024-05-28', 'CUS010', 3, 'Gold 10K', 'White Gold', 8, NULL, 'Beautiful Diamond', 'White', 0.7, NULL, 14, 'Custom earrings design', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'created', NULL),
-('2024-05-27', 'CUS004', 4, 'Gold 22K', 'Yellow', 20, NULL, 'Diamond', 'Lightly Gold', 1.0, NULL, 20, 'Custom bracelet design', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'created', NULL),
+('POI001', '2024-05-28', 'CUS010', 3, 'Gold 10K', 'White Gold', 8, NULL, 'Beautiful Diamond', 'White', 0.7, NULL, 14, 'Custom earrings design', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'created', NULL),
+('POI002', '2024-05-27', 'CUS004', 4, 'Gold 22K', 'Yellow', 20, NULL, 'Diamond', 'Lightly Gold', 1.0, NULL, 20, 'Custom bracelet design', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'created', NULL),
 
-('2024-05-28', 'CUS005', 5, 'Gold 9K', 'Yellow', 5, NULL, 'Diamond', 'F', 0.3, NULL, 12, 'Custom cufflink design', NULL, NULL, NULL, NULL, NULL, NULL, 'Ivy Scott', NULL, NULL, 'requested', NULL),
-('2024-05-27', 'CUS001', 1, 'Gold 18K', 'Yellow', 10, NULL, 'Round Brilliant Cut Diamond', 'D', 0.5, NULL, 16, 'Custom engagement ring design', NULL, NULL, NULL, NULL, NULL, NULL, 'Jack Turner', NULL, NULL, 'requested', NULL),
-('2024-05-26', 'CUS002', 2, 'Gold 14K', 'Rose Gold', 15, NULL, 'Shining Diamond', 'Blue', 0.8, NULL, 18, 'Custom pendant design', NULL, NULL, NULL, NULL, NULL, NULL, 'Ivy Scott', NULL, NULL, 'requested', NULL),
-('2024-05-20', 'CUS005', 5, 'Gold 15.6K', 'Yellow', 4, NULL, 'Diamond', 'Yellow', 1, NULL, 15, 'Pair of gold cufflinks featuring white diamond stones', NULL, NULL, NULL, NULL, NULL, NULL, 'Leo Adams', NULL, NULL, 'requested', NULL),
+('POI003', '2024-05-28', 'CUS005', 5, 'Gold 9K', 'Yellow', 5, NULL, 'Diamond', 'F', 0.3, NULL, 12, 'Custom cufflink design', NULL, NULL, NULL, NULL, NULL, NULL, 'Ivy Scott', NULL, NULL, 'requested', NULL),
+('POI004', '2024-05-27', 'CUS001', 1, 'Gold 18K', 'Yellow', 10, NULL, 'Round Brilliant Cut Diamond', 'D', 0.5, NULL, 16, 'Custom engagement ring design', NULL, NULL, NULL, NULL, NULL, NULL, 'Jack Turner', NULL, NULL, 'requested', NULL),
+('POI005', '2024-05-26', 'CUS002', 2, 'Gold 14K', 'Rose Gold', 15, NULL, 'Shining Diamond', 'Blue', 0.8, NULL, 18, 'Custom pendant design', NULL, NULL, NULL, NULL, NULL, NULL, 'Ivy Scott', NULL, NULL, 'requested', NULL),
+('POI006', '2024-05-20', 'CUS005', 5, 'Gold 15.6K', 'Yellow', 4, NULL, 'Diamond', 'Yellow', 1, NULL, 15, 'Pair of gold cufflinks featuring white diamond stones', NULL, NULL, NULL, NULL, NULL, NULL, 'Leo Adams', NULL, NULL, 'requested', NULL),
 
-('2024-05-28', 'CUS006', 1, 'Gold 16.3K', 'White Gold', 12, 6, 'Diamond', 'E', 0.6, 6, 6, 'Custom wedding band design', 412.23, 196.11, 300.00, 70.0, 120.0, 1208.17, 'Leo Adams', NULL, NULL, 'quoted', NULL),
-('2024-05-27', 'CUS008', 2, 'Gold 15.6K', 'Yellow', 18, 5, 'Diamond', 'Silver', 0.9, 2, 45, 'Custom necklace design', 384.75, 187.27, 200.00, 90.0, 20.0, 970.22, 'Jack Turner', NULL, NULL, 'quoted', NULL),
-('2024-05-27', 'CUS007', 2, 'Gold 22K', 'Yellow', 9, 8, 'Diamond', 'Blue', 3, 11, 40, 'Exquisite gold necklace featuring a large diamond pendant', 417.02, 269.25, 300.00, 150.00, 100.00, 1359.90, 'Karen Walker', NULL, NULL, 'quoted', NULL),
+('POI007', '2024-05-28', 'CUS006', 1, 'Gold 16.3K', 'White Gold', 12, 6, 'Diamond', 'E', 0.6, 6, 6, 'Custom wedding band design', 412.23, 196.11, 300.00, 70.0, 120.0, 1208.17, 'Leo Adams', NULL, NULL, 'quoted', NULL),
+('POI008', '2024-05-27', 'CUS008', 2, 'Gold 15.6K', 'Yellow', 18, 5, 'Diamond', 'Silver', 0.9, 2, 45, 'Custom necklace design', 384.75, 187.27, 200.00, 90.0, 20.0, 970.22, 'Jack Turner', NULL, NULL, 'quoted', NULL),
+('POI009', '2024-05-27', 'CUS007', 2, 'Gold 22K', 'Yellow', 9, 8, 'Diamond', 'Blue', 3, 11, 40, 'Exquisite gold necklace featuring a large diamond pendant', 417.02, 269.25, 300.00, 150.00, 100.00, 1359.90, 'Karen Walker', NULL, NULL, 'quoted', NULL),
 
 
-('2024-05-28', 'CUS003', 3, 'Gold 14K', 'Rose', 3, 4, 'Diamond', 'White Green', 1, 3, 4, 'Rose gold earrings featuring diamond gemstones', 345.74, 168.03, 200.00, 50.00, 50.00, 895.147, 'Jack Turner', 'Mia Nelson', NULL, 'ordered', NULL),
-('2024-05-28', 'CUS004', 4, 'Gold 16.3K', 'White', 6, 6, 'Diamond', 'White Red', 1.5, 17, 17, 'White gold bracelet adorned with diamond gemstones', 331.91, 196.11, 200.00, 50.00, 50.00, 910.82, 'Karen Walker', 'Nate Perez', NULL, 'ordered', NULL),
+('POI010', '2024-05-28', 'CUS003', 3, 'Gold 14K', 'Rose', 3, 4, 'Diamond', 'White Green', 1, 3, 4, 'Rose gold earrings featuring diamond gemstones', 345.74, 168.03, 200.00, 50.00, 50.00, 895.147, 'Jack Turner', 'Mia Nelson', NULL, 'ordered', NULL),
+('POI011', '2024-05-28', 'CUS004', 4, 'Gold 16.3K', 'White', 6, 6, 'Diamond', 'White Red', 1.5, 17, 17, 'White gold bracelet adorned with diamond gemstones', 331.91, 196.11, 200.00, 50.00, 50.00, 910.82, 'Karen Walker', 'Nate Perez', NULL, 'ordered', NULL),
 
-('2024-05-26', 'CUS008', 3, 'Gold 18K', 'Yellow', 10, 7, 'Diamond', 'Clearly White', 0.7, 16, 14, 'Custom earrings design', 340.43, 216.83, 550.00, 30.00, 50.00, 1305.97, 'Ivy Scott', 'Nate Perez', 'Quinn Baker', 'confirmed', NULL),
-('2024-05-28', 'CUS002', 2, 'Gold 22K', 'Yellow', 8, 8, 'Diamond', 'Blue', 2, 18, 45, 'Handcrafted gold necklace with a diamond pendant', 276.6, 269.25, 250.00, 60.00, 60.00, 1007.44, 'Ivy Scott', 'Olivia Hill', 'Rachel Carter', 'confirmed', NULL),
+('POI012', '2024-05-26', 'CUS008', 3, 'Gold 18K', 'Yellow', 10, 7, 'Diamond', 'Clearly White', 0.7, 16, 14, 'Custom earrings design', 340.43, 216.83, 550.00, 30.00, 50.00, 1305.97, 'Ivy Scott', 'Nate Perez', 'Quinn Baker', 'confirmed', NULL),
+('POI013', '2024-05-28', 'CUS002', 2, 'Gold 22K', 'Yellow', 8, 8, 'Diamond', 'Blue', 2, 18, 45, 'Handcrafted gold necklace with a diamond pendant', 276.6, 269.25, 250.00, 60.00, 60.00, 1007.44, 'Ivy Scott', 'Olivia Hill', 'Rachel Carter', 'confirmed', NULL),
 
-('2024-05-27', 'CUS001', 1, 'Gold 18K', 'Yellow', 5, 7, 'Diamond', 'D', 0.5, 1, 4, 'Customized ring with diamond accents', 424.01, 216.83, 350.00, 70.00, 70.00, 1243.92, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 1),
-('2024-06-01', 'CUS006', 1, 'Gold 18K', 'Yellow', 7, 7, 'Diamond', 'F', 0.7, 9, 7, 'Custom-designed gold ring with a diamond', 282.88, 216.83, 150.00, 60.00, 60.00, 846.68, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 6),
+('POI014', '2024-05-27', 'CUS001', 1, 'Gold 18K', 'Yellow', 5, 7, 'Diamond', 'D', 0.5, 1, 4, 'Customized ring with diamond accents', 424.01, 216.83, 350.00, 70.00, 70.00, 1243.92, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 1),
+('POI015', '2024-06-01', 'CUS006', 1, 'Gold 18K', 'Yellow', 7, 7, 'Diamond', 'F', 0.7, 9, 7, 'Custom-designed gold ring with a diamond', 282.88, 216.83, 150.00, 60.00, 60.00, 846.68, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 6),
 
-('2024-05-20', 'CUS002', 1, 'Gold 22K', 'Yellow', 5, 8, 'Diamond', 'D', 0.34, 21, 5, 'Customized ring with diamond accents', 1055.32, 269.25, 350.00, 70.00, 70.00, 1996.03, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 2),
-('2024-04-20', 'CUS003', 2, 'Gold 14K', 'Yellow', 7, 4, 'Diamond', 'F', 0.3, 22, 45, 'Custom-designed gold necklace with a diamond', 902.13, 336.06, 150.00, 60.00, 60.00, 1659.01, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 3),
-('2024-05-21', 'CUS004', 2, 'Gold 16.3K', 'Yellow', 5, 6, 'Diamond', 'D', 0.34, 23, 42, 'Customized necklace with diamond accents', 842.55, 784.44, 300.00, 100.00, 100.00, 2339.69, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 4),
-('2024-05-23', 'CUS005', 1, 'Gold 18K', 'Yellow', 7, 7, 'Diamond', 'F', 0.34, 24, 8, 'Custom-designed gold ring with a diamond', 787.23, 433.66, 250.00, 100.00, 100.00, 1837.98, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 5),
-('2024-05-22', 'CUS007', 3, 'Gold 18K', 'Yellow', 5, 7, 'Diamond', 'D', 0.34, 25, 1, 'Customized gold earrings with diamonds', 680.85, 867.32, 150.00, 70.00, 70.00, 2021.99, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 7),
-('2024-05-24', 'CUS008', 4, 'Gold 18K', 'Yellow', 7, 7, 'Diamond', 'F', 0.34, 26, 20, 'Custom-designed gold bracelet with a diamond center stone', 961.7, 1084.15, 350.00, 90.00, 90.00, 2833.44, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 8),
-('2024-05-25', 'CUS009', 3, 'Gold 22K', 'Yellow', 5, 8, 'Diamond', 'D', 0.5, 41, 1, 'Customized earrings with diamond accents', 1659.57, 1615.5, 350.00, 70.00, 70.00, 4140.58, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 9),
-('2024-05-20', 'CUS010', 4, 'SJC Gold Piece', 'Yellow', 7, 7, 'Diamond', 'F', 0.5, 42, 19, 'Custom-designed gold bracelet with a diamond center stone', 1553.19, 2456.93, 550.00, 160.00, 160.00, 5368.13, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 10),
-('2024-05-27', 'CUS007', 5, 'Gold 8K', 'Yellow', 5, 1, 'Diamond', 'D', 0.5, 43, 5, 'Customized cufflinks with diamond accents', 1489.36, 370.6, 350.00, 70.00, 70.00, 2584.96, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 11),
-('2024-05-21', 'CUS002', 1, 'Gold 9K', 'Yellow', 7, 2, 'Diamond', 'F', 0.5, 44, 48, 'Custom-designed gold ring with a diamond center stone', 1361.7, 635.76, 150.00, 60.00, 60.00, 2494.21, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 12),
-('2024-05-28', 'CUS002', 5, 'Gold 10K', 'Yellow', 5, 3, 'Diamond', 'D', 0.5, 45, 5, 'Customized cufflinks with diamond accents', 1297.87, 944.72, 350.00, 50.00, 50.00, 2961.85, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 13),
-('2024-05-10', 'CUS001', 3, 'Gold 14K', 'Yellow', 7, 4, 'Diamond', 'F', 0.5, 46, 17, 'Custom-designed gold earrings with a diamond center stone', 1621.28, 840.15, 450.00, 60.00, 60.00, 3334.57, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 14),
-('2024-05-27', 'CUS001', 2, 'Gold 15.6K', 'Yellow', 5, 5, 'Diamond', 'D', 0.6, 81, 50, 'Customized necklace with diamond accents', 3109.42, 1301.89, 350.00, 70.00, 70.00, 5401.34, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 15),
-('2024-05-13', 'CUS006', 1, 'Gold 16.3K', 'Yellow', 7, 6, 'Diamond', 'F', 0.6, 82, 9, 'Custom-designed gold ring with a diamond center stone', 1310.89, 784.44, 1000.00, 160.00, 160.00, 4195.33, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 16),
-('2024-05-27', 'CUS004', 1, 'Gold 18K', 'Yellow', 5, 7, 'Diamond', 'D', 1.25, 141, 5, 'Customized ring with diamond accents', 14782.61, 1084.15, 2350.00, 160.00, 160.00, 20390.44, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 17),
-('2024-05-09', 'CUS005', 4, 'Gold22K', 'Yellow', 7, 8, 'Diamond', 'F', 1.25, 142, 15, 'Custom-designed gold bracelet with a diamond center stone', 14739.13, 1615.5, 2350.00, 160.00, 160.00, 20927.09, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 18),
-('2024-05-28', 'CUS006', 4, 'SJC Gold Piece', 'Yellow', 5, 9, 'Diamond', 'D', 1.25, 143, 16, 'Customized bracelet with diamond accents', 14260.87, 2456.93, 1350.00, 160.00, 160.00, 20226.58, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 19),
-('2024-05-29', 'CUS007', 5, 'PNJ Gold 24K', 'Yellow', 7, 10, 'Diamond', 'F', 1.25, 144, 4, 'Custom-designed gold cufflinks with a diamond center stone', 13713.04, 292.88, 5150.00, 160.00, 160.00, 21643.51, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 20);
+('POI016', '2024-05-20', 'CUS002', 1, 'Gold 22K', 'Yellow', 5, 8, 'Diamond', 'D', 0.34, 21, 5, 'Customized ring with diamond accents', 1055.32, 269.25, 350.00, 70.00, 70.00, 1996.03, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 2),
+('POI017', '2024-04-20', 'CUS003', 2, 'Gold 14K', 'Yellow', 7, 4, 'Diamond', 'F', 0.3, 22, 45, 'Custom-designed gold necklace with a diamond', 902.13, 336.06, 150.00, 60.00, 60.00, 1659.01, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 3),
+('POI018', '2024-05-21', 'CUS004', 2, 'Gold 16.3K', 'Yellow', 5, 6, 'Diamond', 'D', 0.34, 23, 42, 'Customized necklace with diamond accents', 842.55, 784.44, 300.00, 100.00, 100.00, 2339.69, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 4),
+('POI019', '2024-05-23', 'CUS005', 1, 'Gold 18K', 'Yellow', 7, 7, 'Diamond', 'F', 0.34, 24, 8, 'Custom-designed gold ring with a diamond', 787.23, 433.66, 250.00, 100.00, 100.00, 1837.98, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 5),
+('POI020', '2024-05-22', 'CUS007', 3, 'Gold 18K', 'Yellow', 5, 7, 'Diamond', 'D', 0.34, 25, 1, 'Customized gold earrings with diamonds', 680.85, 867.32, 150.00, 70.00, 70.00, 2021.99, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 7),
+('POI021', '2024-05-24', 'CUS008', 4, 'Gold 18K', 'Yellow', 7, 7, 'Diamond', 'F', 0.34, 26, 20, 'Custom-designed gold bracelet with a diamond center stone', 961.7, 1084.15, 350.00, 90.00, 90.00, 2833.44, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 8),
+('POI022', '2024-05-25', 'CUS009', 3, 'Gold 22K', 'Yellow', 5, 8, 'Diamond', 'D', 0.5, 41, 1, 'Customized earrings with diamond accents', 1659.57, 1615.5, 350.00, 70.00, 70.00, 4140.58, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 9),
+('POI023', '2024-05-20', 'CUS010', 4, 'SJC Gold Piece', 'Yellow', 7, 7, 'Diamond', 'F', 0.5, 42, 19, 'Custom-designed gold bracelet with a diamond center stone', 1553.19, 2456.93, 550.00, 160.00, 160.00, 5368.13, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 10),
+('POI024', '2024-05-27', 'CUS007', 5, 'Gold 8K', 'Yellow', 5, 1, 'Diamond', 'D', 0.5, 43, 5, 'Customized cufflinks with diamond accents', 1489.36, 370.6, 350.00, 70.00, 70.00, 2584.96, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 11),
+('POI025', '2024-05-21', 'CUS002', 1, 'Gold 9K', 'Yellow', 7, 2, 'Diamond', 'F', 0.5, 44, 48, 'Custom-designed gold ring with a diamond center stone', 1361.7, 635.76, 150.00, 60.00, 60.00, 2494.21, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 12),
+('POI026', '2024-05-28', 'CUS002', 5, 'Gold 10K', 'Yellow', 5, 3, 'Diamond', 'D', 0.5, 45, 5, 'Customized cufflinks with diamond accents', 1297.87, 944.72, 350.00, 50.00, 50.00, 2961.85, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 13),
+('POI027', '2024-05-10', 'CUS001', 3, 'Gold 14K', 'Yellow', 7, 4, 'Diamond', 'F', 0.5, 46, 17, 'Custom-designed gold earrings with a diamond center stone', 1621.28, 840.15, 450.00, 60.00, 60.00, 3334.57, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 14),
+('POI028', '2024-05-27', 'CUS001', 2, 'Gold 15.6K', 'Yellow', 5, 5, 'Diamond', 'D', 0.6, 81, 50, 'Customized necklace with diamond accents', 3109.42, 1301.89, 350.00, 70.00, 70.00, 5401.34, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 15),
+('POI029', '2024-05-13', 'CUS006', 1, 'Gold 16.3K', 'Yellow', 7, 6, 'Diamond', 'F', 0.6, 82, 9, 'Custom-designed gold ring with a diamond center stone', 1310.89, 784.44, 1000.00, 160.00, 160.00, 4195.33, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 16),
+('POI030', '2024-05-27', 'CUS004', 1, 'Gold 18K', 'Yellow', 5, 7, 'Diamond', 'D', 1.25, 141, 5, 'Customized ring with diamond accents', 14782.61, 1084.15, 2350.00, 160.00, 160.00, 20390.44, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 17),
+('POI031', '2024-05-09', 'CUS005', 4, 'Gold22K', 'Yellow', 7, 8, 'Diamond', 'F', 1.25, 142, 15, 'Custom-designed gold bracelet with a diamond center stone', 14739.13, 1615.5, 2350.00, 160.00, 160.00, 20927.09, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 18),
+('POI032', '2024-05-28', 'CUS006', 4, 'SJC Gold Piece', 'Yellow', 5, 9, 'Diamond', 'D', 1.25, 143, 16, 'Customized bracelet with diamond accents', 14260.87, 2456.93, 1350.00, 160.00, 160.00, 20226.58, 'Leo Adams', 'Mia Nelson', 'Sam Edwards', 'delivered', 19),
+('POI033', '2024-05-29', 'CUS007', 5, 'PNJ Gold 24K', 'Yellow', 7, 10, 'Diamond', 'F', 1.25, 144, 4, 'Custom-designed gold cufflinks with a diamond center stone', 13713.04, 292.88, 5150.00, 160.00, 160.00, 21643.51, 'Leo Adams', 'Paul Young', 'Rachel Carter', 'delivered', 20);
 
 
 -- Insert data into the ProductDesignShell table
-INSERT INTO [dbo].[ProductDesignShell] (MaterialId, Weight)
+INSERT INTO [dbo].[ProductDesignShell] (Material_Id, Weight)
 VALUES
 -- Gold 8K (MaterialId = 1)
 (1, 1),
