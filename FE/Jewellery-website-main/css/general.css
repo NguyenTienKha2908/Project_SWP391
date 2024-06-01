@@ -185,15 +185,15 @@ a.sidebar-link:hover,
     p {
         margin: 0;
         text-align: left;
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         font-weight: 600;
         width: 300px;
     }
 
     h3 {
-        font-size: 0.8rem;
+        font-size: 1rem;
         display: inline-block;
-        width: 300px;
+        width: 200px;
         color: #9095A0;
     }
 }
@@ -227,6 +227,7 @@ table {
         border-radius: 30px;
         color: #A11A33;
         text-align: center;
+        margin: 5% 0;
     }
 
     .processing {
@@ -237,6 +238,7 @@ table {
         border-radius: 30px;
         color: #F7B050;
         text-align: center;
+        margin: 5% 0;
     }
 
     .done {
@@ -246,6 +248,7 @@ table {
         border-radius: 30px;
         color: #1B8633;
         text-align: center;
+        margin: 5% 0;
     }
 
 }
@@ -276,7 +279,6 @@ table {
 }
 
 .slStatus {
-    appearance: none;
     font-size: 0.75rem;
     width: 70%;
     background-color: none;
@@ -294,7 +296,7 @@ table {
     justify-content: start;
     align-items: center;
 
-    p {
+    p, a {
         margin: 0;
         text-align: left;
         font-size: 0.8rem;
@@ -390,7 +392,7 @@ table {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     h1 {
-        margin: 2%;
+        margin: 3%;
         font-size: 1.5rem;
         text-align: center;
     }
@@ -428,12 +430,26 @@ table {
 
 /* EDIT-REQUEST */
 
-input {
-    width: 20%;
-}
+.edit {
+    .information {
+        h2 {
+            width: 130px;
+        }
+    }
+    input::placeholder {
+        font-size: 0.75rem;
+    }
 
-textarea {
-    width: 60%;
+    input {
+        width: 20%;
+    }
+
+    textarea {
+        width: 50%;
+    }
+    textarea::placeholder {
+        font-size: 0.75rem;
+    }
 }
 
 .bottom-note {
@@ -452,11 +468,12 @@ textarea {
 
         a {
             margin-right: 10%;
-            padding: 15px 40px;
+            padding: 10px 30px;
             background-color: #424955;
             color: #FFFFFF;
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
+            border-radius: 4px;
 
             &:nth-child(2) {
                 margin-left: 0;
@@ -473,11 +490,12 @@ textarea {
 
 .bottom-note a {
     margin-right: 10%;
-    padding: 15px 40px;
+    padding: 10px 30px;
     background-color: #424955;
     color: #FFFFFF;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
+    border-radius: 4px;
 }
 
 .bottom-note a:hover {
@@ -489,7 +507,7 @@ textarea {
 .title {
     margin: 2% 5%;
     margin-bottom: 0;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
 }
 
 .container-box {
@@ -504,7 +522,7 @@ textarea {
     }
 
     h3 {
-        margin: 5% 2%;
+        margin: 7% 4%;
         text-align: right;
         margin-right: 20%;
     }
@@ -513,7 +531,7 @@ textarea {
         margin-top: 0;
 
         .information {
-            &:nth-child(4) {
+            &:nth-child(6) {
                 margin-bottom: 5%;
             }
         }
@@ -554,7 +572,7 @@ textarea {
 
         h1 {
             text-align: center;
-            font-size: 3rem;
+            font-size: 1.5rem;
         }
 
         span {
@@ -568,11 +586,12 @@ textarea {
 
         a {
             margin-right: 10%;
-            padding: 15px 60px;
+            padding: 15px 35px;
             background-color: #424955;
             color: #FFFFFF;
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
+            border-radius: 4px;
 
             &:nth-child(2) {
                 margin-left: 0;
@@ -597,12 +616,16 @@ textarea {
 
 .slsMaterial {
     appearance: none;
-    font-size: 1.15rem;
-    padding: 2px 10px;
+    font-size: 0.8rem;
     background-color: #F9F9FA;
     border: 1px solid #000000;
     color: #000000;
     cursor: pointer;
+    width: 40%;
+}
+
+.title {
+    text-align: center;
 }
 
 /* ORDERS */
@@ -617,7 +640,6 @@ textarea {
 
 /* ORDER ONE PAGE */
 
-
 .order {
     margin-bottom: 5%;
 }
@@ -625,48 +647,45 @@ textarea {
 .order-one-table {
     margin-left: auto;
     margin-right: auto;
-    width: 93%;
+    width: 87%;
 
     th,
     td {
         &:nth-child(1) {
-            width: 900px;
-            height: 60px;
+            width: 550px;
+            height: 40px;
         }
     }
 }
 
 .order-one-table tr th {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .total-price {
     margin-top: 3%;
-    margin-left: 54%;
-
-    span {
-        font-size: 1.5rem;
-        font-weight: 700;
-    }
+    margin-left: 50%;
 }
 
 /* EDIT PROFILE */
 .first {
-    margin: 10%;
+    margin: 5% 10%;
 
     input,
     h3,
     p {
-        font-size: 1.75rem;
+        font-size: 1rem;
     }
 
     .element p {
-        font-size: 1.75rem;
-        ;
+        font-size: 1rem;
     }
 
     input {
         width: 50%;
+    }
+    input::placeholder {
+        font-size: 0.8rem;
     }
 }
 
@@ -674,12 +693,12 @@ textarea {
     display: inline-block;
     margin-top: 5%;
     margin-left: 68%;
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     font-weight: 600;
     background-color: #383838;
     color: #FFFFFF;
     border-radius: 5px;
-    padding: 1% 5%;
+    padding: 1% 4%;
     margin-right: -5%;
     transition: 0.1s ease-in-out;
 }
@@ -697,6 +716,7 @@ tr td input {
 }
 
 .create {
+
     margin: 0;
 
     tr {
@@ -712,7 +732,7 @@ tr td input {
 }
 
 .created-selection-order {
-    width: 45%;
+    width: 40%;
 }
 
 .total {
@@ -779,11 +799,6 @@ tr td input {
                     outline: none;
                     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
                 }
-
-                input::placeholder {
-                    font-size: 1.25rem;
-                }
-
 
             }
         }
@@ -891,5 +906,20 @@ tr td input {
         text-decoration: underline;
         font-size: 1.25rem;
         ;
+    }
+}
+
+
+.quote {
+    width: 80%;
+    h3 {
+        font-size: 1rem;
+    }
+
+    .information {
+        input {
+            width: 30%;
+            font-size: 0.8rem;
+        }
     }
 }

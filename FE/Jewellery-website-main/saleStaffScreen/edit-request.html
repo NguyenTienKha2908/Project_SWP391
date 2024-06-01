@@ -83,39 +83,58 @@
                 </div>
             </div>
             <hr>
-            <div class="container-fluid">
+            <div class="container-fluid edit">
                 <form action="/action_page.php" method="POST">
-                    <a href="edit-request.html"><img class="icon-pen" src="/icon-fig/pen.svg" alt="pen"></a>
                     <h1>General Information</h1>
                     <div class="information">
                         <h2>Customer Name</h2>
-                        <input type="text" placeholder="Nguyen Thanh Vy" txtName="name">
+                        <input type="text" placeholder="Nguyen Thanh Vy" name="txtName">
                     </div>
                     <div class="information">
                         <h2>Phone</h2>
-                        <input type="password" placeholder="******" txtPassword="pass">
+                        <input type="password" placeholder="******" name="txtPassword">
                     </div>
                     <div class="information">
-                        <h2>Date created</h2>
-                        <input type="date" txtDate="date">
+                        <h2>Email</h2>
+                        <input type="text" placeholder="vynth@fpt.edu.vn" name="txtEmail">
+
+                    </div>
+                    <div class="information">
+                        <h2>Address</h2>
+                        <input type="text" placeholder="ABC Road, United States" name="txtAddress">
+
                     </div>
                     <hr>
                     <div class="information">
                         <h2>Category</h2>
-                        <input type="text" placeholder="Ring" txtCate="category">
+                        <input type="text" placeholder="Ring" name="txtCate">
+                    </div>
+                    <div class="information">
+                        <h2>Size</h2>
+                        <input type="number" placeholder="9" name="txtCateSize">
                     </div>
                     <div class="information">
                         <h2>Material</h2>
-                        <input type="text" placeholder="White Gold" txtMat="material">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <h2>Weight</h2>
-                        <input type="text" placeholder="10g" txtWeightMat="matWeight">
+                        <input type="text" placeholder="White Gold" name="txtMat">
                     </div>
+                    <div class="information">
+                        <h2>Weight</h2>
+                        <input type="text" placeholder="2 mace" name="txtMW">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <h2>Color</h2>
+                        <input type="text" placeholder="White" name="txtWeightMat">
+                    </div>
+                    
                     <div class="information">
                         <h2>Gemstone</h2>
                         <input type="text" placeholder="Diamond" txtMat="gemstone"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="information">
                         <h2>Weight</h2>
-                        <input type="number" placeholder="3mm" txtMat="gemWeight">
+                        <input type="text" placeholder="0.47ct" name="txtMW">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <h2>Color</h2>
+                        <input type="text" placeholder="D" name="txtWeightMat">
                     </div>
                     <hr>
                     <div class="information">
