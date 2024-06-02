@@ -78,6 +78,67 @@ header {
 /*Main CSS*/
 .main_content {
   padding: 120px;
+  h1 {
+    text-align: center;
+  }
+  .main {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 20px 0;
+    justify-content: space-between;
+  }
+
+  .cart-summary {
+    width: 45%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 10px;
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+  }
+  .order-summary {
+    width: 45%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .item-image {
+    width: 30%;
+    margin-right: 10px;
+  }
+
+  .item-image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .item-details {
+    width: 70%;
+  }
+
+  .item-details p {
+    margin-bottom: 5px;
+  }
+
+  .order-summary p {
+    display: flex;
+  }
 }
 /*Footer CSS*/
 footer {

@@ -39,12 +39,34 @@
       <nav class="home_categories">
         <ul>
           <li><a href="/html/HomePage.html">Home</a></li>
-          <li><a href="/html/Jewelry.html">Jewelry</a></li>
+          <li>
+            <a href="/html/collection/collectionPage.html">Blogs</a>
+          </li>
           <li>
             <a href="/html/collection/collectionPage.html">Collections</a>
           </li>
+          <li class="active dropdown">
+            <a
+              href="CurrentOrder.html"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Jewelry</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a href="/html/Order.html" class="sidebar-link"
+                  >Order Jewelry Now</a
+                >
+              </li>
+              <li class="dropdown-item">
+                <a href="Quote.html" class="sidebar-link">All Jewelry</a>
+              </li>
+            </ul>
+          </li>
           <li><a href="#gemstones">Gemstones</a></li>
-          <li><a href="#materials">Materials</a></li>
+          <li><a href="/html/price/Material.html">Materials</a></li>
           <li><a href="#education">Education</a></li>
         </ul>
       </nav>
@@ -53,15 +75,35 @@
     <!--Main Page-->
     <div class="main_content">
       <h1>SHOPPING CART</h1>
-      <div class="row">
-        <div id="item">
-          <h5>Engagement Ring</h5>
-          <img
-            src="/img/cart/Default_A_gold_ring_with_a_diamond_in_the_center_on_a_white_ba_1.jpg"
-            class="h-50"
-          />
+
+      <main class="main">
+        <div class="cart-summary">
+          <h2>My Cart (1 item)</h2>
+          <div class="cart-item">
+            <div class="item-image">
+              <img src="images/ring.jpg" alt="Engagement Ring" />
+            </div>
+            <div class="item-details">
+              <h3>French Pove Diamond Engagement Ring in 14k White Gold</h3>
+              <p>SKU: 501410W14</p>
+              <p>Size: 10</p>
+              <p>Price: $1470</p>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div class="order-summary">
+          <h2>Summary</h2>
+          <p>Subtotal: $2940</p>
+          <p>Shipping: $50</p>
+          <p>Tax: $100</p>
+          <p>**Total Price: $3090**</p>
+          <div class="promo-code">
+            <p>Promo Code: <input type="text" placeholder="Enter code" /></p>
+          </div>
+          <button>CHECK OUT</button>
+        </div>
+      </main>
     </div>
 
     <!--Page footer-->

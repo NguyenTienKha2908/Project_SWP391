@@ -46,12 +46,34 @@
             </div>
           </div>
         </header>
-        <nav>
-          <ul class="home_categories">
+        <nav class="home_categories">
+          <ul>
             <li><a href="/html/HomePage.html">Home</a></li>
-            <li><a href="/html/Jewelry.html">Jewelry</a></li>
+            <li>
+              <a href="/html/collection/collectionPage.html">Blogs</a>
+            </li>
             <li>
               <a href="/html/collection/collectionPage.html">Collections</a>
+            </li>
+            <li class="active dropdown">
+              <a
+                href="CurrentOrder.html"
+                class="navbar-link collapsed has-dropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span>Jewelry</span>
+              </a>
+              <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                <li class="dropdown-item">
+                  <a href="/html/Order.html" class="sidebar-link"
+                    >Order Jewelry Now</a
+                  >
+                </li>
+                <li class="dropdown-item">
+                  <a href="Quote.html" class="sidebar-link">All Jewelry</a>
+                </li>
+              </ul>
             </li>
             <li><a href="#gemstones">Gemstones</a></li>
             <li><a href="/html/price/Material.html">Materials</a></li>
