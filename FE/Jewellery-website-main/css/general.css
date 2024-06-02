@@ -923,3 +923,17 @@ tr td input {
         }
     }
 }
+
+
+#auth,
+#auth1 {
+
+    .sidebar-item a {
+        color: #565E6C;
+        font-size: 0.8rem;
+    }
+
+    .sidebar-item a:hover {
+        color: #00BDD6;
+    }
+}

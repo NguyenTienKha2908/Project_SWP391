@@ -196,7 +196,7 @@ GO
 CREATE TABLE [dbo].[ProductMaterial](
 	Product_Id int REFERENCES Product([Product_Id]),
 	Material_Id int REFERENCES Material([Material_Id]),
-	Material_Weight int,
+	Material_Weight float,
 CONSTRAINT [PK_ProductMaterial] PRIMARY KEY CLUSTERED 
 (
 	Product_Id ASC, Material_Id ASC
@@ -312,7 +312,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Product_Design](
+CREATE TABLE [dbo].[ProductDesign](
 	[Product_Design_Id] [int] IDENTITY(1,1),
 	[Product_Design_Code] [nvarchar] (max) NOT NULL,
 	[Product_Design_Name] [nvarchar](255) NOT NULL,
@@ -346,7 +346,7 @@ GO
 CREATE TABLE [dbo].[ProductDesignShell](
 	[Product_Design_Shell_Id] int IDENTITY(1,1),
 	[Material_Id] int,
-	[Weight] int,
+	[Weight] float,
 	
 CONSTRAINT [PK_ProductDesignShell] PRIMARY KEY CLUSTERED 
 (
@@ -363,9 +363,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProductDesignDiamond](
 	[Product_Design_Diamond_Id] int IDENTITY(1,1),
-	[GemId] int,
-	[GemMinSize] float,
-	[GemMaxSize] float,
+	[Gem_Id] int,
+	[Gem_Min_Size] float,
+	[Gem_Max_Size] float,
 	
 CONSTRAINT [PK_ProductDesignDiamond] PRIMARY KEY CLUSTERED 
 (
@@ -1243,47 +1243,47 @@ VALUES
 (10, 4);
 
 -- Insert data into the ProductDesignDiamond table
-INSERT INTO [dbo].[ProductDesignDiamond] (GemId, GemMinSize, GemMaxSize)
+INSERT INTO [dbo].[ProductDesignDiamond] (Gem_Code, Gem_Min_Size, Gem_Max_Size)
 VALUES
 -- GemId from 1 to 6 with size 0.17 to 0.5
-(1, 0.17, 0.5),
-(2, 0.17, 0.5),
-(3, 0.17, 0.5),
-(4, 0.17, 0.5),
-(5, 0.17, 0.5),
-(6, 0.17, 0.5),
+('DIA010', 1, 0.17, 0.5),
+('DIA012', 2, 0.17, 0.5),
+('DIA013', 3, 0.17, 0.5),
+('DIA014', 4, 0.17, 0.5),
+('DIA031', 5, 0.17, 0.5),
+('DIA032', 6, 0.17, 0.5),
 
 -- GemId from 7 to 12 with size 0.5 to 0.6
-(7, 0.5, 0.6),
-(8, 0.5, 0.6),
-(9, 0.5, 0.6),
-(10, 0.5, 0.6),
-(11, 0.5, 0.6),
-(12, 0.5, 0.6),
+('DIA051', 7, 0.5, 0.6),
+('DIA052', 8, 0.5, 0.6),
+('DIA053', 9, 0.5, 0.6),
+('DIA054', 10, 0.5, 0.6),
+('DIA055', 11, 0.5, 0.6),
+('DIA056', 12, 0.5, 0.6),
 
 -- GemId from 13 to 18 with size 0.6 to 0.92
-(13, 0.6, 0.92),
-(14, 0.6, 0.92),
-(15, 0.6, 0.92),
-(16, 0.6, 0.92),
-(17, 0.6, 0.92),
-(18, 0.6, 0.92),
+('DIA101', 13, 0.6, 0.92),
+('DIA102', 14, 0.6, 0.92),
+('DIA103', 15, 0.6, 0.92),
+('DIA104', 16, 0.6, 0.92),
+('DIA105', 17, 0.6, 0.92),
+('DIA106', 18, 0.6, 0.92),
 
 -- GemId from 19 to 24 with size 0.92 to 1.25
-(19, 0.92, 1.25),
-(20, 0.92, 1.25),
-(21, 0.92, 1.25),
-(22, 0.92, 1.25),
-(23, 0.92, 1.25),
-(24, 0.92, 1.25),
+('DIA141', 19, 0.92, 1.25),
+('DIA142', 20, 0.92, 1.25),
+('DIA143', 21, 0.92, 1.25),
+('DIA144', 22, 0.92, 1.25),
+('DIA145', 23, 0.92, 1.25),
+('DIA146', 24, 0.92, 1.25),
 
 -- GemId from 25 to 30 with size 1.25 to 2.75
-(25, 1.25, 2.75),
-(26, 1.25, 2.75),
-(27, 1.25, 2.75),
-(28, 1.25, 2.75),
-(29, 1.25, 2.75),
-(30, 1.25, 2.75);
+('DIA181',25, 1.25, 2.75),
+('DIA182', 26, 1.25, 2.75),
+('DIA183', 27, 1.25, 2.75),
+('DIA184', 28, 1.25, 2.75),
+('DIA185', 29, 1.25, 2.75),
+('DIA186', 30, 1.25, 2.75);
 
 
 select * from Users
