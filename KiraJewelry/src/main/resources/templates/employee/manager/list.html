@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Page</title>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <span th:if="${session.employeeName != null}">
+                Welcome, <span th:text="${session.employeeName}"></span> |
+                <a th:href="@{/logout}">Log out</a>
+            </span>
+        </div>
+        <h1>All Customer Requests</h1>
+        <table border="1px solid black">
+            <thead>
+                <tr>
+                    <th>Production Order ID</th>
+                    <th>Date</th>
+                    <th>Customer ID</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="productionOrder : ${listProductionOrders}">
+                    <td th:text="${productionOrder.production_Order_Id}"></td>
+                    <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${productionOrder.customer_Id}"></td>
+                    <td th:text="${productionOrder.status}"></td>
+                    <td>
+                        <form th:action="@{/viewProductionOrders}" method="get">
+                            <input type="hidden" name="productionOrderId"
+                                th:value="${productionOrder.production_Order_Id}" />
+                            <button type="submit">View</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

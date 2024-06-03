@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kira Jewelry</title>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <span th:if="${session.customerName != null}">
+                Welcome, <span th:text="${session.customerName}"></span> |
+                <a th:href="@{/logout}">Log out</a>
+            </span>
+            <span th:if="${session.customerName == null}">
+                <a th:href="@{/login}">Log in</a>
+            </span>
+        </div>
+        <hr />
+        <div>
+            <button th:if="${session.customerName != null}" th:onclick="|location.href='@{/request}'|">Create your own
+                Jewelry</button>
+            <button th:if="${session.customerName == null}" th:onclick="|location.href='@{/login}'|">Create your own
+                Jewelry</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Page</title>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <span th:if="${session.employeeName != null}">
+                Welcome, <span th:text="${session.employeeName}"></span> |
+                <a th:href="@{/logout}">Log out</a>
+            </span>
+        </div>
+        <a th:href="@{/listProductionOrders}">Back to List</a>
+        <h1>All Customer Requests</h1>
+        <form th:action="@{/saveProductionOrder}" method="post">
+            <table border="1px solid black">
+                <thead>
+                    <tr>
+                        <th>Production Order ID</th>
+                        <th>Date</th>
+                        <th>Customer ID</th>
+                        <th>Category ID</th>
+                        <th>Material Name</th>
+                        <th>Material Color</th>
+                        <th>Material Weight</th>
+                        <!-- <th>Material ID</th> -->
+                        <th>Gem Name</th>
+                        <th>Gem Color</th>
+                        <th>Gem Weight</th>
+                        <!-- <th>Gem ID</th> -->
+                        <th>Product Size</th>
+                        <th>Description</th>
+                        <!-- <th>Diamond Amount</th>
+                        <th>Material Amount</th>
+                        <th>Production Amount</th>
+                        <th>Side_Material_Cost</th>
+                        <th>Side_Gem_Cost</th> -->
+                        <th>Sales Staff Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="productionOrder : ${listRequests}">
+                        <td th:text="${productionOrder.production_Order_Id}"></td>
+                        <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${productionOrder.customer_Id}"></td>
+                        <td th:text="${productionOrder.category_Id}"></td>
+
+                        <td th:text="${productionOrder.material_Name}"></td>
+                        <td th:text="${productionOrder.material_Color}"></td>
+                        <td th:text="${productionOrder.material_Weight}"></td>
+                        <!-- <td th:text="${productionOrder.material_Id}"></td> -->
+                        <td th:text="${productionOrder.gem_Name}"></td>
+                        <td th:text="${productionOrder.gem_Color}"></td>
+                        <td th:text="${productionOrder.gem_Weight}"></td>
+                        <!-- <td th:text="${productionOrder.gem_Id}"></td> -->
+                        <td th:text="${productionOrder.product_Size}"></td>
+                        <td th:text="${productionOrder.description}"></td>
+                        <td>
+                            <select name="staff" id="staff">
+                                <option value="">Select Sales Staff</option>
+                                <option th:each="staff : ${employees}" th:value="${staff.employee_Id}"
+                                    th:text="${staff.full_Name}"></option>
+                            </select>
+                        </td>
+                        <td th:text="${productionOrder.status}"></td>
+                        <td>
+
+                            <input type="hidden" name="productionOrderId"
+                                th:value="${productionOrder.production_Order_Id}" />
+                            <button type="submit">Save</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+</body>
+
+</html>
