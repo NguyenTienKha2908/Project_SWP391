@@ -77,7 +77,7 @@ header {
 }
 /*Main CSS*/
 .main_content {
-  padding: 120px;
+  padding: 150px;
   h1 {
     text-align: center;
   }
@@ -120,7 +120,7 @@ header {
 
   .item-image {
     width: 30%;
-    margin-right: 10px;
+    margin-right: 10%;
   }
 
   .item-image img {

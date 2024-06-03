@@ -20,31 +20,55 @@
   </head>
   <body>
     <!--Page header-->
+    <!--Page header-->
     <header>
       <div class="top_header">
         <h1 class="header_logo">
-          <img src="/img/logo/black_logo.svg" />Kira Jewelry
+          <a href="/html/HomePage.html"
+            ><img src="/img/logo/black_logo.svg" />Kira Jewelry</a
+          >
         </h1>
         <div class="tools_header">
           <a class="search"><img src="/img/header_tools/black_search.svg" /></a>
-          <a class="profile"
+          <a href="/html/profile/Login.html" class="profile"
             ><img src="/img/header_tools/black_profile.svg"
           /></a>
-          <a class="wishlist"
-            ><img src="/img/header_tools/black_wishlist.svg"
+          <a href="/html/cart/Yourcart.html" class="cart"
+            ><img src="/img/header_tools/black_cart.svg"
           /></a>
-          <a class="cart"><img src="/img/header_tools/black_cart.svg" /></a>
         </div>
       </div>
       <nav class="home_categories">
         <ul>
           <li><a href="/html/HomePage.html">Home</a></li>
-          <li><a href="/html/Jewelry.html">Jewelry</a></li>
+          <li>
+            <a href="/html/collection/collectionPage.html">Blogs</a>
+          </li>
           <li>
             <a href="/html/collection/collectionPage.html">Collections</a>
           </li>
+          <li class="active dropdown">
+            <a
+              href="CurrentOrder.html"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Jewelry</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a href="/html/Order.html" class="sidebar-link"
+                  >Order Jewelry Now</a
+                >
+              </li>
+              <li class="dropdown-item">
+                <a href="Quote.html" class="sidebar-link">All Jewelry</a>
+              </li>
+            </ul>
+          </li>
           <li><a href="#gemstones">Gemstones</a></li>
-          <li><a href="#materials">Materials</a></li>
+          <li><a href="/html/price/Material.html">Materials</a></li>
           <li><a href="#education">Education</a></li>
         </ul>
       </nav>
@@ -54,7 +78,7 @@
       <div>
         <img src="/img/price/image 139.png" alt="" class="h-100 w-100" />
       </div>
-      <div >
+      <div>
         <h1>Material Price List</h1>
         <p>View the price of our store updated by 27/05/2024</p>
       </div>

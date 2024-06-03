@@ -1,0 +1,142 @@
+{
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 133560,
+      "target": 34962,
+      "byteStride": 12
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 133560,
+      "byteLength": 44520,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 178080,
+      "byteLength": 133560,
+      "target": 34962,
+      "byteStride": 12
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 11130,
+      "max": [
+        2.2279999256134033,
+        0.04700088500976562,
+        24
+      ],
+      "min": [
+        -2.7720000743865967,
+        -19.952999114990234,
+        -5.834030453763822e-18
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5125,
+      "count": 11130,
+      "max": [
+        11129
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 11130,
+      "max": [
+        0.984313725490196,
+        0.9803921568627451,
+        0.9803921568627451
+      ],
+      "min": [
+        0.9803921568627451,
+        0.7725490196078432,
+        0.6039215686274509
+      ],
+      "type": "VEC3"
+    }
+  ],
+  "asset": {
+    "version": "2.0",
+    "generator": "Autodesk.Tinkercad"
+  },
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.5
+      },
+      "name": "lambert2SG.001"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "mode": 4,
+          "attributes": {
+            "POSITION": 0,
+            "COLOR_0": 2
+          },
+          "indices": 1,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "Tinkercad GLTF Scene"
+    }
+  ],
+  "scene": 0,
+  "nodes": [
+    {
+      "name": "Mesh_Mesh_head_geo.001_lambert2SG.001",
+      "mesh": 0
+    },
+    {
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "children": [
+        0
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "Basic Ring_data.bin",
+      "byteLength": 311640
+    }
+  ]
+}
