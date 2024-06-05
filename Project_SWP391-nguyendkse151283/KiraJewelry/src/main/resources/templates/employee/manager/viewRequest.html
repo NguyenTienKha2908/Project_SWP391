@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Order Details</title>
+</head>
+<body>
+    <h1>Production Order Details</h1>
+    <p>Order ID: <span th:text="${listRequests.productionOrderId}"></span></p>
+    <p>Status: <span th:text="${listRequests.status}"></span></p>
+    <p>Material Name: <span th:text="${listRequests.materialName}"></span></p>
+    <p>Material Color: <span th:text="${listRequests.materialColor}"></span></p>
+    <p>Material Weight: <span th:text="${listRequests.materialWeight}"></span></p>
+    <p>Gem Name: <span th:text="${listRequests.gemName}"></span></p>
+    <p>Gem Color: <span th:text="${listRequests.gemColor}"></span></p>
+    <p>Gem Weight: <span th:text="${listRequests.gemWeight}"></span></p>
+    <p>Product Size: <span th:text="${listRequests.productSize}"></span></p>
+    <p>Description: <span th:text="${listRequests.description}"></span></p>
+    <!-- <div>
+        <button th:onclick="|location.href='/production-orders/approve?productionOrderId=' + '${listRequests.productionOrderId}'|">Approve</button>
+        <button th:onclick="|location.href='/production-orders/reject?productionOrderId=' + '${listRequests.productionOrderId}'|">Reject</button>
+    </div> -->
+</body>
+</html>
