@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Page</title>
+
 </head>
 
 <body>
@@ -64,7 +65,9 @@
                         <td th:text="${productionOrder.product_Size}"></td>
                         <td th:text="${productionOrder.description}"></td>
                         <td>
-                            <select name="staff" id="staff">
+                            <span th:if="${productionOrder.sales_Staff_Name != null}"
+                                th:text="${productionOrder.sales_Staff_Name}"></span>
+                            <select th:if="${productionOrder.sales_Staff_Name == null}" name="staff" id="staff">
                                 <option value="">Select Sales Staff</option>
                                 <option th:each="staff : ${employees}" th:value="${staff.employee_Id}"
                                     th:text="${staff.full_Name}"></option>
@@ -72,11 +75,13 @@
                         </td>
                         <td th:text="${productionOrder.status}"></td>
                         <td>
-
                             <input type="hidden" name="productionOrderId"
                                 th:value="${productionOrder.production_Order_Id}" />
                             <button type="submit">Save</button>
+                            <a
+                                th:href="@{/confirmDeleteProductionOrder(productionOrderId=${productionOrder.production_Order_Id})}">Delete</a>
                         </td>
+
                     </tr>
                 </tbody>
             </table>

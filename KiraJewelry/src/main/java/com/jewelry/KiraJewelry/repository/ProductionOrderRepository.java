@@ -16,4 +16,5 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     @Query("SELECT p FROM ProductionOrder p WHERE p.status = :status AND p.sales_Staff_Name = :sales_Staff_Name")
     List<ProductionOrder> findProductionOrderByStatusAndName(@Param("status") String status,
             @Param("sales_Staff_Name") String sales_Staff_Name);
+
 }

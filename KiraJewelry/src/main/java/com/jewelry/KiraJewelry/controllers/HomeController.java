@@ -10,4 +10,24 @@ public class HomeController {
     public String home() {
         return "home";
     }
+
+    @GetMapping("/homeManager")
+    public String homeManager() {
+        return "employee/manager/home";
+    }
+
+    @GetMapping("/homeSalesStaff")
+    public String homeSalesStaff() {
+        return "employee/sales_staff/home";
+    }
+
+    @GetMapping("/homeProductionStaff")
+    public String homeProductionStaff() {
+        return "employee/production_staff/home";
+    }
+
+    @GetMapping("/homeDesignStaff")
+    public String homeDesignStaff() {
+        return "employee/design_staff/home";
+    }
 }

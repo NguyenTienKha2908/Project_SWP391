@@ -16,7 +16,8 @@
                 <a th:href="@{/logout}">Log out</a>
             </span>
         </div>
-        <h1>All Customer Requests</h1>
+        <a th:href="@{/homeSalesStaff}">Back to Menu</a>
+        <h1>All Customer Requests - Sales Staff</h1>
         <table border="1px solid black">
             <thead>
                 <tr>
@@ -39,6 +40,10 @@
                                 th:value="${productionOrder.production_Order_Id}" />
                             <button type="submit">View</button>
                         </form>
+                        <a th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
+                            <button type="button">Quote</button>
+                        </a>
+
                     </td>
                 </tr>
             </tbody>

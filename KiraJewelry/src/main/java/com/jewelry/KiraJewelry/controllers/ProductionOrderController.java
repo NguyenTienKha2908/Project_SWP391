@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jewelry.KiraJewelry.models.Customer;
 import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.models.ProductionOrder;
 import com.jewelry.KiraJewelry.models.User;
+import com.jewelry.KiraJewelry.service.CustomerService;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.ProductionOrderService;
 import com.jewelry.KiraJewelry.service.UserService;
@@ -30,6 +32,9 @@ public class ProductionOrderController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @GetMapping("/listProductionOrders")
     public String getAllProductionOrders(Model model) {
@@ -110,7 +115,65 @@ public class ProductionOrderController {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         productionOrder.setStatus("Quote");
         productionOrderService.saveProductionOrder(productionOrder);
-        return "employee/sales_staff/quote";
+        return "employee/sales_staff/viewQuote";
+    }
+
+    @GetMapping("/confirmDeleteProductionOrder")
+    public String confirmDeleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
+            Model model) {
+        model.addAttribute("productionOrderId", productionOrderId);
+        return "employee/manager/delete";
+    }
+
+    @PostMapping("/deleteProductionOrder")
+    public String deleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId) {
+        productionOrderService.deleteProductionOrderById(productionOrderId);
+
+        return "redirect:/listProductionOrders";
+    }
+
+    @GetMapping("/viewEditPage")
+    public String viewEditPage(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        model.addAttribute("productionOrder", productionOrder);
+        return "employee/sales_staff/edit";
+    }
+
+    @PostMapping("/saveEditedProductionOrder")
+    public String saveEditedProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
+            @RequestParam("materialName") String materialName,
+            @RequestParam("materialColor") String materialColor,
+            @RequestParam("materialWeight") double materialWeight,
+            @RequestParam("gemName") String gemName,
+            @RequestParam("gemColor") String gemColor,
+            @RequestParam("gemWeight") double gemWeight,
+            @RequestParam("productSize") int productSize,
+            Model model) {
+
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+
+        productionOrder.setMaterial_Name(materialName);
+        productionOrder.setMaterial_Color(materialColor);
+        productionOrder.setMaterial_Weight(materialWeight);
+        productionOrder.setGem_Name(gemName);
+        productionOrder.setGem_Color(gemColor);
+        productionOrder.setGem_Weight(gemWeight);
+        productionOrder.setProduct_Size(productSize);
+
+        productionOrderService.saveProductionOrder(productionOrder);
+        model.addAttribute("listRequests", productionOrderService.getAllProductionOrders());
+
+        return "redirect:/viewRequestsforSS";
+    }
+
+    @GetMapping("/prepareQuotePage")
+    public String prepareQuotePage(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        Customer customer = customerService.getCustomerByCustomerId(productionOrder.getCustomer_Id());
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("customer", customer);
+        return "employee/sales_staff/prepareQuotePage";
     }
 
 }

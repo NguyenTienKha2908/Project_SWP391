@@ -19,4 +19,8 @@ public class CustomerService {
     public Customer getCustomerByUserId(int user_Id) {
         return customerRepository.findByUserId(user_Id);
     }
+
+    public Customer getCustomerByCustomerId(String customer_Id) {
+        return customerRepository.findByCustomerId(customer_Id);
+    }
 }

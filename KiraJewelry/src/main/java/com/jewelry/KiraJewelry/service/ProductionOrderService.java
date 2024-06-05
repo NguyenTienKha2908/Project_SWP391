@@ -26,7 +26,11 @@ public class ProductionOrderService {
     productionOrderRepository.save(productionOrder);
   }
 
-  public List<ProductionOrder> getProductionOrderByStatusAndName(String status,String employee_Name) {
-    return productionOrderRepository.findProductionOrderByStatusAndName(status,employee_Name);
+  public List<ProductionOrder> getProductionOrderByStatusAndName(String status, String employee_Name) {
+    return productionOrderRepository.findProductionOrderByStatusAndName(status, employee_Name);
+  }
+
+  public void deleteProductionOrderById(String productionOrderId) {
+    productionOrderRepository.deleteById(productionOrderId);
   }
 }

@@ -44,19 +44,19 @@ public class LoginController {
                 session.setAttribute("customerName", customer.getFull_Name());
                 session.setAttribute("customerPN", customer.getPhoneNumber());
                 session.setAttribute("customerId", customer.getCustomer_Id());
-                return "home";
+                return "redirect:/";
 
             } else {
                 employee = employeeService.getEmployeeByUserId(user.getUser_Id());
                 session.setAttribute("employeeName", employee.getFull_Name());
                 if (user.getRole_Id() == 3) {
-                    return "employee/manager/home";
+                    return "redirect:/homeManager";
                 } else if (user.getRole_Id() == 4) {
-                    return "employee/sales_staff/home";
+                    return "redirect:/homeSalesStaff";
                 } else if (user.getRole_Id() == 5) {
-                    return "employee/design_staff/home";
+                    return "redirect:/homeDesginStaff";
                 } else if (user.getRole_Id() == 6) {
-                    return "employee/production_staff/home";
+                    return "redirect:/homeProductionStaff";
                 }
 
             }
