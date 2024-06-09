@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Manage Users</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+      }
+      header {
+        background: #333;
+        color: #fff;
+        padding-top: 30px;
+        min-height: 70px;
+        border-bottom: #77d4d8 3px solid;
+      }
+      header a {
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 16px;
+      }
+      .content {
+        margin: 20px 0;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4caf50;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #999;
+        margin: 10px 0;
+      }
+      .btn:hover {
+        background-color: #3e8e41;
+      }
+      .btn:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+      }
+      .btn-secondary {
+        background-color: #555;
+      }
+      .btn-secondary:hover {
+        background-color: #444;
+      }
+      .btn-secondary:active {
+        background-color: #444;
+      }
+      .message {
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Manage Users</h1>
+      </div>
+    </header>
+    <div class="container">
+      <div th:if="${message}" class="message" th:text="${message}"></div>
+      <div class="content">
+        <h2>Manage Customers</h2>
+        <a th:href="@{/customers}" class="btn btn-secondary"
+          >Manage Customers</a
+        >
+        <h2>Manage Staff</h2>
+        <a th:href="@{/staff}" class="btn btn-secondary">Manage Staff</a>
+      </div>
+      <a th:href="@{/}" class="btn btn-secondary">Back to Home</a>
+    </div>
+  </body>
+</html>
