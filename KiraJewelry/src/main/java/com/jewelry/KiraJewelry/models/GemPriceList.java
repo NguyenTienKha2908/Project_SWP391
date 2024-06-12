@@ -23,27 +23,27 @@ public class GemPriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private String id;
+    private int id;
 
-    @Column(name="Origin")
+    @Column(name = "Origin")
     private String origin;
 
-    @Column(name="Carat_weight")
+    @Column(name = "Carat_weight")
     private String carat_weight;
 
-    @Column(name="Color")
+    @Column(name = "Color")
     private String color;
 
-    @Column(name="Clarity")
+    @Column(name = "Clarity")
     private String clarity;
 
-    @Column(name="Cut")
+    @Column(name = "Cut")
     private String cut;
 
-    @Column(name="Price")
+    @Column(name = "Price")
     private double price;
 
-    @Column(name="Eff_Date")
+    @Column(name = "Eff_Date")
     private Date eff_Date;
-    
+
 }

@@ -20,20 +20,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "MatrerialPriceList")
+@Table(name = "MaterialPriceList")
 public class MaterialPriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private String id;
+    private int id;
 
     @Column(name = "Price")
     private double Price;
 
-    @Column(name="Eff_Date")
+    @Column(name = "Eff_Date")
     private Date eff_Date;
 
     @OneToOne
-    @JoinColumn(name="Material_Id")
+    @JoinColumn(name = "Material_Id")
     private Material material;
 }

@@ -29,66 +29,51 @@ public class ProductionOrder {
     @Column(name = "category_Id")
     private int category_Id;
 
-    @Column(name = "material_Name")
-    private String material_Name;
-
-    @Column(name = "material_Color")
-    private String material_Color;
-
-    @Column(name = "material_Weight")
-    private double material_Weight;
-
-    @Column(name = "material_Id")
-    private int material_Id;
-
-    @Column(name = "gem_Name")
-    private String gem_Name;
-
-    @Column(name = "gem_Color")
-    private String gem_Color;
-
-    @Column(name = "gem_Weight")
-    private double gem_Weight;
-
-    @Column(name = "gem_Id")
-    private int gem_Id;
-
     @Column(name = "product_Size")
     private int product_Size;
+
+    @Column(name = "img_Url")
+    private String img_Url;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "diamond_Amount")
-    private double diamond_Amount;
+    @Column(name = "Q_diamond_Amount")
+    private double q_Diamond_Amount;
 
-    @Column(name = "material_Amount")
-    private double material_Amount;
+    @Column(name = "Q_material_Amount")
+    private double q_Material_Amount;
 
-    @Column(name = "production_Amount")
-    private double production_Amount;
+    @Column(name = "Q_production_Amount")
+    private double q_Production_Amount;
 
-    @Column(name = "side_Material_Cost")
-    private double side_Material_Cost;
+    @Column(name = "Q_total_Amount")
+    private double q_Total_Amount;
 
-    @Column(name = "side_Gem_Cost")
-    private double side_Gem_Cost;
+    @Column(name = "O_diamond_Amount")
+    private double o_Diamond_Amount;
 
-    @Column(name = "total_Amount")
-    private double total_Amount;
+    @Column(name = "O_material_Amount")
+    private double o_Material_Amount;
 
-    @Column(name = "sales_Staff_Name")
-    private String sales_Staff_Name;
+    @Column(name = "O_production_Amount")
+    private double o_Production_Amount;
 
-    @Column(name = "design_Staff_Name")
-    private String design_Staff_Name;
+    @Column(name = "O_total_Amount")
+    private double o_Total_Amount;
 
-    @Column(name = "production_Staff_Name")
-    private String production_Staff_Name;
+    @Column(name = "sales_Staff_Id")
+    private String sales_Staff_Id;
+
+    @Column(name = "design_Staff_Id")
+    private String design_Staff_Id;
+
+    @Column(name = "production_Staff_Id")
+    private String production_Staff_Id;
 
     @Column(name = "status")
     private String status;
-    
+
     @ManyToOne
     @JoinColumn(name = "product_Id")
     private Product product;

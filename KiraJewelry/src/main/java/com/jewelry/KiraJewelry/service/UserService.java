@@ -25,4 +25,8 @@ public class UserService {
         return userRepository.findUsersByRoleId(roleId);
     }
 
+    public User getUsersByUserId(int user_Id) {
+        return userRepository.findUsersByUserId(user_Id);
+    }
+
 }

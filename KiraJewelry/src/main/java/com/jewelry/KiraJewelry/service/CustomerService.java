@@ -16,6 +16,10 @@ public class CustomerService {
         return customerRepository.findCustomerNameByUserId(user_Id);
     }
 
+    public Customer getCustomerIdByCustomerName(String customer_name) {
+        return customerRepository.findCustomerIdByCustomerName(customer_name);
+    }
+
     public Customer getCustomerByUserId(int user_Id) {
         return customerRepository.findByUserId(user_Id);
     }

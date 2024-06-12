@@ -44,18 +44,26 @@ public class LoginController {
                 session.setAttribute("customerName", customer.getFull_Name());
                 session.setAttribute("customerPN", customer.getPhoneNumber());
                 session.setAttribute("customerId", customer.getCustomer_Id());
+                session.setAttribute("customerAddress", customer.getAddress());
+                session.setAttribute("customerEmail", user.getEmail());
                 return "redirect:/";
 
             } else {
                 employee = employeeService.getEmployeeByUserId(user.getUser_Id());
                 session.setAttribute("employeeName", employee.getFull_Name());
+                session.setAttribute("employeeEmail", user.getEmail());
+                session.setAttribute("employeePassword", user.getPassword());
                 if (user.getRole_Id() == 3) {
+                    session.setAttribute("role", "Manager");
                     return "redirect:/homeManager";
                 } else if (user.getRole_Id() == 4) {
+                    session.setAttribute("role", "Sales Staff");
                     return "redirect:/homeSalesStaff";
                 } else if (user.getRole_Id() == 5) {
+                    session.setAttribute("role", "Desgin Staff");
                     return "redirect:/homeDesginStaff";
                 } else if (user.getRole_Id() == 6) {
+                    session.setAttribute("role", "Production Staff");
                     return "redirect:/homeProductionStaff";
                 }
 

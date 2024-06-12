@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Staff Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/staff/staff.css}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a th:href="@{#}">
+                        <img th:src="@{/img/icon-fig/logoWhite.svg}" alt="logo">
+                        <span>KIRA JEWELRY</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeSalesStaff}'|"
+                        class="active sidebar-link">
+                        <img th:src="@{/img//icon-fig/profile.svg}" alt="profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
+                        class="sidebar-link">
+                        <img th:src="@{/img//icon-fig/request.svg}" alt="request">
+                        <span>Requests</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
+                        class="sidebar-link">
+                        <img th:src="@{/img/icon-fig/quote.svg}" alt="quote">
+                        <span>Quotes</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
+                        class="sidebar-link">
+                        <img th:src="@{/img/icon-fig/quote.svg}" alt="materialAndGem">
+                        <span>Material & Gem</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a th:href="@{/logout}" class="sidebar-link">
+                    <img src="/img/icon-fig/logout.svg" alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="out">
+                <div class="top-header">
+                    <div class="first-ele">
+                        <img th:src="@{/img/person/profile1.svg}" alt="person">
+                        <span th:if="${session.employeeName != null}">
+                            Welcome, <span th:text="${session.employeeName}"></span>
+                        </span>
+                    </div>
+                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
+                </div>
+            </div>
+            <div class="content">
+                <h1>Your Profile</h1>
+                <hr>
+                <div class="top-content">
+                    <p>View and manage your personal details and contact information</p>
+                    <a th;href="@{edit-profile.html}">Edit Your Profile</a>
+                </div>
+                <div class="bottom-content">
+                    <div class="element">
+                        <h3>Role</h3>
+                        <span th:text="${session.role}"></span>
+                    </div>
+                    <div class="element">
+                        <h3>Full Name</h3>
+                        <span th:text="${session.employeeName}">
+                    </div>
+                    <div class="element">
+                        <h3>Email</h3>
+                        <span th:text="${session.employeeEmail}">
+                    </div>
+                    <div class="element">
+                        <h3>Password</h3>
+                        <p>************</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
