@@ -1,0 +1,142 @@
+/*Reset styles CSS*/
+body,
+h1,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body {
+  background-color: #fcfaf9;
+  overflow-x: hidden;
+}
+
+/*Header CSS*/
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  .top_header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 20px;
+  }
+
+  h1 {
+    font-weight: 200;
+    font-size: 2em;
+  }
+
+  h1 {
+    flex: 1;
+    margin-left: 5%;
+  }
+
+  .tools_header {
+    display: inline-flex;
+    gap: 2em;
+    margin-right: 10%;
+    margin-top: 1%;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+}
+
+.home_categories {
+  text-align: center;
+
+  ul {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  li {
+    display: inline-block;
+    align-items: center;
+    text-align: center;
+    margin: 0 2% 2% 2%;
+
+    a:hover {
+      color: #f7b050;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
+
+    font-size: 1.2em;
+  }
+}
+
+/*Main page css*/
+#main {
+  #header_content {
+    padding-top: 120px;
+    h1 {
+      position: absolute;
+      color: white;
+      top: 50%;
+      left: 42%;
+    }
+  }
+  hr {
+    height: 3px;
+    background: linear-gradient(black, black);
+    margin: 5% 7%;
+  }
+}
+
+/*Footer CSS*/
+footer {
+  padding: 30px 100px 10px 100px;
+  display: flex;
+  color: white;
+  background-color: black;
+  justify-content: center;
+}
+
+#others_info {
+  a:hover {
+    color: #f7b050;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+#sercurity_contact {
+  padding: 40px 0 0 0;
+}
+
+#sercurity {
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #f7b050;
+  }
+}
+
+#contact {
+  text-align: center;
+}
