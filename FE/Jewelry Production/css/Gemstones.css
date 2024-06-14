@@ -216,5 +216,12 @@ footer {
       font-size: 1.2rem;
     }
   }
-  
+
+  #products {
+    text-align: center;
+    padding: 5% 5%;
+    img {
+      padding-bottom: 5%;
+    }
+  }
 }

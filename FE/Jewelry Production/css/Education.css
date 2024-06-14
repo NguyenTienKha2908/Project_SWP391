@@ -8,7 +8,7 @@ ul {
 }
 
 body {
-  background-color: #fcfaf9;
+  background-color: white;
   overflow-x: hidden;
 }
 
@@ -17,7 +17,6 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: fixed;
   width: 100%;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -27,7 +26,7 @@ header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 10px 20px;
+    padding: 2%;
   }
 
   h1 {
@@ -43,8 +42,7 @@ header {
   .tools_header {
     display: inline-flex;
     gap: 2em;
-    margin-right: 10%;
-    margin-top: 1%;
+    margin: 1% 10%;
   }
   a {
     text-decoration: none;
@@ -125,4 +123,42 @@ footer {
 
 #contact {
   text-align: center;
+}
+
+/*Main CSS*/
+#main {
+  #header_content {
+    background-color: #f6f6f6;
+    text-align: center;
+    padding: 7% 5%;
+
+    h3 {
+      font-size: 3em;
+      font-weight: lighter;
+    }
+    p {
+      padding-top: 6%;
+      font-size: 1.5em;
+      font-weight: lighter;
+    }
+  }
+  #guide {
+    padding: 3% 5%;
+    text-align: center;
+    p {
+      padding-top: 6%;
+      font-weight: lighter;
+    }
+  }
+  #explore {
+    padding: 7% 5%;
+
+    #contents {
+      background-color: #f6f6f6;
+      margin: 10% 3%;
+      #content_txt {
+        padding: 3% 13%;
+      }
+    }
+  }
 }
