@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Diamond</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #333; margin: 0; padding: 0; color: #fff; }
+        .container { width: 50%; margin: auto; overflow: hidden; }
+        header { background: #444; color: #fff; padding-top: 30px; min-height: 70px; border-bottom: #77d4d8 3px solid; }
+        header a { color: #fff; text-decoration: none; text-transform: uppercase; font-size: 16px; }
+        form { background: #222; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        label { display: block; margin-bottom: 10px; }
+        input[type="text"], input[type="file"], select, textarea { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #555; border-radius: 5px; background: #333; color: #fff; }
+        input[type="submit"] { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; }
+        input[type="submit"]:hover { background-color: #3e8e41 }
+        input[type="submit"]:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; margin: 10px 0; }
+        .btn:hover { background-color: #3e8e41 }
+        .btn:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn-secondary { background-color: #555; }
+        .btn-secondary:hover { background-color: #444; }
+        .btn-secondary:active { background-color: #444; }
+        .combined-input { display: flex; align-items: center; margin-bottom: 20px; }
+        .combined-input input[type="file"] { flex: 2; margin-right: 10px; }
+        .combined-input input[type="text"] { flex: 8; }
+        .error-tooltip { color: #f00; font-size: 12px; margin-top: -10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Update Diamond</h1>
+        </div>
+    </header>
+    <div class="container">
+        <form th:action="@{/updateDiamond}" th:object="${diamond}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{diaId}" />
+            
+            <label>Diamond Code: <input type="text" th:field="*{diaCode}" /></label>
+            <div th:if="${#fields.hasErrors('diaCode')}" th:errors="*{diaCode}" class="error-tooltip">Error message</div>
+            
+            <label>Diamond Name: <input type="text" th:field="*{diaName}" /></label>
+            <div th:if="${#fields.hasErrors('diaName')}" th:errors="*{diaName}" class="error-tooltip">Error message</div>
+            
+            <label>Origin: <input type="text" th:field="*{origin}" /></label>
+            <div th:if="${#fields.hasErrors('origin')}" th:errors="*{origin}" class="error-tooltip">Error message</div>
+            
+            <label>Carat Weight: <input type="text" th:field="*{caratWeight}" /></label>
+            <div th:if="${#fields.hasErrors('caratWeight')}" th:errors="*{caratWeight}" class="error-tooltip">Error message</div>
+            
+            <label>Color: <input type="text" th:field="*{color}" /></label>
+            <div th:if="${#fields.hasErrors('color')}" th:errors="*{color}" class="error-tooltip">Error message</div>
+            
+            <label>Clarity: <input type="text" th:field="*{clarity}" /></label>
+            <div th:if="${#fields.hasErrors('clarity')}" th:errors="*{clarity}" class="error-tooltip">Error message</div>
+            
+            <label>Cut: <input type="text" th:field="*{cut}" /></label>
+            <div th:if="${#fields.hasErrors('cut')}" th:errors="*{cut}" class="error-tooltip">Error message</div>
+            
+            <label>Proportions: <input type="text" th:field="*{proportions}" /></label>
+            <div th:if="${#fields.hasErrors('proportions')}" th:errors="*{proportions}" class="error-tooltip">Error message</div>
+            
+            <label>Polish: <input type="text" th:field="*{polish}" /></label>
+            <div th:if="${#fields.hasErrors('polish')}" th:errors="*{polish}" class="error-tooltip">Error message</div>
+            
+            <label>Symmetry: <input type="text" th:field="*{symmetry}" /></label>
+            <div th:if="${#fields.hasErrors('symmetry')}" th:errors="*{symmetry}" class="error-tooltip">Error message</div>
+            
+            <label>Fluorescence: <input type="text" th:field="*{fluorescence}" /></label>
+            <div th:if="${#fields.hasErrors('fluorescence')}" th:errors="*{fluorescence}" class="error-tooltip">Error message</div>
+            
+            <label>Image URL or Upload Image:</label>
+            <div class="combined-input">
+                <input type="file" name="imgFile" />
+                <input type="text" th:field="*{imgUrl}" placeholder="Enter image URL" />
+            </div>
+            <div th:if="${#fields.hasErrors('imgUrl')}" th:errors="*{imgUrl}" class="error-tooltip">Error message</div>
+            <div th:if="${#fields.hasErrors('imgFile')}" th:errors="*{imgFile}" class="error-tooltip">Error message</div>
+            
+            <input type="submit" value="Update Diamond" />
+        </form>
+        <a th:href="@{/diamonds}" class="btn btn-secondary">Back to Diamonds</a>
+    </div>
+    <script src="/js/validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Collection</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #333; margin: 0; padding: 0; color: #fff; }
+        .container { width: 50%; margin: auto; overflow: hidden; }
+        header { background: #444; color: #fff; padding-top: 30px; min-height: 70px; border-bottom: #77d4d8 3px solid; }
+        header a { color: #fff; text-decoration: none; text-transform: uppercase; font-size: 16px; }
+        form { background: #222; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        label { display: block; margin-bottom: 10px; }
+        input[type="text"], input[type="file"], textarea { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #555; border-radius: 5px; background: #333; color: #fff; }
+        input[type="submit"] { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; }
+        input[type="submit"]:hover { background-color: #3e8e41 }
+        input[type="submit"]:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; margin: 10px 0; }
+        .btn:hover { background-color: #3e8e41 }
+        .btn:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn-secondary { background-color: #555; }
+        .btn-secondary:hover { background-color: #444; }
+        .btn-secondary:active { background-color: #444; }
+        .combined-input { display: flex; align-items: center; margin-bottom: 20px; }
+        .combined-input input[type="file"] { flex: 2; margin-right: 10px; }
+        .combined-input input[type="text"] { flex: 8; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Edit Collection</h1>
+        </div>
+    </header>
+    <div class="container">
+        <form th:action="@{/updateCollection}" th:object="${collection}" method="post" enctype="multipart/form-data">
+            <label>Collection Name: <input type="text" th:field="*{collection_Name}" required/></label>
+            <label>Image URL or Upload Image:</label>
+            <div class="combined-input">
+                <input type="file" name="imgFile" />
+                <input type="text" th:field="*{img_Url}" placeholder="Enter image URL" />
+            </div>
+            <input type="submit" value="Save" />
+        </form>
+        <a th:href="@{/collections}" class="btn btn-secondary">Back to Collections</a>
+    </div>
+    <script src="/js/validation.js"></script>
+</body>
+</html>
