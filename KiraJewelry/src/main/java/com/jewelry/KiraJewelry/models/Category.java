@@ -1,6 +1,5 @@
 package com.jewelry.KiraJewelry.models;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,14 +17,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "Category")
-public class Category{
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Category_Id")
-    private int category_Id;  
+    @Column(name = "category_id")
+    private int category_id;
 
     @Column(name = "Category_Name")
-    private String category_Name;  
+    private String category_Name;
 
     @Column(name = "Status")
     private boolean status;

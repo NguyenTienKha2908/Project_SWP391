@@ -57,7 +57,7 @@ public class OrderController {
                     || porder.getStatus().equalsIgnoreCase("Request"))) {
                 model.addAttribute("customer", customer);
                 model.addAttribute("productionOrder", porder);
-                String catergoryName = categoryService.getCateNameById(porder.getCategory_Id());
+                String catergoryName = categoryService.getCateNameById(porder.getCategory_id());
                 model.addAttribute("categoryName", catergoryName);
                 return "customer/userRequest";
             }
@@ -77,7 +77,7 @@ public class OrderController {
             if (customerId.equalsIgnoreCase(porder.getCustomer_Id()) && porder.getStatus().equalsIgnoreCase("Quoted")) {
                 model.addAttribute("customer", customer);
                 model.addAttribute("productionOrder", porder);
-                String catergoryName = categoryService.getCateNameById(porder.getCategory_Id());
+                String catergoryName = categoryService.getCateNameById(porder.getCategory_id());
                 model.addAttribute("categoryName", catergoryName);
                 return "customer/userQuote";
             }
@@ -98,7 +98,7 @@ public class OrderController {
                     || porder.getStatus().equalsIgnoreCase("Order(NP)"))) {
                 model.addAttribute("customer", customer);
                 model.addAttribute("productionOrder", porder);
-                String catergoryName = categoryService.getCateNameById(porder.getCategory_Id());
+                String catergoryName = categoryService.getCateNameById(porder.getCategory_id());
                 model.addAttribute("categoryName", catergoryName);
                 return "customer/userOrder";
             }

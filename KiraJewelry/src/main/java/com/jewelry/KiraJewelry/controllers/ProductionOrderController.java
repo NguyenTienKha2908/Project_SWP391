@@ -65,25 +65,27 @@ public class ProductionOrderController {
     }
 
     // @PostMapping("/saveProductionOrder")
-    // public String saveProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
-    //         @RequestParam(value = "staff", required = false) String employeeId,
-    //         Model model) {
-    //     ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+    // public String saveProductionOrder(@RequestParam("productionOrderId") String
+    // productionOrderId,
+    // @RequestParam(value = "staff", required = false) String employeeId,
+    // Model model) {
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
 
-    //     if (employeeId != null && !employeeId.isEmpty()) {
-    //         Employee employee = employeeService.getEmployeeById(employeeId);
-    //         productionOrder.setSales_Staff_Name(employee.getFull_Name());
-    //         productionOrder.setStatus("Request");
-    //     }
+    // if (employeeId != null && !employeeId.isEmpty()) {
+    // Employee employee = employeeService.getEmployeeById(employeeId);
+    // productionOrder.setSales_Staff_Name(employee.getFull_Name());
+    // productionOrder.setStatus("Request");
+    // }
 
-    //     productionOrderService.saveProductionOrder(productionOrder);
-    //     return "redirect:/viewRequestsforManager";
+    // productionOrderService.saveProductionOrder(productionOrder);
+    // return "redirect:/viewRequestsforManager";
     // }
 
     @GetMapping("/viewRequestsforManager")
     public String getAllRequestsForManager(Model model, HttpSession session) {
-        List<ProductionOrder> requestProductionOrders = productionOrderService.getProductionOrderByStatus("Request");
-        List<ProductionOrder> createdProductionOrders = productionOrderService.getProductionOrderByStatus("Created");
+        List<ProductionOrder> requestProductionOrders = productionOrderService.getProductionOrderByStatus("request");
+        List<ProductionOrder> createdProductionOrders = productionOrderService.getProductionOrderByStatus("created");
         List<ProductionOrder> allProductionOrders = new ArrayList<>(requestProductionOrders);
         allProductionOrders.addAll(createdProductionOrders);
         model.addAttribute("listRequests", allProductionOrders);
@@ -103,26 +105,29 @@ public class ProductionOrderController {
 
     // @GetMapping("/viewRequestsforSS")
     // public String getAllRequests(Model model, HttpSession session) {
-    //     String employeeName = (String) session.getAttribute("employeeName");
-    //     List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndName("Request",
-    //             employeeName);
+    // String employeeName = (String) session.getAttribute("employeeName");
+    // List<ProductionOrder> productionOrders =
+    // productionOrderService.getProductionOrderByStatusAndName("Request",
+    // employeeName);
 
-    //     model.addAttribute("listRequests", productionOrders);
-    //     return "employee/sales_staff/viewRequest";
+    // model.addAttribute("listRequests", productionOrders);
+    // return "employee/sales_staff/viewRequest";
     // }
 
     // @GetMapping("/viewQuotesforSS")
     // public String getAllQuotes(Model model, HttpSession session) {
-    //     String employeeName = (String) session.getAttribute("employeeName");
-    //     List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndName("Quote",
-    //             employeeName);
-    //     List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndName("Quote(NA)",
-    //             employeeName);
-    //     List<ProductionOrder> listRequests = new ArrayList<>();
-    //     listRequests.addAll(productionOrders);
-    //     listRequests.addAll(productionOrders2);
-    //     model.addAttribute("listRequests", listRequests);
-    //     return "employee/sales_staff/viewQuote";
+    // String employeeName = (String) session.getAttribute("employeeName");
+    // List<ProductionOrder> productionOrders =
+    // productionOrderService.getProductionOrderByStatusAndName("Quote",
+    // employeeName);
+    // List<ProductionOrder> productionOrders2 =
+    // productionOrderService.getProductionOrderByStatusAndName("Quote(NA)",
+    // employeeName);
+    // List<ProductionOrder> listRequests = new ArrayList<>();
+    // listRequests.addAll(productionOrders);
+    // listRequests.addAll(productionOrders2);
+    // model.addAttribute("listRequests", listRequests);
+    // return "employee/sales_staff/viewQuote";
     // }
 
     @GetMapping("/viewInformationRequestForManager")
@@ -179,69 +184,76 @@ public class ProductionOrderController {
     }
 
     // @PostMapping("/saveEditedProductionOrder")
-    // public String saveEditedProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
-    //         @RequestParam("materialId") int materialId, @RequestParam("materialName") String materialName,
-    //         @RequestParam("materialWeight") double materialWeight,
-    //         @RequestParam("materialColor") String materialColor,
-    //         @RequestParam("materialAmount") double materialAmount,
-    //         @RequestParam("gemId") int gemId, @RequestParam("gemName") String gemName,
-    //         @RequestParam("gemWeight") double gemWeight,
-    //         @RequestParam("gemColor") String gemColor,
-    //         @RequestParam("diamondAmount") double diamondAmount,
-    //         @RequestParam("sideMaterialCost") double side_material_cost,
-    //         @RequestParam("sideGemCost") double side_gem_cost,
-    //         @RequestParam("productionAmount") double productionAmount,
-    //         @RequestParam("totalAmount") double total_amount,
-    //         Model model) {
+    // public String saveEditedProductionOrder(@RequestParam("productionOrderId")
+    // String productionOrderId,
+    // @RequestParam("materialId") int materialId, @RequestParam("materialName")
+    // String materialName,
+    // @RequestParam("materialWeight") double materialWeight,
+    // @RequestParam("materialColor") String materialColor,
+    // @RequestParam("materialAmount") double materialAmount,
+    // @RequestParam("gemId") int gemId, @RequestParam("gemName") String gemName,
+    // @RequestParam("gemWeight") double gemWeight,
+    // @RequestParam("gemColor") String gemColor,
+    // @RequestParam("diamondAmount") double diamondAmount,
+    // @RequestParam("sideMaterialCost") double side_material_cost,
+    // @RequestParam("sideGemCost") double side_gem_cost,
+    // @RequestParam("productionAmount") double productionAmount,
+    // @RequestParam("totalAmount") double total_amount,
+    // Model model) {
 
-    //     ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
 
-    //     productionOrder.setMaterial_Id(materialId);
-    //     productionOrder.setMaterial_Name(materialName);
-    //     productionOrder.setMaterial_Weight(materialWeight);
-    //     productionOrder.setMaterial_Color(materialColor);
-    //     productionOrder.setMaterial_Amount(materialAmount);
-    //     productionOrder.setGem_Id(gemId);
-    //     productionOrder.setGem_Name(gemName);
-    //     productionOrder.setGem_Color(gemColor);
-    //     productionOrder.setGem_Weight(gemWeight);
-    //     productionOrder.setDiamond_Amount(diamondAmount);
-    //     productionOrder.setSide_Material_Cost(side_material_cost);
-    //     productionOrder.setSide_Gem_Cost(side_gem_cost);
-    //     productionOrder.setProduction_Amount(productionAmount);
-    //     productionOrder.setTotal_Amount(total_amount);
-    //     productionOrder.setStatus("Quote(NA)");
-    //     productionOrderService.saveProductionOrder(productionOrder);
-    //     model.addAttribute("listRequests", productionOrderService.getAllProductionOrders());
+    // productionOrder.setMaterial_Id(materialId);
+    // productionOrder.setMaterial_Name(materialName);
+    // productionOrder.setMaterial_Weight(materialWeight);
+    // productionOrder.setMaterial_Color(materialColor);
+    // productionOrder.setMaterial_Amount(materialAmount);
+    // productionOrder.setGem_Id(gemId);
+    // productionOrder.setGem_Name(gemName);
+    // productionOrder.setGem_Color(gemColor);
+    // productionOrder.setGem_Weight(gemWeight);
+    // productionOrder.setDiamond_Amount(diamondAmount);
+    // productionOrder.setSide_Material_Cost(side_material_cost);
+    // productionOrder.setSide_Gem_Cost(side_gem_cost);
+    // productionOrder.setProduction_Amount(productionAmount);
+    // productionOrder.setTotal_Amount(total_amount);
+    // productionOrder.setStatus("Quote(NA)");
+    // productionOrderService.saveProductionOrder(productionOrder);
+    // model.addAttribute("listRequests",
+    // productionOrderService.getAllProductionOrders());
 
-    //     return "redirect:/viewQuotesforSS";
+    // return "redirect:/viewQuotesforSS";
     // }
 
     // @PostMapping("/saveEditedRequest")
-    // public String saveEditedRequest(@RequestParam("productionOrderId") String productionOrderId,
-    //         @RequestParam("materialName") String materialName,
-    //         @RequestParam("materialColor") String materialColor,
-    //         @RequestParam("materialWeight") double materialWeight,
-    //         @RequestParam("gemName") String gemName,
-    //         @RequestParam("gemColor") String gemColor,
-    //         @RequestParam("gemWeight") double gemWeight,
-    //         @RequestParam("productSize") int productSize,
-    //         Model model) {
+    // public String saveEditedRequest(@RequestParam("productionOrderId") String
+    // productionOrderId,
+    // @RequestParam("materialName") String materialName,
+    // @RequestParam("materialColor") String materialColor,
+    // @RequestParam("materialWeight") double materialWeight,
+    // @RequestParam("gemName") String gemName,
+    // @RequestParam("gemColor") String gemColor,
+    // @RequestParam("gemWeight") double gemWeight,
+    // @RequestParam("productSize") int productSize,
+    // Model model) {
 
-    //     ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
 
-    //     productionOrder.setMaterial_Name(materialName);
-    //     productionOrder.setMaterial_Color(materialColor);
-    //     productionOrder.setMaterial_Weight(materialWeight);
-    //     productionOrder.setGem_Name(gemName);
-    //     productionOrder.setGem_Color(gemColor);
-    //     productionOrder.setGem_Weight(gemWeight);
-    //     productionOrder.setProduct_Size(productSize);
+    // productionOrder.setMaterial_Name(materialName);
+    // productionOrder.setMaterial_Color(materialColor);
+    // productionOrder.setMaterial_Weight(materialWeight);
+    // productionOrder.setGem_Name(gemName);
+    // productionOrder.setGem_Color(gemColor);
+    // productionOrder.setGem_Weight(gemWeight);
+    // productionOrder.setProduct_Size(productSize);
 
-    //     productionOrderService.saveProductionOrder(productionOrder);
-    //     model.addAttribute("listRequests", productionOrderService.getAllProductionOrders());
+    // productionOrderService.saveProductionOrder(productionOrder);
+    // model.addAttribute("listRequests",
+    // productionOrderService.getAllProductionOrders());
 
-    //     return "redirect:/viewRequestsforSS";
+    // return "redirect:/viewRequestsforSS";
     // }
 
     @GetMapping("/prepareQuotePage")

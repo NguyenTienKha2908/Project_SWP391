@@ -1,12 +1,20 @@
 package com.jewelry.KiraJewelry.models;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Getter
 @Setter
@@ -26,8 +34,8 @@ public class ProductionOrder {
     @Column(name = "customer_Id")
     private String customer_Id;
 
-    @Column(name = "category_Id")
-    private int category_Id;
+    @Column(name = "category_id")
+    private int category_id;
 
     @Column(name = "product_Size")
     private int product_Size;

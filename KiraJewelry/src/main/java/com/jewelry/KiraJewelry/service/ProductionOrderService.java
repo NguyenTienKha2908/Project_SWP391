@@ -27,8 +27,10 @@ public class ProductionOrderService {
     productionOrderRepository.save(productionOrder);
   }
 
-  // public List<ProductionOrder> getProductionOrderByStatusAndName(String status, String employee_Name) {
-  //   return productionOrderRepository.findProductionOrderByStatusAndName(status, employee_Name);
+  // public List<ProductionOrder> getProductionOrderByStatusAndName(String status,
+  // String employee_Name) {
+  // return productionOrderRepository.findProductionOrderByStatusAndName(status,
+  // employee_Name);
   // }
 
   public void deleteProductionOrderById(String productionOrderId) {
@@ -43,7 +45,14 @@ public class ProductionOrderService {
     return productionOrderRepository.findProductionOrderByCustomerId(customer_Id);
   }
 
-  public Optional<ProductionOrder> getTopByOrderByProduction_Order_IdDesc() {
-    return productionOrderRepository.findTopByOrderByProduction_Order_IdDesc();
-  }
+  // public String generateProductionOrderId() {
+  //   String lastId = productionOrderRepository.findLastProductionOrderId();
+  //   if (lastId == null || lastId.isEmpty()) {
+  //     return "POI001";
+  //   } else {
+  //     int lastNum = Integer.parseInt(lastId.substring(3));
+  //     int newNum = lastNum + 1;
+  //     return "POI" + String.format("%03d", newNum);
+  //   }
+  // }
 }

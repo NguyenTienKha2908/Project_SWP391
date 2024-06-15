@@ -83,7 +83,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Category](
-	[Category_Id] int identity(1,1) NOT NULL,
+	[category_Id] int identity(1,1) NOT NULL,
 	[Category_Name] [nvarchar](255) NOT NULL,
 	[Status] [bit]  NOT NULL,
 	[Img_Url] varchar(255) NOT NULL,
@@ -154,7 +154,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[MaterialPriceList](
+CREATE TABLE [dbo].[Material_Price_List](
 	[id] int IDENTITY(1,1),
 	[Price] [float] NOT NULL,
 	[Eff_Date] [date] NOT NULL,
@@ -166,6 +166,33 @@ CONSTRAINT [PK_MaterialPriceList] PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 
+/* Table [Product] */ 
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Product](
+	[Product_Id] [int] IDENTITY(1,1),
+	[Product_Code] [nvarchar] (max),
+	[Product_Name] [nvarchar](255),
+	[Collection_Id] int REFERENCES Collections([Collection_Id]),
+	[Description] [nvarchar](max),
+
+	[Gender] [nvarchar](50) NOT NULL,
+	[Size] [int] NOT NULL,
+	[Img_Url] varchar(255) NOT NULL,
+
+	[Status] bit NOT NULL,
+	--[Warranty_Card_Id] int,
+	
+CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
+(
+	[Product_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
 /* Table [ProductionOrder] */ 
 SET ANSI_NULLS ON
 GO
@@ -176,7 +203,7 @@ CREATE TABLE [dbo].[Production_Order](
 	[Date] [date] NOT NULL,
 
 	[Customer_Id] [nvarchar] (255) REFERENCES [Customer](Customer_Id),
-	[Category_Id] int REFERENCES [Category](Category_Id),
+	[category_id] int REFERENCES [Category](Category_Id),
 	[Product_Size] [int],
 	[Img_Url] varchar(255),
 
@@ -204,13 +231,15 @@ CREATE TABLE [dbo].[Production_Order](
 							  --Completed
 							  --Delivered
 
-	[Product_Id] int,
+	[Product_Id] int REFERENCES Product([Product_Id])
 CONSTRAINT [PK_Production_Order] PRIMARY KEY CLUSTERED 
 (
 	[Production_Order_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+drop table Cate 
 
 /* Table [Warranty_Card] */ 
 /*SET ANSI_NULLS ON
@@ -236,31 +265,6 @@ GO*/
 
 
 
-/* Table [Product] */ 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Product](
-	[Product_Id] [int] IDENTITY(1,1),
-	[Product_Code] [nvarchar] (max),
-	[Product_Name] [nvarchar](255),
-	[Collection_Id] int,
-	[Description] [nvarchar](max),
-
-	[Gender] [nvarchar](50) NOT NULL,
-	[Size] [int] NOT NULL,
-	[Img_Url] varchar(255) NOT NULL,
-
-	[Status] bit NOT NULL,
-	--[Warranty_Card_Id] int,
-	
-CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED 
-(
-	[Product_Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
 
 
 /* Table [ProductMaterial] */ 
@@ -288,10 +292,11 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Gem_Price_List] (
+CREATE TABLE [dbo].[Diamond_Price_List] (
     [Id] [int] IDENTITY(1,1),
 	[Origin] [nvarchar] (255) NOT NULL,
-    [Carat_Weight] [float] NOT NULL,
+    [Carat_Weight_From] [float] NOT NULL,
+	[Carat_Weight_To] [float] NOT NULL,
 	[Color] [char](10) NOT NULL,
 	[Clarity] [char](10) NOT NULL,
 	[Cut] [nvarchar] (255) NOT NULL,
@@ -311,9 +316,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Diamond](
-	[Gem_Id] [int] IDENTITY(1,1),
-	[Gem_Code] [nvarchar](255) NOT NULL,
-	[Gem_Name] [nvarchar](255) NOT NULL,
+	[Dia_Id] [int] IDENTITY(1,1),
+	[Dia_Code] [nvarchar](255) NOT NULL,
+	[Dia_Name] [nvarchar](255) NOT NULL,
 
 	[Origin] [nvarchar] (255) NOT NULL,
     [Carat_Weight] [float] NOT NULL,
@@ -331,11 +336,11 @@ CREATE TABLE [dbo].[Diamond](
 	[Q_Price] float,
 	[O_Price] float,
 
-	[Product_Id] int,
+	[Product_Id] int REFERENCES Product([Product_Id])
 
 CONSTRAINT [PK_Diamond] PRIMARY KEY CLUSTERED 
 	(
-		[Gem_Id] ASC
+		[Dia_Id] ASC
 	) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
 	--CONSTRAINT [FK_Diamond_Product] FOREIGN KEY ([Product_Id]) REFERENCES [dbo].[Product] ([Product_Id])
 ) ON [PRIMARY]
@@ -380,14 +385,14 @@ CREATE TABLE [dbo].[Product_Design](
 	[Gem_Max_Size] float,
 
 	[Status] bit NOT NULL,
-	[Product_Id] int,
+	[Product_Id] int REFERENCES Product([Product_Id])
 CONSTRAINT [PK_Product_Design] PRIMARY KEY CLUSTERED 
 (
 	[Product_Design_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
+drop table product_design 
 
 /*================ INSERT DATA ================*/
 
@@ -551,7 +556,7 @@ DECLARE @EndDate DATE = '2024-06-11';   -- End date for generating data
 WHILE @StartDate <= @EndDate
 BEGIN
     -- Gold prices for each type of gold on the current date
-    INSERT INTO [dbo].[MaterialPriceList] ([Price], [Eff_Date], [Material_Id])
+    INSERT INTO [dbo].[Material_Price_List] ([Price], [Eff_Date], [Material_Id])
     VALUES
         (92.65, @StartDate, 1),  -- Gold8K
         (105.96, @StartDate, 2), -- Gold9K
@@ -574,34 +579,35 @@ DECLARE @EndDateGem DATE = '2024-06-11';   -- End date for generating data
 WHILE @StartDateGem <= @EndDateGem
 BEGIN
     -- Generate data for GemPriceList table (Diamond prices for different dates)
-INSERT INTO [dbo].[Gem_Price_List] ([Origin], [Carat_Weight], [Color], [Clarity], [Cut], [Price], [Eff_Date])
+INSERT INTO [dbo].[Diamond_Price_List] ([Origin], [Carat_Weight_From], [Carat_Weight_To], [Color], [Clarity], [Cut], [Price], [Eff_Date])
 VALUES
 		-- 3.6mm
 		-- D Color
-	('Vietnam', 0.17, 'D', 'IF', 'Excellent', 424.01, @StartDateGem),
-	('America', 0.17, 'D', 'VVS1', 'Excellent', 384.75, @StartDateGem),
-	('Italy', 0.17, 'D', 'VVS2', 'Excellent', 345.74, @StartDateGem),
-	('Australia', 0.17, 'D', 'VS1', 'Excellent', 322.17, @StartDateGem),
-	('South Africa', 0.17, 'D', 'VS2', 'Excellent', 275.02, @StartDateGem),
+	('Vietnam', 0.15, 0.17, 'D', 'IF', 'Excellent', 424.01, @StartDateGem),
+	('America',  0.15, 0.17, 'D', 'VVS1', 'Excellent', 384.75, @StartDateGem),
+	('Italy',  0.15, 0.17, 'D', 'VVS2', 'Excellent', 345.74, @StartDateGem),
+	('Australia',  0.15, 0.17, 'D', 'VS1', 'Excellent', 322.17, @StartDateGem),
+	('South Africa',  0.15, 0.17, 'D', 'VS2', 'Excellent', 275.02, @StartDateGem),
 		-- E Color
-	('Vietnam', 0.17, 'E', 'IF', 'Excellent', 412.23, @StartDateGem),
-	('America', 0.17, 'E', 'VVS1', 'Excellent', 361.19, @StartDateGem),
-	('Italy', 0.17, 'E', 'VVS2', 'Excellent', 314.31, @StartDateGem),
-	('Australia', 0.17, 'E', 'VS1', 'Excellent', 282.88, @StartDateGem),
-	('South Africa', 0.17, 'E', 'VS2', 'Excellent', 196.44, @StartDateGem),
+	('Vietnam',  0.15, 0.17, 'E', 'IF', 'Excellent', 412.23, @StartDateGem),
+	('America',  0.15, 0.17, 'E', 'VVS1', 'Excellent', 361.19, @StartDateGem),
+	('Italy',  0.15, 0.17, 'E', 'VVS2', 'Excellent', 314.31, @StartDateGem),
+	('Australia',  0.15, 0.17, 'E', 'VS1', 'Excellent', 282.88, @StartDateGem),
+	('South Africa',  0.15, 0.17, 'E', 'VS2', 'Excellent', 196.44, @StartDateGem),
 		-- F Color
-	('Vietnam', 0.17, 'F', 'IF', 'Excellent', 417.02, @StartDateGem),
-	('America', 0.17, 'F', 'VVS1', 'Excellent', 387.23, @StartDateGem),
-	('Italy', 0.17, 'F', 'VVS2', 'Excellent', 300.928, @StartDateGem),
-	('Australia', 0.17, 'F', 'VS1', 'Excellent', 255.32, @StartDateGem),
-	('South Africa', 0.17, 'F', 'VS2', 'Excellent', 165.96, @StartDateGem),
+	('Vietnam', 0.15, 0.17, 'F', 'IF', 'Excellent', 417.02, @StartDateGem),
+	('America', 0.15, 0.17, 'F', 'VVS1', 'Excellent', 387.23, @StartDateGem),
+	('Italy', 0.15, 0.17, 'F', 'VVS2', 'Excellent', 300.928, @StartDateGem),
+	('Australia', 0.15, 0.17, 'F', 'VS1', 'Excellent', 255.32, @StartDateGem),
+	('South Africa', 0.15, 0.17, 'F', 'VS2', 'Excellent', 165.96, @StartDateGem),
 		-- J Color
-	('Vietnam', 0.17, 'J', 'IF', 'Excellent', 340.43 , @StartDateGem),
-	('America', 0.17, 'J', 'VVS1', 'Excellent', 331.91, @StartDateGem),
-	('Italy', 0.17, 'J', 'VVS2', 'Excellent', 276.60, @StartDateGem),
-	('Australia', 0.17, 'J', 'VS1', 'Excellent', 263.83, @StartDateGem),
-	('South Africa', 0.17, 'J', 'VS2', 'Excellent', 225.53, @StartDateGem),
-		
+	('Vietnam', 0.15, 0.17, 'J', 'IF', 'Excellent', 340.43 , @StartDateGem),
+	('America', 0.15, 0.17, 'J', 'VVS1', 'Excellent', 331.91, @StartDateGem),
+	('Italy', 0.15, 0.17, 'J', 'VVS2', 'Excellent', 276.60, @StartDateGem),
+	('Australia', 0.15, 0.17, 'J', 'VS1', 'Excellent', 263.83, @StartDateGem),
+	('South Africa', 0.15, 0.17, 'J', 'VS2', 'Excellent', 225.53, @StartDateGem);
+
+/*		
 		--4.5mm
 		-- D Color
 	('Vietnam', 0.34, 'D', 'IF', 'Excellent', 1055.32, @StartDateGem),
@@ -830,7 +836,7 @@ VALUES
     ('America', 2.75, 'J', 'VVS1', 'Excellent', 21900, @StartDateGem),
     ('Vietnam', 2.75, 'J', 'VVS2', 'Excellent', 21666.67, @StartDateGem),
     ('America', 2.75, 'J', 'VS1', 'Excellent', 20410.87, @StartDateGem),
-    ('Vietnam', 2.75, 'J', 'VS2', 'Excellent', 19043.48, @StartDateGem);
+    ('Vietnam', 2.75, 'J', 'VS2', 'Excellent', 19043.48, @StartDateGem);*/
 
     SET @StartDateGem = DATEADD(day, 1, @StartDateGem);
 END;
@@ -839,7 +845,7 @@ SET IDENTITY_INSERT [Material] OFF
 SET IDENTITY_INSERT [Diamond] ON;
 
 -- Insert data into the [Diamond] table
-INSERT INTO [dbo].[Diamond] ([Gem_Id], [Gem_Code], [Gem_Name], [Origin], [Carat_Weight], [Color], [Clarity], [Cut], [Proportions], [Polish], [Symmetry], [Fluorescence], [Status], [Q_Price], [O_Price], [Img_Url])
+INSERT INTO [dbo].[Diamond] ([Dia_Id], [Dia_Code], [Dia_Name], [Origin], [Carat_Weight], [Color], [Clarity], [Cut], [Proportions], [Polish], [Symmetry], [Fluorescence], [Status], [Q_Price], [O_Price], [Img_Url])
 VALUES
 -- Gemstones with D Color
 (1, 'DIA001', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.17, 'D', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=b0c525b0-1f57-4bfd-a9be-d4ad5bfb300d'),
@@ -867,9 +873,9 @@ VALUES
 (17, 'DIA017', 'Round Brilliant Cut Diamond - America', 'America', 0.17, 'J', 'VVS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=b6cf71d6-3292-4dec-9f0d-d4e6cb84752c'),
 (18, 'DIA018', 'Round Brilliant Cut Diamond - Italy', 'Italy', 0.17, 'J', 'VVS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=35a9e414-0f63-4a86-aed7-8488ec8e22d7'),
 (19, 'DIA019', 'Round Brilliant Cut Diamond - Australia', 'Australia', 0.17, 'J', 'VS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=95210446-0cac-412c-b7f1-d1c33152b79b'),
-(20, 'DIA020', 'Round Brilliant Cut Diamond - South Africa', 'South Africa', 0.17, 'J', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=5c853e49-3426-4c6b-9174-cbec99f5078f'),
+(20, 'DIA020', 'Round Brilliant Cut Diamond - South Africa', 'South Africa', 0.17, 'J', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=5c853e49-3426-4c6b-9174-cbec99f5078f');
 
-
+/*
 -- Gemstones with D Color
 (21, 'DIA021', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.34, 'D', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=b0c525b0-1f57-4bfd-a9be-d4ad5bfb300d'),
 (22, 'DIA022', 'Round Brilliant Cut Diamond - America', 'America', 0.34, 'D', 'VVS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=5fdd9030-1600-46f2-9642-3710806c131f'),
@@ -1121,6 +1127,7 @@ VALUES
 (198, 'DIA198', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 2.75, 'J', 'VVS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=35a9e414-0f63-4a86-aed7-8488ec8e22d7'),
 (199, 'DIA199', 'Round Brilliant Cut Diamond - America', 'America', 2.75, 'J', 'VS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=b6cf71d6-3292-4dec-9f0d-d4e6cb84752c'),
 (200, 'DIA200', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 1.33, 'J', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, NULL, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=2d1fac7d-419a-479e-b429-a5e598ead86b');
+*/
 
 SET IDENTITY_INSERT [Diamond] OFF
 SET IDENTITY_INSERT [Product] ON;
@@ -1136,16 +1143,16 @@ INSERT INTO [dbo].[Product] (
 	[Img_Url],
 	[Collection_Id])
 VALUES
-(1, 'PO00001', 'Radiant Sunburst Diamond Ring', 'Radiant sunburst design featuring a brilliant round cut diamond center stone.', 'Unisex', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_A_classic_22K_gold_ring_with_a_brilliant_diamond_cente_0.jpg?alt=media&token=2de10ada-0f96-4fe3-8a0d-691ed9a65a50', 0),
-(2, 'PO00002', 'Ethereal Dream Diamond Necklace', 'An ethereal dream necklace showcasing a mesmerizing round brilliant cut diamond pendant.', 'Women', 18, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fnecklace%2FDefault_A_24K_gold_pendant_with_a_diamond_complemented_by_whit_0.jpg?alt=media&token=0b6c421a-5468-413f-aac3-7a658a9a6934', 0),
-(3, 'PO00003', 'Starry Night Diamond Earrings', 'Starry night inspired diamond earrings featuring dazzling round brilliant cut diamonds.', 'Women', 8, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fearrings%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=f58d81f6-4322-4344-a340-4411babc3235', 0),
-(4, 'PO00004', 'Celestial Cascade Diamond Bracelet', 'Celestial cascade bracelet adorned with cascading round brilliant cut diamonds.', 'Women', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07', 0),
-(5, 'PO00005', 'Lunar Elegance Diamond Cufflinks', 'Lunar elegance cufflinks crafted with precision and featuring round brilliant cut diamonds.', 'Men', 10, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fcufflinks%2FDefault_A_Gold_PNJ_9999_tennis_cufflink_lined_with_evenly_spac_0.jpg?alt=media&token=6595906e-39ca-415b-8034-d03b09bf833a', 0),
-(6, 'PO00006', 'Diamond Galaxy Engagement Ring', 'Embark on a journey with this diamond galaxy engagement ring, featuring a stunning round brilliant cut diamond.', 'Women', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_22K_Gold_Diamond_Wedding_Band_A_22K_gold_wedding_band_0.jpg?alt=media&token=2619ffed-9c99-4e1e-95c7-7545e638ecf9', 0),
-(7, 'PO00007', 'Aurora Borealis Diamond Pendant', 'Capture the beauty of the northern lights with this aurora borealis diamond pendant.', 'Women', 18, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fnecklace%2FDefault_22K_Gold_Diamond_Pendant_Necklace_A_22K_gold_pendant_n_0.jpg?alt=media&token=61c6b5b1-fc4a-4ba2-adf7-f50f8ab58732', 0),
-(8, 'PO00008', 'Eternal Love Diamond Earrings',  'Symbolize eternal love with these breathtaking diamond earrings featuring round brilliant cut diamonds.', 'Women', 8, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fearrings%2FDefault_22K_Gold_Diamond_Hoops_Stylish_22K_gold_hoop_earrings_0.jpg?alt=media&token=e5214a2e-6f63-4ced-aa0b-d02dcd82c08e', 0),
-(9, 'PO00009', 'Twilight Serenade Diamond Bracelet', 'Serene elegance meets twilight allure in this stunning diamond bracelet.', 'Women', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_A_10K_gold_bangle_encrusted_with_diamonds_for_a_sophis_0.jpg?alt=media&token=8d6cf4f7-2757-41e9-82d5-201dbc8d2a95', 0),
-(10, 'PO00010', 'Galactic Odyssey Diamond Cufflinks', 'Embark on a galactic odyssey with these exquisite diamond cufflinks.', 'Men', 10, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fcufflinks%2FDefault_A_Gold_SJC_9999_cufflink_with_a_single_diamond_for_a_0.jpg?alt=media&token=c5e09f05-594b-4d92-927c-e879af788623', 0);
+(1, 'PO00001', 'Radiant Sunburst Diamond Ring', 'Radiant sunburst design featuring a brilliant round cut diamond center stone.', 'Unisex', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_A_classic_22K_gold_ring_with_a_brilliant_diamond_cente_0.jpg?alt=media&token=2de10ada-0f96-4fe3-8a0d-691ed9a65a50', NULL),
+(2, 'PO00002', 'Ethereal Dream Diamond Necklace', 'An ethereal dream necklace showcasing a mesmerizing round brilliant cut diamond pendant.', 'Women', 18, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fnecklace%2FDefault_A_24K_gold_pendant_with_a_diamond_complemented_by_whit_0.jpg?alt=media&token=0b6c421a-5468-413f-aac3-7a658a9a6934', NULL),
+(3, 'PO00003', 'Starry Night Diamond Earrings', 'Starry night inspired diamond earrings featuring dazzling round brilliant cut diamonds.', 'Women', 8, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fearrings%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=f58d81f6-4322-4344-a340-4411babc3235', NULL),
+(4, 'PO00004', 'Celestial Cascade Diamond Bracelet', 'Celestial cascade bracelet adorned with cascading round brilliant cut diamonds.', 'Women', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07', NULL),
+(5, 'PO00005', 'Lunar Elegance Diamond Cufflinks', 'Lunar elegance cufflinks crafted with precision and featuring round brilliant cut diamonds.', 'Men', 10, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fcufflinks%2FDefault_A_Gold_PNJ_9999_tennis_cufflink_lined_with_evenly_spac_0.jpg?alt=media&token=6595906e-39ca-415b-8034-d03b09bf833a', NULL),
+(6, 'PO00006', 'Diamond Galaxy Engagement Ring', 'Embark on a journey with this diamond galaxy engagement ring, featuring a stunning round brilliant cut diamond.', 'Women', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_22K_Gold_Diamond_Wedding_Band_A_22K_gold_wedding_band_0.jpg?alt=media&token=2619ffed-9c99-4e1e-95c7-7545e638ecf9', NULL),
+(7, 'PO00007', 'Aurora Borealis Diamond Pendant', 'Capture the beauty of the northern lights with this aurora borealis diamond pendant.', 'Women', 18, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fnecklace%2FDefault_22K_Gold_Diamond_Pendant_Necklace_A_22K_gold_pendant_n_0.jpg?alt=media&token=61c6b5b1-fc4a-4ba2-adf7-f50f8ab58732', NULL),
+(8, 'PO00008', 'Eternal Love Diamond Earrings',  'Symbolize eternal love with these breathtaking diamond earrings featuring round brilliant cut diamonds.', 'Women', 8, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fearrings%2FDefault_22K_Gold_Diamond_Hoops_Stylish_22K_gold_hoop_earrings_0.jpg?alt=media&token=e5214a2e-6f63-4ced-aa0b-d02dcd82c08e', NULL),
+(9, 'PO00009', 'Twilight Serenade Diamond Bracelet', 'Serene elegance meets twilight allure in this stunning diamond bracelet.', 'Women', 7, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_A_10K_gold_bangle_encrusted_with_diamonds_for_a_sophis_0.jpg?alt=media&token=8d6cf4f7-2757-41e9-82d5-201dbc8d2a95', NULL),
+(10, 'PO00010', 'Galactic Odyssey Diamond Cufflinks', 'Embark on a galactic odyssey with these exquisite diamond cufflinks.', 'Men', 10, 1, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fcufflinks%2FDefault_A_Gold_SJC_9999_cufflink_with_a_single_diamond_for_a_0.jpg?alt=media&token=c5e09f05-594b-4d92-927c-e879af788623', NULL);
 
 SET IDENTITY_INSERT [Product] OFF
 
@@ -1267,3 +1274,4 @@ select * from Production_Order
 select * from Product_Design_Shell
 select * from Product_Design
 
+SELECT p.production_Order_Id FROM Production_Order p WHERE p.category_Id = 1

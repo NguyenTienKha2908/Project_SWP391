@@ -99,7 +99,7 @@
                     <div class="row">
                         <label for="category">Category</label>
                         <select name="category" id="category">
-                            <option th:each="category : ${categories}" th:value="${category.category_Id}"
+                            <option th:each="category : ${categories}" th:value="${category.category_id}"
                                 th:text="${category.category_Name}"></option>
                         </select>
                     </div>
@@ -116,6 +116,7 @@
                     <label for="file">Upload image: </label>
                     <input type="file" id="file" accept="image/png, image/svg, image/jpeg" /><br />
                     <button type="submit">Send request</button>
+                </form>
             </div>
             <div class="col-md-6">
                 <div id="img_container" class="row">

@@ -114,6 +114,7 @@
                             <tr>
                                 <th>Request ID</th>
                                 <th>Date</th>
+                                <th>Category</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -122,6 +123,7 @@
                             <tr th:each="productionOrder : ${listRequests}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${productionOrder.category_id}"></td>
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <form th:action="@{/viewInformationRequestForManager}" method="get">
