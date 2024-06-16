@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Staff</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }.btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            margin: 10px 0; 
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            var roleId = document.getElementById("role_Id").value;
+            if (roleId < 2 || roleId > 6) {
+                alert("Role ID must be between 2 and 6");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Staff</h1>
+        <form th:action="@{/users/addStaff}" th:object="${newStaff}" method="post" onsubmit="return validateForm()">
+            <label>Email: <input type="email" th:field="*{email}" required /></label>
+            <label>Password: <input type="password" th:field="*{password}" required /></label>
+            <label>Role ID: <input type="number" id="role_Id" th:field="*{role_Id}" required min="2" max="6"/></label>
+            <button type="submit">Add Staff</button>
+            <div th:if="${#fields.hasErrors('role_Id')}" class="error" th:errors="*{role_Id}">Role ID Error</div>
+        </form>
+        <a th:href="@{/staff}" class="btn btn-secondary">Back to Manage Staff</a>
+    </div>
+    <script src="/js/validation.js"></script>
+</body>
+</html>

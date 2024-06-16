@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Home Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
+    <style>
+        #sidebar {
+            background-color: rgb(167, 168, 166);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a href="#">
+                        <img th:src="@{/img/icon-fig/logoWhite.svg}" alt="logo">
+                        <span>KIRA JEWELRY</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a th:if="${session.customerName != null}" th:onclick="|location.href='@{/homeCustomer}'|"
+                        class=" sidebar-link">
+                        <img th:src="@{/img//icon-fig/profile.svg}" alt="profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.customerName != null}" th:onclick="|location.href='@{/viewProductionOrder}'|"
+                        class="active sidebar-link">
+                        <img th:src="@{/img//icon-fig/request.svg}" alt="request">
+                        <span>View Order</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a th:href="@{/logout}" class="sidebar-link">
+                    <img th:src="@{/img/icon-fig/logout.svg}" alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="out">
+                <div class="top-header">
+                    <div class="first-ele">
+                        <img th:src="@{/img/person/profile1.svg}" alt="person">
+                        <span th:if="${session.customerName != null}">
+                            Welcome, <span th:text="${session.customerName}"></span>
+                        </span>
+                    </div>
+                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
+                </div>
+            </div>
+            <div class="content">
+                <h1>All Customer Production Orders</h1>
+                <hr>
+                <div class="container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Production Order ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="productionOrder : ${listPO}">
+                                <td th:text="${productionOrder.production_Order_Id}"></td>
+                                <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${productionOrder.status}"></td>
+                                <td>
+                                    <form th:action="@{/viewInformationPOForCustomer}" method="get">
+                                        <input type="hidden" name="productionOrderId"
+                                            th:value="${productionOrder.production_Order_Id}" />
+                                        <button class="text-decoation-none" type="submit">View</button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+</body>
+
+<!-- <footer>
+    <div class="container-fluid">
+        <div id="others_info" class="row">
+            <div class="footer col-md-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="footer_logo">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b" class="logo" /> Kira
+                            Jewelry
+                        </h2>
+                    </div>
+                    <div class="col-md-12">
+                        <div>
+                            <p>Hotline: 123123123</p>
+                            <p>Address: 12AS, Austin, 123</p>
+                            <p>Email: abc1234@fpt.edu.vn</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer col-md-9">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="col-md-12">
+                            <h4><a href="#policy">Policy</a></h4>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <li><a href="#">Return and Refund</a></li>
+                                <li><a href="#">Cancellation</a></li>
+                                <li><a href="#">Delivery</a></li>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-md-12">
+                            <h4><a href="#resources">Resources</a></h4>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <li><a href="#">Gold price</a></li>
+                                <li><a href="#">Blogs</a></li>
+                                <li><a href="#">Jewelry price</a></li>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-md-12">
+                            <h4><a href="#company">Company</a></h4>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <li><a href="#about">About</a></li>
+                                <li><a href="#">Join us</a></li>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="col-md-12">
+                            <h4><a href="#support">Support</a></h4>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <li><a href="#">Help center</a></li>
+                                <li><a href="#">Chat support</a></li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sercurity_contact" class="row">
+            <div class="copyright col-md-4">
+                <p>&copy; 2022 Kira Jewelry, Inc</p>
+            </div>
+            <div id="sercurity" class="copyright col-md-4">
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+                <a href="#sitemap">Sitemap</a>
+            </div>
+            <div id="contact" class="copyright col-md-4">
+                <div class="contact_footer">
+                    <a class="twitter"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
+                    <a class="facebook"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
+                    <a class="linkedin"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
+                    <a class="youtube"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
+                    <a class="instagram"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer> -->
+</html>
