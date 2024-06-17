@@ -20,16 +20,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(RegisterDto registerDto) {
-        User user = new User(registerDto.getEmail(),registerDto.getPassword(), "1",1);
+        User user = new User(registerDto.getEmail(),registerDto.getPassword(), 1,1);
         return userRepository.save(user);
     }
 
-    @Override
-    public Customer saveCustomer(RegisterDto registerDto) {
-        User user = saveUser(registerDto);
-        Customer customer = new Customer(user.getUserId(), registerDto.getFullname(), registerDto.getAddress(), registerDto.getPhone());
-        return customerRepository.save(customer);
-    }
+
     @Override
     public void saveUserAndCustomer(RegisterDto registerDto) {
         User user = saveUser(registerDto);
@@ -41,9 +36,6 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+
 }
-
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
-//        passwordEncoder.encode()

@@ -72,6 +72,13 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.28</version> <!-- Kiểm tra trang web của Lombok để xem phiên bản mới nhất -->
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -8,7 +8,7 @@ import admin_user.model.User;
 
 public interface UserService {
     User saveUser(RegisterDto registerDto);
-    Customer saveCustomer(RegisterDto registerDto);
     void saveUserAndCustomer(RegisterDto registerDto);
     User findByEmail(String email);
+
 }
