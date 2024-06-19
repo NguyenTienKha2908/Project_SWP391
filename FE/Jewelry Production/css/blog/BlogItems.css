@@ -1,0 +1,158 @@
+/*Reset styles CSS*/
+body,
+h1,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body {
+  background-color: white;
+  overflow-x: hidden;
+}
+
+/*Header CSS*/
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding-bottom: 2%;
+
+  .top_header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2%;
+  }
+
+  h1 {
+    font-weight: 200;
+    font-size: 2em;
+  }
+
+  h1 {
+    flex: 1;
+    margin-left: 5%;
+  }
+
+  .tools_header {
+    display: inline-flex;
+    gap: 2em;
+    margin: 1% 10%;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+}
+
+.home_categories {
+  text-align: center;
+
+  ul {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  li {
+    display: inline-block;
+    align-items: center;
+    text-align: center;
+    margin: 0 2% 2% 2%;
+
+    a:hover {
+      color: #f7b050;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
+    a.active {
+      color: #f7b050;
+      border-bottom: 2px solid #f7b050;
+    }
+
+    font-size: 1.2em;
+  }
+}
+
+/*Footer CSS*/
+footer {
+  padding: 30px 100px 10px 100px;
+  display: flex;
+  color: white;
+  background-color: black;
+  justify-content: center;
+}
+
+#others_info {
+  a:hover {
+    color: #f7b050;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+#sercurity_contact {
+  padding: 40px 0 0 0;
+}
+
+#sercurity {
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #f7b050;
+  }
+}
+
+#contact {
+  text-align: center;
+}
+
+/* Main CSS */
+#main {
+  #content_header {
+    position: relative;
+    #contents {
+      position: absolute;
+      background-color: rgba(23, 26, 31, 0.7);
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      pointer-events: none;
+
+      p {
+        color: white;
+        font-size: 1em;
+      }
+    }
+  }
+  #main_content {
+    padding: 5%;
+  }
+  h1 {
+    color: #f7b050;
+    font-size: 4em;
+  }
+}

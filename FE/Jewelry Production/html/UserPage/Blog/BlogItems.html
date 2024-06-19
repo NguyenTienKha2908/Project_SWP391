@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/blog/BlogItems.css" />
+  </head>
+  <body>
+    <!--Page header-->
+    <header>
+      <div class="top_header">
+        <h1 class="header_logo">
+          <a href="/html/HomePage.html"
+            ><img src="/img/logo/black_logo.svg" />Kira Jewelry</a
+          >
+        </h1>
+        <div class="tools_header">
+          <a href="/html/Search.html" class="search"
+            ><img src="/img/header_tools/black_search.svg"
+          /></a>
+          <a href="/html/profile/Login.html" class="profile"
+            ><img src="/img/header_tools/black_profile.svg"
+          /></a>
+          <a href="/html/cart/Yourcart.html" class="cart"
+            ><img src="/img/header_tools/black_cart.svg"
+          /></a>
+        </div>
+      </div>
+      <nav class="home_categories">
+        <ul>
+          <li><a th:href="@{#}">Home</a></li>
+          <li>
+            <a th:href="@{#}" class="active">Blogs</a>
+          </li>
+          <li>
+            <a th:href="@{#}">Collections</a>
+          </li>
+          <li class="active dropdown">
+            <a
+              a
+              th:href="@{#}"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Jewelry</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a th:href="@{#}" class="sidebar-link">Order Jewelry Now</a>
+              </li>
+              <li class="dropdown-item">
+                <a th:href="@{#}" class="sidebar-link">All Jewelry</a>
+              </li>
+            </ul>
+          </li>
+          <li><a th:href="@{#}">Gemstones</a></li>
+          <li><a th:href="@{#}">Materials</a></li>
+          <li><a th:href="@{#}">Education</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!--Main Page-->
+    <div id="main">
+      <div id="content_header">
+        <div id="contents" class="w-100">
+          <h1>Wellness Wisdom</h1>
+          <p>September, August 21st, 2023</p>
+        </div>
+        <img src="/img/blog/header.png" alt="" class="w-100" />
+      </div>
+      <div id="main_content" class="container">
+        <h1>Wellness Wisdom</h1>
+        <p>
+          Welcome to KIRA Jewelry, where the beauty of each unique gemstone
+          jewelry meets exquisite craftsmanship. Our curated collection features
+          a diverse range of precious and semi-precious gemstones, including
+          Ruby, Sapphire, Emerald, Topaz, Garnet, Peridot, Quartz, and
+          Tourmaline, each chosen for its unique beauty and symbolism. Crafted
+          with precision and attention to detail, our pieces exude elegance and
+          sophistication, making them perfect for any occasion. Whether you're
+          searching for a statement necklace, a pair of sparkling earrings, or a
+          meaningful bracelet, KIRA Jewelry offers timeless pieces designed to
+          inspire harmony and elevate your style.
+        </p>
+        <br />
+        <p>
+          Welcome to KIRA Jewelry, where the beauty of each unique gemstone
+          jewelry meets exquisite craftsmanship. Our curated collection features
+          a diverse range of precious and semi-precious gemstones, including
+          Ruby, Sapphire, Emerald, Topaz, Garnet, Peridot, Quartz, and
+          Tourmaline, each chosen for its unique beauty and symbolism. Crafted
+          with precision and attention to detail, our pieces exude elegance and
+          sophistication, making them perfect for any occasion. Whether you're
+          searching for a statement necklace, a pair of sparkling earrings, or a
+          meaningful bracelet, KIRA Jewelry offers timeless pieces designed to
+          inspire harmony and elevate your style.
+        </p>
+        <br />
+        <p>
+          Welcome to KIRA Jewelry, where the beauty of each unique gemstone
+          jewelry meets exquisite craftsmanship. Our curated collection features
+          a diverse range of precious and semi-precious gemstones, including
+          Ruby, Sapphire, Emerald, Topaz, Garnet, Peridot, Quartz, and
+          Tourmaline, each chosen for its unique beauty and symbolism. Crafted
+          with precision and attention to detail, our pieces exude elegance and
+          sophistication, making them perfect for any occasion. Whether you're
+          searching for a statement necklace, a pair of sparkling earrings, or a
+          meaningful bracelet, KIRA Jewelry offers timeless pieces designed to
+          inspire harmony and elevate your style.
+        </p>
+      </div>
+    </div>
+
+    <!--Page footer-->
+    <footer>
+      <div class="container-fluid">
+        <div id="others_info" class="row">
+          <div class="footer col-md-3">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="footer_logo">
+                  <img src="/img/logo/white_logo.svg" class="logo" /> Kira
+                  Jewelry
+                </h2>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <p>Hotline: 123123123</p>
+                  <p>Address: 12AS, Austin, 123</p>
+                  <p>Email: abc1234@fpt.edu.vn</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer col-md-9">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#policy">Policy</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#">Return and Refund</a></li>
+                    <li><a href="#">Cancellation</a></li>
+                    <li><a href="#">Delivery</a></li>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#resources">Resources</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#">Gold price</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Jewelry price</a></li>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#company">Company</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#">Join us</a></li>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#support">Support</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#">Help center</a></li>
+                    <li><a href="#">Chat support</a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="sercurity_contact" class="row">
+          <div class="copyright col-md-4">
+            <p>&copy; 2022 Kira Jewelry, Inc</p>
+          </div>
+          <div id="sercurity" class="copyright col-md-4">
+            <a href="#privacy">Privacy</a>
+            <a href="#terms">Terms</a>
+            <a href="#sitemap">Sitemap</a>
+          </div>
+          <div id="contact" class="copyright col-md-4">
+            <div class="contact_footer">
+              <a class="twitter"
+                ><img src="/img/footer_contact/twitter.svg"
+              /></a>
+              <a class="facebook"
+                ><img src="/img/footer_contact/facebook.svg"
+              /></a>
+              <a class="linkedin"
+                ><img src="/img/footer_contact/linkedIn.svg"
+              /></a>
+              <a class="youtube"
+                ><img src="/img/footer_contact/youtube.svg"
+              /></a>
+              <a class="instagram"
+                ><img src="/img/footer_contact/instagram.svg"
+              /></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
