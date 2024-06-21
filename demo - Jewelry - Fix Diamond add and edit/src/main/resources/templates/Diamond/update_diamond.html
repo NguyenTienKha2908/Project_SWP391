@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Diamond</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #444;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d4d8 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        form {
+            background: #222;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+        }
+        input[type="submit"] {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+        }
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+        input[type="submit"]:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #3e8e41;
+        }
+        .btn:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+        .btn-secondary {
+            background-color: #555;
+        }
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        .btn-secondary:active {
+            background-color: #444;
+        }
+        .combined-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .combined-input input[type="file"] {
+            flex: 2;
+            margin-right: 10px;
+        }
+        .combined-input input[type="text"] {
+            flex: 8;
+        }
+        .error-tooltip {
+            color: #f00;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .note {
+            color: #77d4d8;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Update Diamond</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="note">Please select options from top to bottom for it to work correctly.</div>
+        <form th:action="@{/updateDiamond}" th:object="${diamond}" method="post" enctype="multipart/form-data">
+            <label>Diamond Code:
+                <input type="text" th:field="*{dia_code}" readonly="readonly" />
+            </label>
+            <div th:if="${#fields.hasErrors('dia_code')}" th:errors="*{dia_code}" class="error-tooltip">
+                Error message
+            </div>
+            <label>Diamond Name:
+                <input type="text" th:field="*{dia_name}" placeholder="Enter Diamond Name" />
+            </label>
+            <div th:if="${#fields.hasErrors('dia_name')}" th:errors="*{dia_name}" class="error-tooltip">
+                Error message
+            </div>
+            <label>Origin:
+                <select th:field="*{origin}" id="origin" onchange="fetchColorOptions()">
+                    <option value="">Select Origin</option>
+                    <option th:each="origin : ${origins}" th:value="${origin}" th:text="${origin}" th:selected="${origin} == ${diamond.origin}"></option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('origin')}" th:errors="*{origin}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Carat Weight:
+                <input type="text" th:field="*{carat_weight}" id="carat_weight" onchange="fetchColorOptions()" placeholder="Enter Carat Weight" />
+            </label>
+            <div th:if="${#fields.hasErrors('carat_weight')}" th:errors="*{carat_weight}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Color:
+                <select th:field="*{color}" id="color" onchange="fetchClarityOptions()">
+                    <option value="">Select Color</option>
+                    <option th:each="color : ${colors}" th:value="${color}" th:text="${color}" th:selected="${color} == ${diamond.color}"></option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('color')}" th:errors="*{color}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Clarity:
+                <select th:field="*{clarity}" id="clarity" onchange="fetchCutOptions()">
+                    <option value="">Select Clarity</option>
+                    <option th:each="clarity : ${clarities}" th:value="${clarity}" th:text="${clarity}" th:selected="${clarity} == ${diamond.clarity}"></option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('clarity')}" th:errors="*{clarity}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Cut:
+                <select th:field="*{cut}" id="cut">
+                    <option value="">Select Cut</option>
+                    <option th:each="cut : ${cuts}" th:value="${cut}" th:text="${cut}" th:selected="${cut} == ${diamond.cut}"></option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('cut')}" th:errors="*{cut}" class="error-tooltip">
+                Error message
+            </div>
+            <button type="button" class="btn" onclick="calculatePrice()">Calculate Price</button>
+            <!-- <button type="button" class="btn" id="calculatePrice">Calculate Price</button> -->
+            <label>Q Price:
+                <input type="text" th:field="*{q_price}" id="qPrice" readonly="readonly" />
+            </label>
+            <input type="hidden" th:field="*{o_price}" value="0.0" />
+            <label>Proportions:
+                <select th:field="*{proportions}">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Very good">Very good</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('proportions')}" th:errors="*{proportions}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Polish:
+                <select th:field="*{polish}">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Very good">Very good</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('polish')}" th:errors="*{polish}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Symmetry:
+                <select th:field="*{symmetry}">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Very good">Very good</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('symmetry')}" th:errors="*{symmetry}" class="error-tooltip">
+                Error message
+            </div>
+
+            <label>Fluorescence:
+                <select th:field="*{fluorescence}">
+                    <option value="None">None</option>
+                    <option value="Faint">Faint</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Strong">Strong</option>
+                    <option value="Very Strong">Very Strong</option>
+                </select>
+            </label>
+            <div th:if="${#fields.hasErrors('fluorescence')}" th:errors="*{fluorescence}" class="error-tooltip">
+                Error message
+            </div>
+
+            <div class="combined-input">
+                <input type="file" th:field="*{img_file}" />
+                <input type="text" th:field="*{img_url}" placeholder="Enter image URL" />
+            </div>
+
+            <input type="submit" value="Update Diamond" />
+        </form>
+        <a href="#" class="btn btn-secondary" th:href="@{/diamonds}">Back to Diamonds</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let originElement = document.getElementById('origin');
+            let caratWeightElement = document.getElementById('carat_weight');
+            let colorElement = document.getElementById('color');
+            let clarityElement = document.getElementById('clarity');
+            let cutElement = document.getElementById('cut');
+            // let calculateButton = document.getElementById('calculatePrice');
+
+            function fetchData(url, params) {
+                return fetch(url + '?' + new URLSearchParams(params))
+                    .then(response => response.json());
+            }
+
+            function resetBelowElement(element) {
+                if (element === originElement) {
+                    caratWeightElement.value = '';
+                    colorElement.innerHTML = '<option>Select Color</option>';
+                    clarityElement.innerHTML = '<option>Select Clarity</option>';
+                    cutElement.innerHTML = '<option>Select Cut</option>';
+                } else if (element === caratWeightElement) {
+                    colorElement.innerHTML = '<option>Select Color</option>';
+                    clarityElement.innerHTML = '<option>Select Clarity</option>';
+                    cutElement.innerHTML = '<option>Select Cut</option>';
+                } else if (element === colorElement) {
+                    clarityElement.innerHTML = '<option>Select Clarity</option>';
+                    cutElement.innerHTML = '<option>Select Cut</option>';
+                } else if (element === clarityElement) {
+                    cutElement.innerHTML = '<option>Select Cut</option>';
+                }
+            }
+
+            originElement.addEventListener('change', function() {
+                resetBelowElement(originElement);
+                fetchData('/getPriceListByColor', {origin: originElement.value})
+                    .then(data => {
+                        data.forEach(color => {
+                            let option = document.createElement('option');
+                            option.value = color;
+                            option.text = color.trim();
+                            colorElement.add(option);
+                        });
+                    });
+            });
+
+            caratWeightElement.addEventListener('change', function() {
+                resetBelowElement(caratWeightElement);
+                fetchData('/getPriceListByColor', { origin: originElement.value, carat_weight: caratWeightElement.value })
+                    .then(data => {
+                        data.forEach(color => {
+                            let option = document.createElement('option');
+                            option.value = color;
+                            option.text = color.trim();
+                            colorElement.add(option);
+                        });
+                    });
+            });
+
+            colorElement.addEventListener('change', function() {
+                resetBelowElement(colorElement);
+                fetchData('/getPriceListByClarity', { origin: originElement.value, carat_weight: caratWeightElement.value, color: colorElement.value })
+                    .then(data => {
+                        data.forEach(clarity => {
+                            let option = document.createElement('option');
+                            option.value = clarity;
+                            option.text = clarity.trim();
+                            clarityElement.add(option);
+                        });
+                    });
+            });
+
+            clarityElement.addEventListener('change', function() {
+                resetBelowElement(clarityElement);
+                fetchData('/getPriceListByCut', { origin: originElement.value, carat_weight: caratWeightElement.value, color: colorElement.value, clarity: clarityElement.value })
+                    .then(data => {
+                        data.forEach(cut => {
+                            let option = document.createElement('option');
+                            option.value = cut;
+                            option.text = cut.trim();
+                            cutElement.add(option);
+                        });
+                    });
+            });
+
+            // calculateButton.addEventListener('click', function() {
+            //     fetchData('/calculatePrice', {
+            //         origin: originElement.value,
+            //         caratWeight: caratWeightElement.value,
+            //         color: colorElement.value,
+            //         clarity: clarityElement.value,
+            //         cut: cutElement.value
+            //     })
+            //         .then(data => {
+            //             document.getElementById('qPrice').value = data.q_price;
+            //         })
+            //         .catch(error => {
+            //             console.error('Error calculating price:', error);
+            //         });
+            // });
+        });
+        
+        function calculatePrice() {
+            const origin = document.getElementById("origin").value;
+            const carat_weight = parseFloat(document.getElementById("carat_weight").value);
+            const color = document.getElementById("color").value;
+            const clarity = document.getElementById("clarity").value;
+            const cut = document.getElementById("cut").value;
+
+            if (!origin || isNaN(carat_weight) || !color || !clarity || !cut) {
+                document.querySelector('input[name="q_price"]').value = "";
+                return;
+            }
+
+            fetch(`/getPriceListByDetails?origin=${origin}&carat_weight=${carat_weight}&color=${color}&clarity=${clarity}&cut=${cut}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const qPriceInput = document.querySelector('input[name="q_price"]');
+
+                    if (data) {
+                        qPriceInput.value = data.price;
+                    } else {
+                        qPriceInput.value = "";
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error calculating price:', error);
+                });
+        }
+    </script>
+</body>
+</html>
