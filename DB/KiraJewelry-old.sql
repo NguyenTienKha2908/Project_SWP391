@@ -59,17 +59,6 @@ CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 
-/* 
-Origin: Natural
-Color: D, E, F,J
-Clarity: IF, VSS1, VSS2, VS1, VS2
-Cut: Excellent, Shallow, Poor
-Proportions: Ideal
-Polish: Excellent
-Symmetry: Excellent
-Flourescence: None
-*/
-
 /* Table [Customer] */ 
 SET ANSI_NULLS ON
 GO
@@ -326,21 +315,21 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Diamond](
 	[Dia_Id] [int] IDENTITY(1,1),
-	[Dia_Code] [nvarchar](255),
+	[Dia_Code] [nvarchar](255) ,
 	[Dia_Name] [nvarchar](255) ,
 
 	[Origin] [nvarchar] (255),
     [Carat_Weight] [float] ,
-	[Color] [char](10),
-	[Clarity] [char](10),
+	[Color] [char](10) ,
+	[Clarity] [char](10) ,
 	[Cut] [nvarchar] (255) ,
 
-	[Proportions] [nvarchar](255),
+	[Proportions] [nvarchar](255) ,
 	[Polish] [nvarchar](255),
 	[Symmetry] [nvarchar](255) ,
 	[Fluorescence] [char](10),
-	[Status] [bit] NOT NULL, -- 1/Active | 0/Inactive (Used by some Pro)
-	[Img_Url] varchar(255) NOT NULL,
+	[Status] [bit], -- 1/Active | 0/Inactive (Used by some Pro)
+	[Img_Url] varchar(255) ,
 
 	[Q_Price] float,
 	[O_Price] float,
@@ -354,6 +343,7 @@ CONSTRAINT [PK_Diamond] PRIMARY KEY CLUSTERED
 	--CONSTRAINT [FK_Diamond_Product] FOREIGN KEY ([Product_Id]) REFERENCES [dbo].[Product] ([Product_Id])
 ) ON [PRIMARY]
 GO
+
 
 /* Table [ProductDesignShell] */ 
 SET ANSI_NULLS ON
@@ -379,20 +369,20 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Product_Design](
 	[Product_Design_Id] [int] IDENTITY(1,1),
-	[Product_Design_Code] [nvarchar] (max),
-	[Product_Design_Name] [nvarchar](255),
+	[Product_Design_Code] [nvarchar] (max) NOT NULL,
+	[Product_Design_Name] [nvarchar](255) NOT NULL,
 	[Category_Id] int REFERENCES [Category](Category_Id),
 	[Collection_Id] int REFERENCES [Collections](Collection_Id),
 	[Description] [nvarchar](max),
 
-	[Gender] [nvarchar](50),
-	[Product_Size] [int],
+	[Gender] [nvarchar](50) NOT NULL,
+	[Product_Size] [int] NOT NULL,
 
 	[Product_Design_Shell_Id] int REFERENCES [Product_Design_Shell]([Product_Design_Shell_Id]),
 	[Gem_Min_Size] float,
 	[Gem_Max_Size] float,
 
-	[Status] bit,
+	[Status] bit NOT NULL,
 	[Product_Id] int REFERENCES Product([Product_Id])
 CONSTRAINT [PK_Product_Design] PRIMARY KEY CLUSTERED 
 (
@@ -405,11 +395,9 @@ GO
 
 --Insert data into the Users table
 SET IDENTITY_INSERT [Users] ON;
+
 INSERT INTO [dbo].[Users] (User_Id, Email, Password, Role_ID, Status)
 VALUES 
-
- 
-
 -- 10 Customers
 (1, 'truongantnh@gmail.com', 'andhtSE180230@fpt', 1, 1),
 (2, 'customer1@example.com', 'Cust1#Secure', 1, 1),
@@ -582,194 +570,80 @@ BEGIN
 END;
 
 -- Insert data for [GemPriceList] table (Diamond prices for different dates)
-DECLARE @StartDateGem DATE = '2024-06-17'; -- Start date for generating data
-DECLARE @EndDateGem DATE = '2024-06-17';   -- End date for generating data
+DECLARE @StartDateGem DATE = '2024-06-11'; -- Start date for generating data
+DECLARE @EndDateGem DATE = '2024-06-11';   -- End date for generating data
 -- Loop through dates to generate data for each day
 WHILE @StartDateGem <= @EndDateGem
 BEGIN
     -- Generate data for GemPriceList table (Diamond prices for different dates)
 INSERT INTO [dbo].[Diamond_Price_List] ([Origin], [Carat_Weight_From], [Carat_Weight_To], [Color], [Clarity], [Cut], [Price], [Eff_Date])
 VALUES
-	
-		--0.04-0.14
-	('Natural',  0.04, 0.07, 'F', 'IF', 'Ideal',  9.5 , @StartDateGem),
-	('Natural',  0.04, 0.07, 'E', 'VVS1', 'Ideal',   9.5 , @StartDateGem),
-	('Natural',  0.04, 0.07, 'J', 'VVS1', 'Shallow',  9.5 , @StartDateGem),
-	('Natural',  0.04, 0.07, 'D', 'VS1', 'Ideal',  9.5 , @StartDateGem),
-	('Natural',  0.04, 0.07, 'F', 'VVS1', 'Shallow',  9.5 , @StartDateGem),
-		
-	('Natural', 0.08, 0.14, 'J', 'VVS1', 'Ideal', 10.6, @StartDateGem),
-	('Natural',  0.08, 0.14, 'F', 'IF', 'Shallow', 10.6, @StartDateGem),
-	('Natural',  0.08, 0.14, 'E', 'VVS2', 'Ideal', 10.6, @StartDateGem),
-	('Natural',  0.08, 0.14, 'D', 'VS1', 'Ideal', 10.6, @StartDateGem),
-	('Natural', 0.08, 0.14, 'J', 'IF', 'Ideal',  8.4, @StartDateGem),
-
-		-- 0.15 - 0.49 ct
-	('Natural', 0.15, 0.17, 'D', 'IF', 'Deep', 12.5, @StartDateGem),
-	('Natural',  0.15, 0.17, 'F', 'VVS1', 'Shallow', 12.5, @StartDateGem),
-	('Natural',  0.15, 0.17, 'E', 'VVS2', 'Poor', 12.5, @StartDateGem),
-	('Natural',  0.15, 0.17, 'D', 'VS1', 'Ideal', 12.5, @StartDateGem),
-	('Natural',  0.15, 0.17, 'J', 'VS2', 'Ideal', 9.9, @StartDateGem),
-		
-	('Natural',  0.18, 0.22, 'E', 'IF', 'Ideal', 14.6, @StartDateGem),
-	('Natural',  0.18, 0.22, 'E', 'VVS1', 'Ideal', 14.6, @StartDateGem),
-	('Natural',  0.18, 0.22, 'F', 'VVS2', 'Shallow', 14.6, @StartDateGem),
-	('Natural',  0.18, 0.22, 'D', 'VS1', 'Ideal', 14.6, @StartDateGem),
-	('Natural',  0.18, 0.22, 'E', 'VS2', 'Ideal', 14.6, @StartDateGem),
-		
-	('Natural', 0.23, 0.29, 'F', 'IF', 'Ideal', 17.4, @StartDateGem),
-	('Natural', 0.23, 0.29, 'D', 'VVS1', 'Ideal', 17.4, @StartDateGem),
-	('Natural', 0.23, 0.29, 'E', 'VVS2', 'Ideal', 17.4, @StartDateGem),
-	('Natural', 0.23, 0.29, 'J', 'VS1', 'Ideal', 12.5, @StartDateGem),
-	('Natural', 0.23, 0.29, 'F', 'VS2', 'Shallow', 17.4, @StartDateGem),
-		
-	('Natural', 0.40, 0.49, 'J', 'IF', 'Ideal', 22, @StartDateGem),
-	('Natural', 0.40, 0.49, 'D', 'VVS1', 'Ideal', 33, @StartDateGem),
-	('Natural', 0.40, 0.49, 'E', 'VVS2', 'Shallow', 28, @StartDateGem),
-	('Natural', 0.40, 0.49, 'F', 'VS1', 'Ideal', 24, @StartDateGem),
-	('Natural', 0.40, 0.49, 'J', 'VS2', 'Shallow', 15, @StartDateGem),
-
-
-	-- 0.5 - 0.1.49 ct
-	('Natural', 0.50, 0.69, 'D', 'IF', 'Shallow', 65, @StartDateGem),
-	('Natural',  0.50, 0.69, 'F', 'VVS1', 'Shallow', 43, @StartDateGem),
-	('Natural',  0.50, 0.69, 'E', 'VVS2', 'Ideal', 39, @StartDateGem),
-	('Natural',  0.50, 0.69, 'J', 'IF', 'Ideal', 23, @StartDateGem),
-	('Natural',  0.50, 0.69, 'D', 'VS2', 'Ideal', 43, @StartDateGem),
-		
-	('Natural', 0.70, 0.89, 'E', 'IF', 'Ideal', 70, @StartDateGem),
-	('Natural', 0.70, 0.89, 'J', 'VVS1', 'Ideal', 31, @StartDateGem),
-	('Natural', 0.70, 0.89, 'D', 'VVS2', 'Ideal', 58, @StartDateGem),
-	('Natural', 0.70, 0.89, 'F', 'VS1', 'Shallow', 45, @StartDateGem),
-	('Natural', 0.70, 0.89, 'E', 'VS2', 'Ideal', 41, @StartDateGem),
+		-- 3.6mm
+		-- D Color
+	('Vietnam', 0.15, 0.17, 'D', 'IF', 'Excellent', 424.01, @StartDateGem),
+	('America',  0.15, 0.17, 'D', 'VVS1', 'Excellent', 384.75, @StartDateGem),
+	('Italy',  0.15, 0.17, 'D', 'VVS2', 'Excellent', 345.74, @StartDateGem),
+	('Australia',  0.15, 0.17, 'D', 'VS1', 'Excellent', 322.17, @StartDateGem),
+	('South Africa',  0.15, 0.17, 'D', 'VS2', 'Excellent', 275.02, @StartDateGem),
+		-- E Color
+	('Vietnam',  0.15, 0.17, 'E', 'IF', 'Excellent', 412.23, @StartDateGem),
+	('America',  0.15, 0.17, 'E', 'VVS1', 'Excellent', 361.19, @StartDateGem),
+	('Italy',  0.15, 0.17, 'E', 'VVS2', 'Excellent', 314.31, @StartDateGem),
+	('Australia',  0.15, 0.17, 'E', 'VS1', 'Excellent', 282.88, @StartDateGem),
+	('South Africa',  0.15, 0.17, 'E', 'VS2', 'Excellent', 196.44, @StartDateGem),
 		-- F Color
-	('Natural', 0.90, 0.99, 'F', 'IF', 'Ideal', 100, @StartDateGem),
-	('Natural', 0.90, 0.99, 'E', 'VVS1', 'Ideal', 99, @StartDateGem),
-	('Natural', 0.90, 0.99, 'J', 'VVS1', 'Shallow', 46, @StartDateGem),
-	('Natural', 0.90, 0.99, 'D', 'VS1', 'Ideal', 71, @StartDateGem),
-	('Natural', 0.90, 0.99, 'F', 'VVS1', 'Shallow', 91, @StartDateGem),
+	('Vietnam', 0.15, 0.17, 'F', 'IF', 'Excellent', 417.02, @StartDateGem),
+	('America', 0.15, 0.17, 'F', 'VVS1', 'Excellent', 387.23, @StartDateGem),
+	('Italy', 0.15, 0.17, 'F', 'VVS2', 'Excellent', 300.928, @StartDateGem),
+	('Australia', 0.15, 0.17, 'F', 'VS1', 'Excellent', 255.32, @StartDateGem),
+	('South Africa', 0.15, 0.17, 'F', 'VS2', 'Excellent', 165.96, @StartDateGem),
 		-- J Color
-	('Natural', 1.00, 1.49, 'J', 'IF', 'Ideal', 57, @StartDateGem),
-	('Natural', 1.00, 1.49, 'F', 'IF', 'Shallow', 126, @StartDateGem),
-	('Natural', 1.00, 1.49, 'E', 'VVS2', 'Ideal', 112, @StartDateGem),
-	('Natural', 1.00, 1.49, 'D', 'VS1', 'Ideal', 108, @StartDateGem),
-	('Natural', 1.00, 1.49, 'J', 'IF', 'Ideal', 58, @StartDateGem),
+	('Vietnam', 0.15, 0.17, 'J', 'IF', 'Excellent', 340.43 , @StartDateGem),
+	('America', 0.15, 0.17, 'J', 'VVS1', 'Excellent', 331.91, @StartDateGem),
+	('Italy', 0.15, 0.17, 'J', 'VVS2', 'Excellent', 276.60, @StartDateGem),
+	('Australia', 0.15, 0.17, 'J', 'VS1', 'Excellent', 263.83, @StartDateGem),
+	('South Africa', 0.15, 0.17, 'J', 'VS2', 'Excellent', 225.53, @StartDateGem);
 
-
-	-- 1.5 - 4.99 ct
-	('Natural', 1.50, 1.99, 'D', 'IF', 'Shallow', 243, @StartDateGem),
-	('Natural',  1.50, 1.99, 'F', 'VVS1', 'Shallow', 171, @StartDateGem),
-	('Natural',  1.50, 1.99, 'E', 'VVS2', 'Ideal', 160, @StartDateGem),
-	('Natural',  1.50, 1.99, 'J', 'IF', 'Ideal', 85, @StartDateGem),
-	('Natural',  1.50, 1.99, 'D', 'VS2', 'Ideal', 126, @StartDateGem),
-		
-	('Natural', 2.00, 2.99, 'E', 'IF', 'Ideal', 300, @StartDateGem),
-	('Natural', 2.00, 2.99, 'J', 'VVS1', 'Ideal', 110, @StartDateGem),
-	('Natural', 2.00, 2.99, 'D', 'VVS2', 'Ideal', 260, @StartDateGem),
-	('Natural', 2.00, 2.99, 'F', 'VS1', 'Shallow', 195, @StartDateGem),
-	('Natural', 2.00, 2.99, 'E', 'VS2', 'Ideal', 175, @StartDateGem),
-		
-	('Natural', 3.00, 3.99, 'F', 'IF', 'Ideal', 450, @StartDateGem),
-	('Natural', 3.00, 3.99, 'E', 'VVS1', 'Ideal', 485, @StartDateGem),
-	('Natural', 3.00, 3.99, 'J', 'VVS1', 'Shallow', 225, @StartDateGem),
-	('Natural', 3.00, 3.99, 'D', 'VS1', 'Ideal', 400, @StartDateGem),
-	('Natural', 3.00, 3.99, 'F', 'VVS1', 'Shallow', 425, @StartDateGem),
-		
-	('Natural', 4.00, 4.99, 'J', 'IF', 'Ideal', 230, @StartDateGem),
-	('Natural', 4.00, 4.99, 'F', 'IF', 'Shallow', 580, @StartDateGem),
-	('Natural', 4.00, 4.99, 'E', 'VVS2', 'Ideal', 550, @StartDateGem),
-	('Natural', 4.00, 4.99, 'D', 'VS1', 'Ideal', 535, @StartDateGem),
-	('Natural', 4.00, 4.99, 'J', 'IF', 'Ideal', 230, @StartDateGem),
-
-	-- 1.5 - 4.99 ct
-	('Natural', 5.00, 5.99, 'D', 'IF', 'Shallow', 1130, @StartDateGem),
-	('Natural',  5.00, 5.99, 'F', 'VVS1', 'Shallow', 715, @StartDateGem),
-	('Natural',  5.00, 5.99, 'E', 'VVS2', 'Ideal', 730, @StartDateGem),
-	('Natural',  5.00, 5.99, 'J', 'IF', 'Ideal', 300, @StartDateGem),
-	('Natural',  5.00, 5.99, 'D', 'VS2', 'Ideal', 835, @StartDateGem),
-
-	('Natural', 10.00, 10.99, 'E', 'IF', 'Ideal', 1380, @StartDateGem),
-	('Natural', 10.00, 10.99, 'J', 'VVS1', 'Ideal', 430, @StartDateGem),
-	('Natural', 10.00, 10.99, 'D', 'VVS2', 'Ideal', 1300, @StartDateGem),
-	('Natural', 10.00, 10.99, 'F', 'VS1', 'Shallow', 875, @StartDateGem),
-	('Natural', 10.00, 10.99, 'E', 'VS2', 'Ideal', 875, @StartDateGem);
-	
 
     SET @StartDateGem = DATEADD(day, 1, @StartDateGem);
 END;
 
 SET IDENTITY_INSERT [Material] OFF
-
+SET IDENTITY_INSERT [Diamond] ON;
 
 -- Insert data into the [Diamond] table
-SET IDENTITY_INSERT [Diamond] ON;
 INSERT INTO [dbo].[Diamond] ([Dia_Id], [Dia_Code], [Dia_Name], [Origin], [Carat_Weight], [Color], [Clarity], [Cut], [Proportions], [Polish], [Symmetry], [Fluorescence], [Status], [Q_Price], [O_Price], [Img_Url])
 VALUES
 -- Gemstones with D Color
-(1, 'DIA001', 'Round Brilliant Cut Diamond', 'Natural', 1.85, 'D', 'IF', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 243, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=b0c525b0-1f57-4bfd-a9be-d4ad5bfb300d'),
-(2, 'DIA002', 'Round Brilliant Cut Diamond', 'Natural', 0.49, 'D', 'VVS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 33, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=5fdd9030-1600-46f2-9642-3710806c131f'),
-(3, 'DIA003', 'Round Brilliant Cut Diamond', 'Natural', 2.99, 'E', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 300, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=a05edcef-6e3b-4e6c-a487-0e9164895fa9'),
-(4, 'DIA004', 'Round Brilliant Cut Diamond', 'Natural', 2.75, 'J', 'VVS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 110, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=cbac271e-76e7-4d3d-ae9e-9383e9a9b874'),
-(5, 'DIA005', 'Round Brilliant Cut Diamond', 'Natural', 2.99, 'D', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 260, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=41823da8-ca9f-4507-baf7-75729beded75'),
+(1, 'DIA001', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.17, 'D', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=b0c525b0-1f57-4bfd-a9be-d4ad5bfb300d'),
+(2, 'DIA002', 'Round Brilliant Cut Diamond - America', 'America', 0.17, 'D', 'VVS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=5fdd9030-1600-46f2-9642-3710806c131f'),
+(3, 'DIA003', 'Round Brilliant Cut Diamond - Italy', 'Italy', 0.17, 'D', 'VVS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=a05edcef-6e3b-4e6c-a487-0e9164895fa9'),
+(4, 'DIA004', 'Round Brilliant Cut Diamond - Australia', 'Australia', 0.17, 'D', 'VS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=cbac271e-76e7-4d3d-ae9e-9383e9a9b874'),
+(5, 'DIA005', 'Round Brilliant Cut Diamond - South Africa', 'South Africa', 0.17, 'D', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=41823da8-ca9f-4507-baf7-75729beded75'),
  
 -- Gemstones with E Color
-(6, 'DIA006', 'Round Brilliant Cut Diamond', 'Natural', 4.5, 'E', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 550, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2%20(1).jpg?alt=media&token=2acf8ac0-8299-42be-8c45-2c8b88ba50b5'),
-(7, 'DIA007', 'Round Brilliant Cut Diamond', 'Natural', 4.25, 'D', 'VS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 535, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(4).jpg?alt=media&token=a60a7f36-76ba-4d3b-aee2-c1388db933f8'),
-(8, 'DIA008', 'Round Brilliant Cut Diamond', 'Natural', 3.25, 'F', 'VVS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 425, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(3).jpg?alt=media&token=5abf0b4b-7fbd-47a2-ad80-cbdb0675b614'),
-(9, 'DIA009', 'Round Brilliant Cut Diamond', 'Natural', 10, 'E', 'VS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 875, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(2).jpg?alt=media&token=fcf5b459-37e5-438a-b8d9-ac10648cdb0b'),
-(10, 'DIA010', 'Round Brilliant Cut Diamond', 'Natural', 2.21, 'E', 'VS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 175, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(2).jpg?alt=media&token=2fa766eb-5963-44c9-8022-b9bb7e4d4fb3'),
+(6, 'DIA006', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.17, 'E', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2%20(1).jpg?alt=media&token=2acf8ac0-8299-42be-8c45-2c8b88ba50b5'),
+(7, 'DIA007', 'Round Brilliant Cut Diamond - America', 'America', 0.17, 'E', 'VVS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(4).jpg?alt=media&token=a60a7f36-76ba-4d3b-aee2-c1388db933f8'),
+(8, 'DIA008', 'Round Brilliant Cut Diamond - Italy', 'Italy', 0.17, 'E', 'VVS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(3).jpg?alt=media&token=5abf0b4b-7fbd-47a2-ad80-cbdb0675b614'),
+(9, 'DIA009', 'Round Brilliant Cut Diamond - Australia', 'Australia', 0.17, 'E', 'VS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(2).jpg?alt=media&token=fcf5b459-37e5-438a-b8d9-ac10648cdb0b'),
+(10, 'DIA010', 'Round Brilliant Cut Diamond - South Africa', 'South Africa', 0.17, 'E', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(2).jpg?alt=media&token=2fa766eb-5963-44c9-8022-b9bb7e4d4fb3'),
 
 -- Gemstones with F Color
-(11, 'DIA011', 'Round Brilliant Cut Diamond', 'Natural', 2.5, 'E', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 300, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=1c8f4268-c8d1-43ff-9be6-4732bdec7bde'),
-(12, 'DIA012', 'Round Brilliant Cut Diamond', 'Natural', 3.5, 'E', 'VVS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 485, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=87042c63-0701-49e9-b7c4-60ec0437f150'),
-(13, 'DIA013', 'Round Brilliant Cut Diamond', 'Natural', 1.5, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 85, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=cb6cacce-4d3e-4531-905b-6d2d36c58995'),
-(14, 'DIA014', 'Round Brilliant Cut Diamond', 'Natural', 1.25, 'D', 'VS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 108, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=95349540-6f34-4d02-b934-466e1d14cf47'),
-(15, 'DIA015', 'Round Brilliant Cut Diamond', 'Natural', 5.5, 'F', 'VVS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 715, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=ef69675e-35c7-463f-bceb-d70e96063993'),
+(11, 'DIA011', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.17, 'F', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=1c8f4268-c8d1-43ff-9be6-4732bdec7bde'),
+(12, 'DIA012', 'Round Brilliant Cut Diamond - America', 'America', 0.17, 'F', 'VVS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=87042c63-0701-49e9-b7c4-60ec0437f150'),
+(13, 'DIA013', 'Round Brilliant Cut Diamond - Italy', 'Italy', 0.17, 'F', 'VVS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=cb6cacce-4d3e-4531-905b-6d2d36c58995'),
+(14, 'DIA014', 'Round Brilliant Cut Diamond - Australia', 'Australia', 0.17, 'F', 'VS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=95349540-6f34-4d02-b934-466e1d14cf47'),
+(15, 'DIA015', 'Round Brilliant Cut Diamond - South Africa', 'South Africa', 0.17, 'F', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=ef69675e-35c7-463f-bceb-d70e96063993'),
 
 -- Gemstones with J Color
-(16, 'DIA016', 'Round Brilliant Cut Diamond', 'Natural', 2.25, 'J', 'VVS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 110, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=2d1fac7d-419a-479e-b429-a5e598ead86b'),
-(17, 'DIA017', 'Round Brilliant Cut Diamond', 'Natural', 5.25, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 300, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=b6cf71d6-3292-4dec-9f0d-d4e6cb84752c'),
-(18, 'DIA018', 'Round Brilliant Cut Diamond', 'Natural', 10.25, 'D', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 430, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=35a9e414-0f63-4a86-aed7-8488ec8e22d7'),
-(19, 'DIA019', 'Round Brilliant Cut Diamond', 'Natural', 3.25, 'J', 'VSS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 225, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=95210446-0cac-412c-b7f1-d1c33152b79b'),
-(20, 'DIA020', 'Round Brilliant Cut Diamond', 'Natural', 4.75, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 230, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=5c853e49-3426-4c6b-9174-cbec99f5078f'),
+(16, 'DIA016', 'Round Brilliant Cut Diamond - Vietnam', 'Vietnam', 0.17, 'J', 'IF', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=2d1fac7d-419a-479e-b429-a5e598ead86b'),
+(17, 'DIA017', 'Round Brilliant Cut Diamond - America', 'America', 0.17, 'J', 'VVS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=b6cf71d6-3292-4dec-9f0d-d4e6cb84752c'),
+(18, 'DIA018', 'Round Brilliant Cut Diamond - Italy', 'Italy', 0.17, 'J', 'VVS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=35a9e414-0f63-4a86-aed7-8488ec8e22d7'),
+(19, 'DIA019', 'Round Brilliant Cut Diamond - Australia', 'Australia', 0.17, 'J', 'VS1', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=95210446-0cac-412c-b7f1-d1c33152b79b'),
+(20, 'DIA020', 'Round Brilliant Cut Diamond - South Africa', 'South Africa', 0.17, 'J', 'VS2', 'Excellent', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 100, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=5c853e49-3426-4c6b-9174-cbec99f5078f');
 
 
-(21, 'DIA021', 'Round Brilliant Cut Diamond', 'Natural', 0.45, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 22, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=b0c525b0-1f57-4bfd-a9be-d4ad5bfb300d'),
-(22, 'DIA022', 'Round Brilliant Cut Diamond', 'Natural', 0.75, 'D', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 58, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=5fdd9030-1600-46f2-9642-3710806c131f'),
-(23, 'DIA023', 'Round Brilliant Cut Diamond', 'Natural', 3.55, 'D', 'VS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 400, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=a05edcef-6e3b-4e6c-a487-0e9164895fa9'),
-(24, 'DIA024', 'Round Brilliant Cut Diamond', 'Natural', 2.65, 'F', 'VS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 175, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=41823da8-ca9f-4507-baf7-75729beded75'),
-(25, 'DIA025', 'Round Brilliant Cut Diamond', 'Natural', 5.34, 'D', 'VS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 835, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=cbac271e-76e7-4d3d-ae9e-9383e9a9b874'),
-
--- Gemstones with E Color
-(26, 'DIA026', 'Round Brilliant Cut Diamond', 'Natural', 3.45, 'F', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 450, 0,'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(2).jpg?alt=media&token=2fa766eb-5963-44c9-8022-b9bb7e4d4fb3'),
-(27, 'DIA027', 'Round Brilliant Cut Diamond', 'Natural', 3.35, 'J', 'VVS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 225, 0,'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(2).jpg?alt=media&token=fcf5b459-37e5-438a-b8d9-ac10648cdb0b'),
-(28, 'DIA028', 'Round Brilliant Cut Diamond', 'Natural', 4.53, 'E', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 550, 0,'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(3).jpg?alt=media&token=5abf0b4b-7fbd-47a2-ad80-cbdb0675b614'),
-(29, 'DIA029', 'Round Brilliant Cut Diamond', 'Natural', 2.75, 'E', 'VS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 175, 0,'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(4).jpg?alt=media&token=a60a7f36-76ba-4d3b-aee2-c1388db933f8'),
-(30, 'DIA030', 'Round Brilliant Cut Diamond', 'Natural', 1.55, 'D', 'VS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 126, 0,'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2%20(1).jpg?alt=media&token=2acf8ac0-8299-42be-8c45-2c8b88ba50b5'),
-
--- Gemstones with F Color
-(31, 'DIA031', 'Round Brilliant Cut Diamond', 'Natural', 3.45, 'F', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 450, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=1c8f4268-c8d1-43ff-9be6-4732bdec7bde'),
-(32, 'DIA032', 'Round Brilliant Cut Diamond', 'Natural', 4.87, 'E', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 550, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=87042c63-0701-49e9-b7c4-60ec0437f150'),
-(33, 'DIA033', 'Round Brilliant Cut Diamond', 'Natural', 4.99, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 230, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=cb6cacce-4d3e-4531-905b-6d2d36c58995'),
-(34, 'DIA034', 'Round Brilliant Cut Diamond', 'Natural', 5.99, 'F', 'VVS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 715, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=95349540-6f34-4d02-b934-466e1d14cf47'),
-(35, 'DIA015', 'Round Brilliant Cut Diamond', 'Natural', 5.99, 'D', 'VS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 835, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FF-color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=ef69675e-35c7-463f-bceb-d70e96063993'),
-
--- Gemstones with J Color
-(36, 'DIA036', 'Round Brilliant Cut Diamond', 'Natural', 1.75, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 58, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=5c853e49-3426-4c6b-9174-cbec99f5078f'),
-(37, 'DIA037', 'Round Brilliant Cut Diamond', 'Natural', 2.75, 'J', 'VVS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 110, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=95210446-0cac-412c-b7f1-d1c33152b79b'),
-(38, 'DIA038', 'Round Brilliant Cut Diamond', 'Natural', 3.5, 'F', 'VVS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 425, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1.jpg?alt=media&token=35a9e414-0f63-4a86-aed7-8488ec8e22d7'),
-(39, 'DIA039', 'Round Brilliant Cut Diamond', 'Natural', 4.3, 'D', 'VS1', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 535, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=b6cf71d6-3292-4dec-9f0d-d4e6cb84752c'),
-(40, 'DIA040', 'Round Brilliant Cut Diamond', 'Natural', 4.99, 'J', 'IF', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 230, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FJ-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=2d1fac7d-419a-479e-b429-a5e598ead86b'),
-
--- Gemstones with D Color
-(41, 'DIA041', 'Round Brilliant Cut Diamond', 'Natural', 0.85, 'F', 'VS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 45, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_2.jpg?alt=media&token=b0c525b0-1f57-4bfd-a9be-d4ad5bfb300d'),
-(42, 'DIA042', 'Round Brilliant Cut Diamond', 'Natural', 2.5, 'D', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 260, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0.jpg?alt=media&token=5fdd9030-1600-46f2-9642-3710806c131f'),
-(43, 'DIA043', 'Round Brilliant Cut Diamond', 'Natural', 10.5, 'D', 'VVS2', 'Ideal', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 1300, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_1%20(1).jpg?alt=media&token=a05edcef-6e3b-4e6c-a487-0e9164895fa9'),
-(44, 'DIA044', 'Round Brilliant Cut Diamond', 'Natural', 3.5, 'F', 'VVS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 425, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_3.jpg?alt=media&token=cbac271e-76e7-4d3d-ae9e-9383e9a9b874'),
-(45, 'DIA045', 'Round Brilliant Cut Diamond', 'Natural', 10.5, 'F', 'VS1', 'Shallow', 'Ideal', 'Excellent', 'Excellent', 'None', 1, 875, 0, 'https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FD-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(1).jpg?alt=media&token=41823da8-ca9f-4507-baf7-75729beded75');
 SET IDENTITY_INSERT [Diamond] OFF
-
-
 SET IDENTITY_INSERT [Product] ON;
 -- Insert data into the Product table
 INSERT INTO [dbo].[Product] (
@@ -811,48 +685,7 @@ VALUES
 (9, 9, 3, 300, NULL),   
 (10, 10, 3, 300, NULL);
 
-/*
-INSERT INTO [dbo].[Production_Order] (
-	[Production_Order_Id], 
-	[Date], 
 
-	[Customer_Id], 
-	[Category_Id], 
-
-	[Product_Size], 
-	[Description], 
-
-	[Img_Url],
-
-	[Q_Diamond_Amount], 
-	[Q_Material_Amount], 
-	[Q_Production_Amount], 
-	[Q_Total_Amount],
-
-	[O_Diamond_Amount], 
-	[O_Material_Amount], 
-	[O_Production_Amount], 
-	[O_Total_Amount], 
-
-	[Sales_Staff_Id], 
-	[Design_Staff_Id], 
-	[Production_Staff_Id], 
-	[Status], 
-	[Product_Id])
-VALUES 
-('POI00001', '2024-05-28', 'CUS010', 3, 14, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Custom earrings design', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'created', NULL),
-('POI00002', '2024-05-28', 'CUS010', 3, 14, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Pair of gold cufflinks featuring white diamond stones', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'created', NULL),
-
-('POI00003', '2024-05-28', 'CUS001', 1, 14, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Custom earrings design', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'requested', NULL),
-('POI00004', '2024-05-28', 'CUS002', 2, 44, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Pair of gold cufflinks featuring white diamond stones', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Karen Walker', NULL, NULL, 'requested', NULL),
-
-('POI00005', '2024-05-28', 'CUS010', 3, 24, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Pair of gold cufflinks featuring white diamond stones', 100, 100, 100, 300, 100, 100, 100, 300, 'Karen Walker', NULL, NULL, 'quoted (NAC)', NULL),
-('POI00006', '2024-05-28', 'CUS010', 3, 34, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Custom earrings design', 100, 100, 100, 300, 100, 100, 100, 300, 'Jack Turner', NULL, NULL, 'quoted (NAM)', NULL),
-
-('POI00007', '2024-05-28', 'CUS001', 1, 34, 'https://firebasestorage.googleapis.com/v0/b/demofirebase-b958b.appspot.com/o/540dc9d4-aba3-4268-acce-a8c8ea4c2f8a.jpg?alt=media', 'Custom earrings design', 100, 100, 100, 300, 100, 100, 100, 300, 'Karen Walker', 'Mia Nelson', NULL, 'ordered', 'PO010');
-*/
-
---SET IDENTITY_INSERT [Product] OFF
 SET IDENTITY_INSERT [Product_Design_Shell] ON;
 
 
@@ -897,7 +730,7 @@ VALUES
 (24, 10, 4);
 SET IDENTITY_INSERT [Product_Design_Shell] OFF;
 
---select * from Diamond_Price_List where price = 110
+
 
 select * from Users
 select * from Customer
@@ -912,13 +745,35 @@ select * from Diamond
 select * from Product
 select * from Production_Order
 select * from Product_Material
-
 select * from Product_Design_Shell
 select * from Product_Design
 
-use JewelryStore
 
-update  diamond set status= 1 where Dia_id = 42
-update  diamond set status= 1 where Dia_id = 43
-update  diamond set status= 1 where Dia_id = 44
-update  diamond set status= 0 where Dia_id = 45
+drop table Product 
+drop table Production_Order
+drop table Product_Material
+
+UPDATE [dbo].[Diamond]
+SET [O_Price] = 0
+
+delete from Production_Order where Production_Order_Id = 'POI001'
+delete from Product where Product_Id = 10
+delete from Diamond where Dia_Id=21
+
+ALTER TABLE Diamond
+add q_Price float;
+
+
+drop table diamond
+
+update Diamond set Carat_Weight = 0.16 where Dia_Id=1
+
+
+ALTER TABLE Diamond
+DROP column O_Price;
+
+ALTER TABLE Diamond
+DROP column Q_Price;
+
+update diamond set Status = 0 where dia_id = 1
+
