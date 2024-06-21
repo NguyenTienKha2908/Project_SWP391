@@ -1,0 +1,23 @@
+package com.jewelry.KiraJewelry.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.jewelry.KiraJewelry.models.Diamond;
+
+@Repository
+public interface DiamondRepository extends JpaRepository<Diamond, Integer>,JpaSpecificationExecutor<Diamond> {
+    @Query("SELECT d FROM Diamond d WHERE d.product.product_Id = :productId")
+    Diamond findDiamondByProductId(@Param("productId") int productId);
+
+    @Query("SELECT d FROM Diamond d WHERE d.dia_Id= :dia_Id")
+    Diamond findDiamondById(@Param("dia_Id") int dia_Id);
+
+    @Query("SELECT d FROM Diamond d WHERE d.dia_Name LIKE %:name%")
+    List<Diamond> findByNameContaining(@Param("name") String name);
+}
