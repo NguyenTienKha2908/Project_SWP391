@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Jewelry Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d4d8 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        a {
+            display: block;
+            margin: 20px 0;
+            color: #333;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Welcome to the Jewelry Management System</h1>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Manage Sections</h2>
+        <a th:href="@{/materials}">Manage Materials</a>
+        <a th:href="@{/materialPriceLists}">Manage Material Price Lists</a>
+        <a th:href="@{/diamonds}">Manage Diamonds</a>
+        <a th:href="@{/diaPriceLists}">Manage Diamond Price Lists</a>
+        <a th:href="@{/manageUsers}">Manage Users</a>
+        <a th:href="@{/categories}">Manage Categories</a>
+        <a th:href="@{/collections}">Manage Collections</a>
+        <a th:href="@{/blogs}">Manage Blogs</a>
+    </div>
+</body>
+</html>
