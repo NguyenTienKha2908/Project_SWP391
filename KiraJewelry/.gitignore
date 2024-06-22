@@ -38,4 +38,4 @@ node_modules/
 /playwright/.cache/
 
 
-KiraJewelry/src/main/resources/serviceAccountKey.json
+src/main/resources/serviceAccountKey.json
