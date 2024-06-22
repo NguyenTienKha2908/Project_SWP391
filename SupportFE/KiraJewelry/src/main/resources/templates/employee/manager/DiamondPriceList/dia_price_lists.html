@@ -140,12 +140,30 @@
             <div class="content">
                 <h1>All Diamond Prices</h1>
                 <hr>
-                <div th:if="${message}" th:text="${message}"></div>
-                <div class="top-content">
-                    <p>View, update or delete a diamond price</p>
-                    <a th:href="@{/showNewDiaPriceListForm}" class="btn btn-secondary">Add New Diamond Price</a>
+                <nav class="navbar navbar-expand-sm switch-page-nav">
+                    <div class="container justify-content-center">
+                        <!-- Links -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/homeManager}">Back to Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active-nav" th:href="@{/diaPriceLists}">Diamond Price List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/showNewDiaPriceListForm}">Add New Diamond Price
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/diamonds}">Manage Diamond</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="mess-box">
+                    <div th:if="${message}" th:text="${message}"></div>
                 </div>
-                <div class="container">
+                <div class="container my-3">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -174,7 +192,8 @@
                                     <td th:text="${diamondPriceList.price}"></td>
                                     <td th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
                                     <td>
-                                        <a th:href="@{/showFormForUpdateDiaPriceList/{id}(id=${diamondPriceList.id})}">Edit</a>
+                                        <a
+                                            th:href="@{/showFormForUpdateDiaPriceList/{id}(id=${diamondPriceList.id})}">Edit</a>
 
                                         <a th:href="@{/deleteDiaPriceList/{id}(id=${diamondPriceList.id})}">Delete</a>
                                     </td>
@@ -194,10 +213,6 @@
                             <a th:href="@{/diaPriceLists(page=${diaPriceListPage.number + 1})}">Next</a>
                         </li>
                     </ul>
-                    <div class="m-4 button-div">
-                        <a th:href="@{/homeManager}" class="btn btn-secondary">Back to
-                            Home</a>
-                    </div>
                 </div>
             </div>
         </div>

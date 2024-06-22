@@ -69,7 +69,11 @@ public class OrderController {
 
         if (newestProductionOrder != null) {
             Employee employee = employeeService.getEmployeeById(newestProductionOrder.getSales_Staff_Id());
-            model.addAttribute("sale_staff_name", employee.getFull_Name());
+            if(employee==null) {
+                model.addAttribute("sale_staff_name", "Sales Staff will contact you soon");
+            } else {
+                model.addAttribute("sale_staff_name", employee.getFull_Name());
+            }
             model.addAttribute("customer", customer);
             model.addAttribute("productionOrder", newestProductionOrder);
             String catergoryName = categoryService.getCateNameById(newestProductionOrder.getCategory_Id());

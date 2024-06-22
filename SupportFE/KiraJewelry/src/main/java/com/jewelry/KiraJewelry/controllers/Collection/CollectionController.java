@@ -50,7 +50,7 @@ public class CollectionController {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
                 byte[] imageBytes = imgFile.getBytes();
-                collection.setImageData(imageBytes);
+                // collection.setImageData(imageBytes);
                 collection.setImg_Url(imgFile.getOriginalFilename());
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
@@ -69,7 +69,7 @@ public class CollectionController {
                     }
                 }
                 byte[] imageBytes = baos.toByteArray();
-                collection.setImageData(imageBytes);
+                // collection.setImageData(imageBytes);
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage",
                         "Could not retrieve image from URL: " + e.getMessage());
@@ -100,33 +100,33 @@ public class CollectionController {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
                 byte[] imageBytes = imgFile.getBytes();
-                collection.setImageData(imageBytes);
+                // collection.setImageData(imageBytes);
                 collection.setImg_Url(imgFile.getOriginalFilename());
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
                 return "employee/manager/Collection/update_collection";
             }
-        } else if (collection.getImg_Url() != null && !collection.getImg_Url().isEmpty()) {
-            if (collection.getImageData() == null || collection.getImageData().length == 0) {
-                try {
-                    @SuppressWarnings("deprecation")
-                    URL url = new URL(collection.getImg_Url());
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    try (InputStream is = url.openStream()) {
-                        byte[] buffer = new byte[1024];
-                        int n;
-                        while ((n = is.read(buffer)) != -1) {
-                            baos.write(buffer, 0, n);
-                        }
-                    }
-                    byte[] imageBytes = baos.toByteArray();
-                    collection.setImageData(imageBytes);
-                } catch (IOException e) {
-                    redirectAttributes.addFlashAttribute("errorMessage",
-                            "Could not retrieve image from URL: " + e.getMessage());
-                    return "employee/manager/Collection/update_collection";
-                }
-            }
+        // } else if (collection.getImg_Url() != null && !collection.getImg_Url().isEmpty()) {
+        //     if (collection.getImageData() == null || collection.getImageData().length == 0) {
+        //         try {
+        //             @SuppressWarnings("deprecation")
+        //             URL url = new URL(collection.getImg_Url());
+        //             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //             try (InputStream is = url.openStream()) {
+        //                 byte[] buffer = new byte[1024];
+        //                 int n;
+        //                 while ((n = is.read(buffer)) != -1) {
+        //                     baos.write(buffer, 0, n);
+        //                 }
+        //             }
+        //             byte[] imageBytes = baos.toByteArray();
+        //             collection.setImageData(imageBytes);
+        //         } catch (IOException e) {
+        //             redirectAttributes.addFlashAttribute("errorMessage",
+        //                     "Could not retrieve image from URL: " + e.getMessage());
+        //             return "employee/manager/Collection/update_collection";
+        //         }
+        //     }
         }
 
         collectionService.saveCollection(collection);

@@ -3,6 +3,7 @@ package com.jewelry.KiraJewelry.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.jewelry.KiraJewelry.dto.LoginRequest;
 import com.jewelry.KiraJewelry.models.User;
 import com.jewelry.KiraJewelry.service.UserService;
 
@@ -20,6 +22,97 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @GetMapping("/registration")
+    public String getRegistrationPage(Model model, RedirectAttributes redirectAttributes) {
+        LoginRequest registerDto = new LoginRequest();
+        model.addAttribute("user", registerDto);
+        // Check for flash attributes and add them to the model if they exist
+        if (redirectAttributes.getFlashAttributes().containsKey("fullNameError")) {
+            model.addAttribute("fullNameError", redirectAttributes.getAttribute("fullNameError"));
+        }
+        if (redirectAttributes.getFlashAttributes().containsKey("emailError")) {
+            model.addAttribute("emailError", redirectAttributes.getAttribute("emailError"));
+        }
+        if (redirectAttributes.getFlashAttributes().containsKey("passwordError")) {
+            model.addAttribute("passwordError", redirectAttributes.getAttribute("passwordError"));
+        }
+        if (redirectAttributes.getFlashAttributes().containsKey("phoneError")) {
+            model.addAttribute("phoneError", redirectAttributes.getAttribute("phoneError"));
+        }
+        if (redirectAttributes.getFlashAttributes().containsKey("userexist")) {
+            model.addAttribute("userexist", redirectAttributes.getAttribute("userexist"));
+        }
+        if (redirectAttributes.getFlashAttributes().containsKey("message")) {
+            model.addAttribute("message", redirectAttributes.getAttribute("message"));
+        }
+        return "register";
+    }
+
+    @PostMapping("/registration")
+    public String registerSave(@Valid @ModelAttribute("user") LoginRequest registerDto,
+            RedirectAttributes redirectAttributes) {
+        // if (registerDto.getRole() == 0) {
+        // registerDto.setRole(1); // Default role to 1
+        // }
+
+        // Validate fullname field for containing numbers
+        if (containsNumbers(registerDto.getFullname())) {
+            redirectAttributes.addFlashAttribute("fullNameError", "Full Name cannot contain number!");
+            return "redirect:/registration?error";
+        }
+        // Validate phone number length
+        if (registerDto.getPhone().length() != 10) {
+            redirectAttributes.addFlashAttribute("phoneError", "Phone number must be exactly 10 digits");
+            return "redirect:/registration?error";
+        }
+
+        // Validate email format
+        if (!isValidEmail(registerDto.getEmail())) {
+            // Add error message as flash attribute for redirection
+            redirectAttributes.addFlashAttribute("emailError", "Invalid Email Format");
+            return "redirect:/registration?error";
+        }
+
+        // Validate password complexity
+        if (!isValidPassword(registerDto.getPassword())) {
+            redirectAttributes.addFlashAttribute("passwordError",
+                    "Password must have at least 1 special character, 1 uppercase letter, and 1 digit");
+            return "redirect:/registration?error";
+        }
+
+        User user = userService.findByEmail(registerDto.getEmail());
+        if (user != null) {
+            // Add userexist as a flash attribute for redirection
+            redirectAttributes.addFlashAttribute("userexist", user);
+            return "redirect:/registration?error";
+        } else {
+
+            userService.saveUserAndCustomer(registerDto);
+            // Add message as a flash attribute for redirection
+            redirectAttributes.addFlashAttribute("message", "Registered Successfully!");
+            return "redirect:/registration?success";
+        }
+
+    }
+
+    // Validate fullName
+    private boolean containsNumbers(String str) {
+        return str != null && str.matches(".*\\d.*");
+    }
+
+    // Validate email
+    private boolean isValidEmail(String email) {
+        return email != null && email.matches("[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|example\\.com|fpt\\.edu\\.vn)");
+    }
+
+    // Validate password
+    private boolean isValidPassword(String password) {
+        return password != null && password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$");
+    }
 
     @GetMapping("/users")
     public String getAllUsers(Model model) {

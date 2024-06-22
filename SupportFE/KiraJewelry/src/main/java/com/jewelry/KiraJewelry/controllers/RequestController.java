@@ -20,7 +20,6 @@ import com.jewelry.KiraJewelry.service.FilesStorageService;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.ProductionOrderService;
 
-import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -58,7 +57,8 @@ public class RequestController {
             @RequestParam("description") String description,
             @RequestParam("file") MultipartFile file,
             HttpSession session, Model model) {
-        // Get user info from session
+
+            // Get user info from session
         String customerId = (String) session.getAttribute("customerId");
 
         // Generate production_Order_Id
@@ -104,7 +104,7 @@ public class RequestController {
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exception (log it, show error message, etc.)
-            return "error";
+            return "redirect:/request?error";
         }
 
         Customer customer = customerService.getCustomerIdByCustomerName((String) session.getAttribute("customerName"));
@@ -114,20 +114,25 @@ public class RequestController {
         model.addAttribute("categoryName", catergoryName);
 
         // Redirect to success page
-        return "customer/userRequest";
+        // return "customer/userRequest";
+        return "redirect:/request?success";
     }
 
     private String generateProductionOrderId() {
         // Lấy production_Order_Id cuối cùng đã được chèn vào
         ProductionOrder lastOrder = productionOrderService.getTopByOrderByProduction_Order_IdDesc();
-        if (lastOrder.getProduction_Order_Id() != null) {
-            String lastId = lastOrder.getProduction_Order_Id();
-            // Trích xuất phần số và tăng lên
-            int numericPart = Integer.parseInt(lastId.substring(3)) + 1;
-            // Định dạng lại ID mới theo mẫu mong muốn
-            return String.format("POI%03d", numericPart);
+        if (lastOrder != null) {
+            if (lastOrder.getProduction_Order_Id() != null) {
+                String lastId = lastOrder.getProduction_Order_Id();
+                // Trích xuất phần số và tăng lên
+                int numericPart = Integer.parseInt(lastId.substring(3)) + 1;
+                // Định dạng lại ID mới theo mẫu mong muốn
+                return String.format("POI%03d", numericPart);
+            } else {
+                // Nếu không có order nào trước đó, bắt đầu với POI001
+                return "POI001";
+            }
         } else {
-            // Nếu không có order nào trước đó, bắt đầu với POI001
             return "POI001";
         }
     }

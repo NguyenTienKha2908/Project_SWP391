@@ -142,11 +142,27 @@
                 <div class="mess-box">
                     <div th:if="${message}" class="message" th:text="${message}"></div>
                 </div>
-                <div class="top-content">
-                    <p>View, update or delete a material</p>
-                    <a th:href="@{/showNewMaterialPriceListForm}" class="btn btn-secondary">Add New Material Price List</a>
-                </div>
-                <div class="container">
+                <nav class="navbar navbar-expand-sm switch-page-nav">
+                    <div class="container justify-content-center">
+                        <!-- Links -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/homeManager}">Back to Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active-nav" th:href="@{/materialPriceLists}">Material Price List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/showNewMaterialPriceListForm}">Add New Material
+                                    Price</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/materials}">All Materials</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container my-3">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -184,10 +200,7 @@
                             <a th:href="@{/diamonds(page=${diamondPage.number + 1})}">Next</a>
                         </li>
                     </ul> -->
-                    <div class="m-4 button-div">
-                        <a th:href="@{/homeManager}" class="btn btn-secondary">Back to
-                            Home</a>
-                    </div>
+                    
                 </div>
             </div>
         </div>

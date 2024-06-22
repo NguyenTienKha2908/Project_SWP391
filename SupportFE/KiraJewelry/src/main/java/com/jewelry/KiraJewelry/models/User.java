@@ -25,13 +25,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_Id")
     private int user_Id;
+    
     @Email
-    @Column(name = "Email", nullable = false)
+    @Column(nullable = false, unique = true,name = "Email")// Email không được null và phải là duy nhất
     private String email;
 
-    @Column(name = "Password", nullable = false)
+    @Column(nullable = false,name = "Password")  // Mật khẩu không được null
     private String password;
-    @Min(2)
+
+    @Min(1)
     @Max(6)
     @Column(name = "Role_Id", nullable = false)
     private int role_Id;
@@ -39,6 +41,13 @@ public class User {
     @Column(name = "Status", nullable = false)
     private boolean status;
 
+    public User(String email, String password, int role_Id, boolean status) {
+        this.email = email;
+        this.password = password;
+        this.role_Id = role_Id;
+        this.status = status;
+
+    }
     // Getters and setters
     public int getUser_Id() {
         return user_Id;

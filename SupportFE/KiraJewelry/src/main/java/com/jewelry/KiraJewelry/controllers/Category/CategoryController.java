@@ -50,7 +50,7 @@ public class CategoryController {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
                 byte[] imageBytes = imgFile.getBytes();
-                category.setImageData(imageBytes);
+                // category.setImageData(imageBytes);
                 category.setImg_Url(imgFile.getOriginalFilename());
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
@@ -69,7 +69,7 @@ public class CategoryController {
                     }
                 }
                 byte[] imageBytes = baos.toByteArray();
-                category.setImageData(imageBytes);
+                // category.setImageData(imageBytes);
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage",
                         "Could not retrieve image from URL: " + e.getMessage());
@@ -100,34 +100,35 @@ public class CategoryController {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
                 byte[] imageBytes = imgFile.getBytes();
-                category.setImageData(imageBytes);
+                // category.setImageData(imageBytes);
                 category.setImg_Url(imgFile.getOriginalFilename());
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
                 return "employee/manager/Category/update_category";
             }
-        } else if (category.getImg_Url() != null && !category.getImg_Url().isEmpty()) {
-            // Check if there is already an existing image
-            if (category.getImageData() == null || category.getImageData().length == 0) {
-                try {
-                    @SuppressWarnings("deprecation")
-                    URL url = new URL(category.getImg_Url());
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    try (InputStream is = url.openStream()) {
-                        byte[] buffer = new byte[1024];
-                        int n;
-                        while ((n = is.read(buffer)) != -1) {
-                            baos.write(buffer, 0, n);
-                        }
-                    }
-                    byte[] imageBytes = baos.toByteArray();
-                    category.setImageData(imageBytes);
-                } catch (IOException e) {
-                    redirectAttributes.addFlashAttribute("errorMessage",
-                            "Could not retrieve image from URL: " + e.getMessage());
-                    return "employee/manager/Category/update_category";
-                }
-            }
+            // } else if (category.getImg_Url() != null && !category.getImg_Url().isEmpty())
+            // {
+            // // Check if there is already an existing image
+            // if (category.getImageData() == null || category.getImageData().length == 0) {
+            // try {
+            // @SuppressWarnings("deprecation")
+            // URL url = new URL(category.getImg_Url());
+            // ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // try (InputStream is = url.openStream()) {
+            // byte[] buffer = new byte[1024];
+            // int n;
+            // while ((n = is.read(buffer)) != -1) {
+            // baos.write(buffer, 0, n);
+            // }
+            // }
+            // byte[] imageBytes = baos.toByteArray();
+            // // category.setImageData(imageBytes);
+            // } catch (IOException e) {
+            // redirectAttributes.addFlashAttribute("errorMessage",
+            // "Could not retrieve image from URL: " + e.getMessage());
+            // return "employee/manager/Category/update_category";
+            // }
+            // }
         }
 
         categoryService.saveCategory(category);

@@ -38,10 +38,6 @@ public class Collection {
     @Column(name = "Img_Url", nullable = true)
     private String img_Url;
 
-    @Lob
-    @Column(name = "Image_Data", nullable = true)
-    private byte[] imageData;
-
     // Getters and setters
     public int getCollection_Id() {
         return collection_Id;
@@ -73,13 +69,5 @@ public class Collection {
 
     public void setImg_Url(String img_Url) {
         this.img_Url = img_Url;
-    }
-
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
     }
 }

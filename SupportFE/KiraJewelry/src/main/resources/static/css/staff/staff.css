@@ -959,17 +959,15 @@ tr td input {
 /* General */
 .btn {
     display: inline-block;
-    padding: 10px 15px;
+    padding: 7px 25px;
     font-size: 14px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
     outline: none;
     color: #fff;
-    background-color: #4CAF50;
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 9px #999;
+    border-radius: 10px;
     margin: 10px 0;
 }
 
@@ -1018,4 +1016,31 @@ tr td input {
         float: right;
         margin: 5% 10%;
     }
+}
+
+.btnform-group {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.switch-page-nav {
+    a {
+        color: #303030;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+    a:hover, .active-nav {
+        font-weight: 600;
+        color: #f7b050;
+        border-bottom: 1px soild #f7b050;
+
+    }
+}
+
+.error-tooltip {
+    color: #f00;
+    font-size: 12px;
+    padding: 2% 0%;
 }
