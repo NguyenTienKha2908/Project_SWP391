@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Material List</title>
+</head>
+<body>
+
+<div>
+    <a href="/index.html">Home</a>
+    <h1>Material List</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Code</th>
+            <th>Name</th>
+
+            <th>Img_Url</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="material : ${materials}" th:if="${material.status == true}">
+            <td th:text="${material.materialId}"></td>
+            <td th:text="${material.materialCode}"></td>
+            <td th:text="${material.materialName}"></td>
+            <td th:text="${material.imgUrl}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

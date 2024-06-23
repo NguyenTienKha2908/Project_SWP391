@@ -32,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable())
                 .authorizeRequests(request -> request
-                        .requestMatchers("/user-page").hasAuthority("1")
+                        .requestMatchers("/user-page","/homePage",).hasAuthority("1")
                         .requestMatchers("/admin-page").hasAuthority("2")
                         .requestMatchers("/sale-page").hasAuthority("3")
                         .requestMatchers("/manager-page").hasAuthority("4")

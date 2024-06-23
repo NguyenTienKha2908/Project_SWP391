@@ -17,12 +17,12 @@ public class RegisterDto {
 
     @NotNull
     private  int role;
-    private int status;
+    private boolean status;
     private String fullname;
     private String address;
     private String phone;
 
-    public RegisterDto(String email, String password, int role, int status, String fullname, String address, String phone) {
+    public RegisterDto(String email, String password, int role, boolean status, String fullname, String address, String phone) {
         this.email = email;
         this.password = password;
         this.role = role;

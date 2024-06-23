@@ -27,9 +27,9 @@ public class User {
     private int role;
 
     @Column(nullable = false,name = "Status")  // Trạng thái không được null
-    private int status;
+    private boolean status;
 
-    public User(String email, String password, int role, int status) {
+    public User(String email, String password, int role, boolean status) {
         this.email = email;
         this.password = password;
         this.role = role;
