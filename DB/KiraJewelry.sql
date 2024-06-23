@@ -917,8 +917,3 @@ select * from Product_Design_Shell
 select * from Product_Design
 
 use JewelryStore
-
-update  diamond set status= 1 where Dia_id = 42
-update  diamond set status= 1 where Dia_id = 43
-update  diamond set status= 1 where Dia_id = 44
-update  diamond set status= 0 where Dia_id = 45

@@ -41,4 +41,16 @@ public class DiamondService {
         return diamondRepository.findAll(spec);
     }
 
+    public List<Diamond> getByListDiamonds(String name, Double caratWeight, String color, String clarity, String cut,
+            String origin) {
+
+        return diamondRepository.findByListDiamonds(name, caratWeight, color, clarity, cut, origin);
+    }
+
+    public List<Diamond> getByListDiamondsLackWeight(String name, String color, String clarity, String cut,
+            String origin) {
+
+        return diamondRepository.findByListDiamondsLackWeight(name, color, clarity, cut, origin);
+    }
+
 }

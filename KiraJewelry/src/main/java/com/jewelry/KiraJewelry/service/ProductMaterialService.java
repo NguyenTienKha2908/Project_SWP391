@@ -1,5 +1,7 @@
 package com.jewelry.KiraJewelry.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +25,9 @@ public class ProductMaterialService {
     public ProductMaterial getProductMaterialByProductId(int productId) {
         return productMaterialRepository.findProductMaterialByProductId(productId);
     }
+    public List<ProductMaterial> getListProductMaterialByProductId(int productId) {
+        return productMaterialRepository.findListProductMaterialByProductId(productId);
+    }
+
+    
 }

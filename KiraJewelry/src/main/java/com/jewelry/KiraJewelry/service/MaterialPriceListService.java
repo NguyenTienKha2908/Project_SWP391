@@ -20,4 +20,6 @@ public class MaterialPriceListService {
     public MaterialPriceList getMaterialPriceListByMaterialId(int material_Id) {
         return materialPriceListRepository.findMaterialPriceListByMaterialId(material_Id);
     }
+
+
 }

@@ -88,17 +88,21 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewIngredientsPage")
-    public String getIngredients(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+    public String getIngredients(@RequestParam("productionOrderId") String productionOrderId, Model model,
+            HttpSession session) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         Product product = productionOrder.getProduct();
+        session.setAttribute("productionOrder", productionOrder);
+        session.setAttribute("product", product);
         model.addAttribute("product", product);
         model.addAttribute("productionOrder", productionOrder);
         return "employee/sales_staff/findIngredientsPage";
     }
 
-    @PostMapping("/searchMaterial")
+    @GetMapping("/searchMaterial")
     public String searchMaterial(@RequestParam("production_Order_Id") String productionOrderId,
             @RequestParam String materialName, Model model) {
+
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         List<Material> material = materialService.findByName(materialName);
         List<MaterialPriceList> listPrice = new ArrayList<>();
@@ -106,69 +110,114 @@ public class ProductionOrderController {
             MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(m.getMaterial_Id());
             listPrice.add(mpl);
         }
+        String message = "Search for material name : " + materialName;
+        model.addAttribute("message", message);
         model.addAttribute("productionOrder", productionOrder);
         model.addAttribute("product", productionOrder.getProduct());
+        model.addAttribute("productionOrderId", productionOrderId);
         model.addAttribute("materialName", materialName);
         model.addAttribute("materialPriceList", listPrice);
         model.addAttribute("material", material);
         return "employee/sales_staff/findIngredientsPage";
     }
 
-    @PostMapping("/saveMaterial")
-    public String saveMaterial(@RequestParam("production_Order_Id") String productionOrderId,
+    @GetMapping("/saveMaterial")
+    public String saveMaterial(
+            @RequestParam("production_Order_Id") String productionOrderId,
             @RequestParam("material_Id") int materialId,
-            @RequestParam("material_Name") String materialName,
-            @RequestParam(value = "materialWeight", required = false) Double materialWeight,
+            // @RequestParam(value = "materialWeight", required = false) Double
+            // materialWeight,
             Model model) {
-        String message = "";
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
 
-        int productId = productionOrder.getProduct().getProduct_Id();
-        ProductMaterial productMaterials = productMaterialService.getProductMaterialByProductId(productId);
-        if (productMaterials != null) {
-            message = "This product has selected materials!";
-        } else {
+        // Log the received parameters for debugging
+        // System.out.println("Received production_Order_Id: " + productionOrderId);
+        // System.out.println("Received material_Id: " + materialId);
+
+        String message = "";
+
+        try {
+            ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+
+            int productId = productionOrder.getProduct().getProduct_Id();
+            ProductMaterial productMaterials = productMaterialService.getProductMaterialByProductId(productId);
+            // hiện tại đang bị lỗi ở đây vì lỗi kiểm tra product material
+            if (productMaterials != null) {
+                productMaterialService.deleteProductMaterialById(productMaterials.getId().getProduct_Id(),
+                        productMaterials.getId().getMaterial_Id());
+
+            }
             ProductMaterial productMaterial = new ProductMaterial();
             ProductMaterialId productMaterialId = new ProductMaterialId();
             productMaterialId.setProduct_Id(productionOrder.getProduct().getProduct_Id());
             productMaterialId.setMaterial_Id(materialId);
             productMaterial.setId(productMaterialId);
-            if (materialWeight != null) {
-                productMaterial.setMaterial_Weight(materialWeight);
-                MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(materialId);
-                if (mpl != null) {
-                    double q_Price = materialWeight * mpl.getPrice();
-                    productMaterial.setQ_Price(q_Price);
-                    productMaterial.setO_Price(q_Price);
-                }
-                message = "Save material successfully!";
-            } else {
-                productMaterial.setMaterial_Weight(0);
-                productMaterial.setQ_Price(0);
-                productMaterial.setO_Price(0);
-                message = "Save material but you didn't choose material before!";
-            }
 
             productMaterialService.saveProductMaterial(productMaterial);
+            Material material = materialService.getMaterialById(materialId);
+            MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(materialId);
+            message = "You just choose material :" + materialId + ", Material Code : " + material.getMaterial_Code()
+                    + ", Material Name : " + material.getMaterial_Name() + ", Price 1 units - Day effective : "
+                    + mpl.getPrice() + " - " + mpl.getEff_Date();
+
+            model.addAttribute("productionOrder", productionOrder);
+            model.addAttribute("product", productionOrder.getProduct());
+        } catch (Exception e) {
+            // Log the exception (consider using a logging framework like SLF4J)
+            e.printStackTrace();
+            message = "An error occurred while saving the material: " + e.getMessage();
         }
 
         model.addAttribute("message", message);
-        model.addAttribute("productionOrder", productionOrder);
-        model.addAttribute("product", productionOrder.getProduct());
+
         return "employee/sales_staff/findIngredientsPage";
     }
 
-    @PostMapping("/searchDiamond")
+    @GetMapping("/saveMaterialWeight")
+    public String saveMaterialWeight(@RequestParam("production_Order_Id") String productionOrderId,
+            @RequestParam(value = "materialWeight", required = false) Double materialWeight, Model model) {
+        String message = "";
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        int productId = productionOrder.getProduct().getProduct_Id();
+        ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(productId);
+        if (materialWeight == null) {
+            message = "Material weight not found";
+        } else {
+            productMaterial.setMaterial_Weight(materialWeight);
+            productMaterialService.saveProductMaterial(productMaterial);
+
+            int materialId = productMaterial.getId().getMaterial_Id();
+            MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(materialId);
+            double materialPrice = mpl.getPrice();
+            double productionOrderMaterialPrice = materialPrice * materialWeight;
+            productionOrder.setQ_Material_Amount(productionOrderMaterialPrice);
+            productionOrderService.saveProductionOrder(productionOrder);
+            message = "Save material weight successfully";
+        }
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("product", productionOrder.getProduct());
+        model.addAttribute("message", message);
+        return "employee/sales_staff/findIngredientsPage";
+    }
+
+    @GetMapping("/searchDiamond")
     public String searchDiamond(@RequestParam("production_Order_Id") String productionOrderId,
-            @RequestParam(required = false) String diamondName,
-            @RequestParam(required = false) Double caratWeight,
-            @RequestParam(required = false) String color,
-            @RequestParam(required = false) String clarity,
-            @RequestParam(required = false) String cut,
-            @RequestParam(required = false) String origin,
+            @RequestParam("diamondName") String diamondName,
+            @RequestParam(value = "caratWeight", required = false) Double caratWeight,
+            @RequestParam("color") String color,
+            @RequestParam("clarity") String clarity,
+            @RequestParam("cut") String cut,
+            @RequestParam("origin") String origin,
             Model model) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        List<Diamond> diamond = diamondService.findByCriteria(diamondName, caratWeight, color, clarity, cut, origin);
+        // List<Diamond> diamond = diamondService.findByCriteria(diamondName,
+        // caratWeight, color, clarity, cut, origin);
+        List<Diamond> diamond = new ArrayList<Diamond>();
+        if (caratWeight == null) {
+            diamond = diamondService.getByListDiamondsLackWeight(diamondName, color, clarity, cut, origin);
+        } else {
+            diamond = diamondService.getByListDiamonds(diamondName, caratWeight, color, clarity, cut, origin);
+        }
+        String messageDiamond = "";
 
         model.addAttribute("diamondName", diamondName);
         model.addAttribute("caratWeight", caratWeight);

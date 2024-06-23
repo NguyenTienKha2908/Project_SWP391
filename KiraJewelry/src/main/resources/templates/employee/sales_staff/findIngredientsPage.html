@@ -117,7 +117,7 @@
                     </div>
                     <hr>
                     <div class="container">
-                        <form th:action="@{/searchMaterial}" method="post">
+                        <form th:action="@{/searchMaterial}" method="get">
                             <input type="hidden" id="production_Order_Id" name="production_Order_Id"
                                 th:value="${productionOrder.production_Order_Id}">
                             <h3 class="fw-bold text-center" style="color: rgb(226, 187, 13)">Material</h3>
@@ -127,52 +127,60 @@
                                     <div class="d-flex">
                                         <input type="text" id="materialName" name="materialName" class="form-control"
                                             th:value="${materialName}">
-                                        <button type="submit" class="text-decoration-none  text-nowrap">Search
+                                        <button type="submit" class="text-decoration-none text-nowrap">Search
                                             Material</button>
                                     </div>
                                 </div>
-                                <div>
-                                    <label for="materialWeight">Material Weight:</label>
-                                    <div class="d-flex">
-                                        <input type="text" id="materialWeight" name="materialWeight"
-                                            class="form-control" th:value="${materialWeight}">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <form th:action="@{/saveMaterial}" method="post">
-                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                                th:value="${productionOrder.production_Order_Id}">
-                            <div th:if="${material != null }">
                                 <br>
-                                <table class="w-100">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Code</th>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    <tr th:each="material : ${material}">
-                                        <td th:text="${material.material_Id}"></td>
-                                        <td th:text="${material.material_Code}"></td>
-                                        <td th:text="${material.material_Name}"></td>
-                                        <td th:text="${material.status}"></td>
-                                        <td>
-                                            <input type="hidden" name="material_Id"
-                                                th:value="${material.material_Id}" />
-                                            <input type="hidden" name="material_Name"
-                                                th:value="${material.material_Name}" />
-                                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                                                th:value="${productionOrder.production_Order_Id}">
-                                            <button class="text-decoration-none text-success">Save</button>
-                                        </td>
-                                    </tr>
-                                </table>
+
                             </div>
                         </form>
+                        <div class="form-group w-50">
+                            <form th:action="@{/saveMaterialWeight}" method="get">
+
+                                <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                    th:value="${productionOrder.production_Order_Id}">
+                                <label for="materialWeight" class="text-nowrap">Material Weight:</label>
+                                <div class="d-flex">
+
+                                    <input type="text" id="materialWeight" name="materialWeight" class="form-control"
+                                        th:value="${materialWeight}">
+
+                                    <button type="submit" class="text-decoration-none text-nowrap">Save Material
+                                        Weight</button>
+                                </div>
+                            </form>
+                        </div>
+                        <br>
                         <div th:if="${message != null}">
                             <i class="fw-bold" th:text="${message}"></i>
+                        </div>
+                        <div th:if="${material != null}">
+                            <br>
+                            <table class="w-100">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr th:each="material : ${material}">
+                                    <td th:text="${material.material_Id}"></td>
+                                    <td th:text="${material.material_Code}"></td>
+                                    <td th:text="${material.material_Name}"></td>
+                                    <td th:text="${material.status}"></td>
+                                    <td>
+                                        <form th:action="@{/saveMaterial}" method="get">
+                                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                                th:value="${productionOrder.production_Order_Id}">
+                                            <input type="hidden" name="material_Id"
+                                                th:value="${material.material_Id}" />
+                                            <button class="text-decoration-none text-success">Save</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                         <div th:if="${materialPriceList != null }">
                             <br>
@@ -194,96 +202,103 @@
                     </div>
                     <br>
                     <hr class="w-100">
-                    <form th:action="@{/searchDiamond}" method="post">
-                        <h3 class="fw-bold text-center" style="color: rgb(179, 174, 185)">Diamond</h3>
-                        <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                            th:value="${productionOrder.production_Order_Id}">
-                        <div class="form-group w-50">
-                            <div>
-                                <label for="diamondName">Diamond Name:</label>
-                                <input type="text" id="diamondName" name="diamondName" class="form-control"
-                                    th:value="${diamondName}">
+                    <div class="container">
+                        <form th:action="@{/searchDiamond}" method="get">
+                            <h3 class="fw-bold text-center" style="color: rgb(179, 174, 185)">Diamond</h3>
+                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                th:value="${productionOrder.production_Order_Id}">
+                            <div class="form-group w-50">
+                                <div>
+                                    <label for="diamondName">Diamond Name:</label>
+                                    <input type="text" id="diamondName" name="diamondName" class="form-control"
+                                        th:value="${diamondName}">
+                                </div>
+                                <div>
+                                    <label for="caratWeight">Carat weight:</label>
+                                    <input type="number" step="any" min="0" id="caratWeight" name="caratWeight"
+                                        class="form-control" th:value="${caratWeight}">
+                                </div>
+                                <div>
+                                    <label for="origin">Origin:</label>
+                                    <input type="text" id="origin" name="origin" class="form-control"
+                                        th:value="${origin}">
+                                </div>
+                                <div>
+                                    <label for="color">Color:</label>
+                                    <input type="text" id="color" name="color" class="form-control" th:value="${color}">
+                                </div>
+                                <div>
+                                    <label for="clarity">Clarity:</label>
+                                    <input type="text" id="clarity" name="clarity" class="form-control"
+                                        th:value="${clarity}">
+                                </div>
+                                <div>
+                                    <label for="cut">Cut:</label>
+                                    <input type="text" id="cut" name="cut" class="form-control" th:value="${cut}">
+                                </div>
+                                <button type="submit" class="text-decoration-none text-nowrap">Search Diamond</button>
                             </div>
-                            <div>
-                                <label for="caratWeight">Carat weight:</label>
-                                <input type="number" step="any" min="0" id="caratWeight" name="caratWeight"
-                                    class="form-control" th:value="${caratWeight}">
-                            </div>
-                            <div>
-                                <label for="origin">Origin:</label>
-                                <input type="text" id="origin" name="origin" class="form-control" th:value="${origin}">
-                            </div>
-                            <div>
-                                <label for="color">Color:</label>
-                                <input type="text" id="color" name="color" class="form-control" th:value="${color}">
-                            </div>
-                            <div>
-                                <label for="clarity">Clarity:</label>
-                                <input type="text" id="clarity" name="clarity" class="form-control"
-                                    th:value="${clarity}">
-                            </div>
-                            <div>
-                                <label for="cut">Cut:</label>
-                                <input type="text" id="cut" name="cut" class="form-control" th:value="${cut}">
-                            </div>
-                            <button type="submit" class="text-decoration-none text-nowrap">Search Diamond</button>
+                        </form>
+                        <div th:if="${diamond != null }">
+                            <br>
+                            <table class="w-100">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Origin</th>
+                                    <th>Carat Weight</th>
+                                    <th>Color</th>
+                                    <th>Clarity</th>
+                                    <th>Cut</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr th:each="diamond : ${diamond}">
+                                    <td th:text="${diamond.dia_Id}"></td>
+                                    <td th:text="${diamond.dia_Code}"></td>
+                                    <td th:text="${diamond.dia_Name}"></td>
+                                    <td th:text="${diamond.origin}"></td>
+                                    <td th:text="${diamond.carat_Weight}"></td>
+                                    <td th:text="${diamond.color}"></td>
+                                    <td th:text="${diamond.clarity}"></td>
+                                    <td th:text="${diamond.cut}"></td>
+                                    <td><button class="text-decoration-none text-success">Save</button></td>
+                                </tr>
+                            </table>
                         </div>
-                    </form>
-                    <div th:if="${diamond != null }">
-                        <br>
-                        <table class="w-100">
-                            <tr>
-                                <th>ID</th>
-                                <th>Code</th>
-                                <th>Name</th>
-                                <th>Origin</th>
-                                <th>Carat Weight</th>
-                                <th>Color</th>
-                                <th>Clarity</th>
-                                <th>Cut</th>
-                                <th>Action</th>
-                            </tr>
-                            <tr th:each="diamond : ${diamond}">
-                                <td th:text="${diamond.dia_Id}"></td>
-                                <td th:text="${diamond.dia_Code}"></td>
-                                <td th:text="${diamond.dia_Name}"></td>
-                                <td th:text="${diamond.origin}"></td>
-                                <td th:text="${diamond.carat_Weight}"></td>
-                                <td th:text="${diamond.color}"></td>
-                                <td th:text="${diamond.clarity}"></td>
-                                <td th:text="${diamond.cut}"></td>
-                                <td><button class="text-decoration-none text-success">Save</button></td>
-                            </tr>
-                        </table>
+                        <div th:if="${diamondPriceList != null && #lists.size(diamondPriceList) > 0 }">
+                            <br>
+                            <table class="w-100">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Origin</th>
+                                    <th>Carat Weight From</th>
+                                    <th>Carat Weight To</th>
+                                    <th>Color</th>
+                                    <th>Clarity</th>
+                                    <th>Cut</th>
+                                    <th>Price</th>
+                                    <th>Effective Date</th>
+                                </tr>
+                                <tr th:each="diamondPriceList : ${diamondPriceList}">
+                                    <td th:text="${diamondPriceList.id}"></td>
+                                    <td th:text="${diamondPriceList.origin}"></td>
+                                    <td th:text="${diamondPriceList.carat_Weight_From}"></td>
+                                    <td th:text="${diamondPriceList.carat_Weight_To}"></td>
+                                    <td th:text="${diamondPriceList.color}"></td>
+                                    <td th:text="${diamondPriceList.clarity}"></td>
+                                    <td th:text="${diamondPriceList.cut}"></td>
+                                    <td th:text="${diamondPriceList.price}"></td>
+                                    <td th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd HH:mm:ss')}">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    <div th:if="${diamondPriceList != null && #lists.size(diamondPriceList) > 0 }">
-                        <br>
-                        <table class="w-100">
-                            <tr>
-                                <th>ID</th>
-                                <th>Origin</th>
-                                <th>Carat Weight From</th>
-                                <th>Carat Weight To</th>
-                                <th>Color</th>
-                                <th>Clarity</th>
-                                <th>Cut</th>
-                                <th>Price</th>
-                                <th>Effective Date</th>
-                            </tr>
-                            <tr th:each="diamondPriceList : ${diamondPriceList}">
-                                <td th:text="${diamondPriceList.id}"></td>
-                                <td th:text="${diamondPriceList.origin}"></td>
-                                <td th:text="${diamondPriceList.carat_Weight_From}"></td>
-                                <td th:text="${diamondPriceList.carat_Weight_To}"></td>
-                                <td th:text="${diamondPriceList.color}"></td>
-                                <td th:text="${diamondPriceList.clarity}"></td>
-                                <td th:text="${diamondPriceList.cut}"></td>
-                                <td th:text="${diamondPriceList.price}"></td>
-                                <td th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                            </tr>
-                        </table>
+                    <div th:if="${messageForDiamond != null}">
+                        <i class="fw-bold" th:text="${messageForDiamond}"></i>
                     </div>
-                    <form th:action="@{/saveDiamond}" method="post">
+                    <form th:action="@{/saveDiamond}" method="get">
                         <input type="hidden" id="production_Order_Id" name="production_Order_Id"
                             th:value="${productionOrder.production_Order_Id}">
                     </form>

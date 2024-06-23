@@ -17,22 +17,22 @@ public class DiamondSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (name != null && !name.isEmpty()) {
-                predicates.add(cb.like(root.get("dia_Name"), "%" + name + "%"));
+                predicates.add(cb.like(cb.lower(root.get("dia_Name")), "%" + name.toLowerCase() + "%"));
             }
             if (caratWeight != null) {
                 predicates.add(cb.equal(root.get("carat_Weight"), caratWeight));
             }
             if (color != null && !color.isEmpty()) {
-                predicates.add(cb.equal(root.get("color"), color));
+                predicates.add(cb.equal(cb.lower(root.get("color")), color.toLowerCase()));
             }
             if (clarity != null && !clarity.isEmpty()) {
-                predicates.add(cb.like(root.get("clarity"), "%" + clarity + "%"));
+                predicates.add(cb.like(cb.lower(root.get("clarity")), "%" + clarity.toLowerCase() + "%"));
             }
             if (cut != null && !cut.isEmpty()) {
-                predicates.add(cb.like(root.get("cut"), "%" + cut + "%"));
+                predicates.add(cb.like(cb.lower(root.get("cut")), "%" + cut.toLowerCase() + "%"));
             }
             if (origin != null && !origin.isEmpty()) {
-                predicates.add(cb.like(root.get("origin"), "%" + origin + "%"));
+                predicates.add(cb.like(cb.lower(root.get("origin")), "%" + origin.toLowerCase() + "%"));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
