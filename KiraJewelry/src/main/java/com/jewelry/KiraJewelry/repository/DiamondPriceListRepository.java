@@ -27,7 +27,7 @@ public interface DiamondPriceListRepository extends JpaRepository<Diamond_Price_
                         @Param("origin") String origin);
 
         @Query("SELECT dpl FROM Diamond_Price_List dpl WHERE dpl.carat_Weight_From <= :caratWeight AND dpl.carat_Weight_To >= :caratWeight AND dpl.color = :color AND dpl.clarity = :clarity AND dpl.cut = :cut AND dpl.origin = :origin")
-        Diamond_Price_List findPriceListByCriteria(@Param("caratWeight") double caratWeight,
+        List<Diamond_Price_List> findPriceListByCriteria(@Param("caratWeight") double caratWeight,
                         @Param("color") String color,
                         @Param("clarity") String clarity,
                         @Param("cut") String cut, @Param("origin") String origin);

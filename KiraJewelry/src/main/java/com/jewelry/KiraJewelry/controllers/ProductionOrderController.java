@@ -229,13 +229,15 @@ public class ProductionOrderController {
 
         List<Diamond_Price_List> diamondPriceList = new ArrayList<>();
         for (Diamond d : diamond) {
-            Diamond_Price_List dpl = diamondPriceListService.findPriceListByCriteria(d.getCarat_Weight(),
+            List<Diamond_Price_List> dplList = diamondPriceListService.findPriceListByCriteria(d.getCarat_Weight(),
                     d.getColor(),
                     d.getClarity(),
                     d.getCut(),
                     d.getOrigin());
-            if (dpl != null && d.isStatus()) {
-                diamondPriceList.add(dpl);
+            for (Diamond_Price_List dpl : dplList) {
+                if (dpl != null && d.isStatus()) {
+                    diamondPriceList.add(dpl);
+                }
             }
         }
         System.out.println("DPL : " + diamondPriceList);
@@ -259,26 +261,33 @@ public class ProductionOrderController {
         return "employee/sales_staff/viewQuote";
     }
 
-    @GetMapping("/viewInformationQuoteForSS")
-    public String getQuotesForSS(@RequestParam("productionOrderId") String productionOrderId, Model model) {
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        Customer customer = customerService.getCustomerByCustomerId(productionOrder.getCustomer_Id());
-        Product product = productionOrder.getProduct();
-        ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(product.getProduct_Id());
-        Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
-        Diamond diamond = diamondService.getDiamondByProductId(product.getProduct_Id());
-        Diamond_Price_List diamondPriceList = diamondPriceListService.getDiamondPriceList(diamond.getColor(),
-                diamond.getClarity(), diamond.getCut(), diamond.getOrigin());
+    // @GetMapping("/viewInformationQuoteForSS")
+    // public String getQuotesForSS(@RequestParam("productionOrderId") String
+    // productionOrderId, Model model) {
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
+    // Customer customer =
+    // customerService.getCustomerByCustomerId(productionOrder.getCustomer_Id());
+    // Product product = productionOrder.getProduct();
+    // ProductMaterial productMaterial =
+    // productMaterialService.getProductMaterialByProductId(product.getProduct_Id());
+    // Material material =
+    // materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+    // // Diamond diamond =
+    // diamondService.getDiamondByProductId(product.getProduct_Id());
+    // Diamond_Price_List diamondPriceList =
+    // diamondPriceListService.getDiamondPriceList(diamond.getColor(),
+    // diamond.getClarity(), diamond.getCut(), diamond.getOrigin());
 
-        model.addAttribute("productMaterial", productMaterial);
-        model.addAttribute("productionOrder", productionOrder);
-        model.addAttribute("customer", customer);
-        model.addAttribute("product", product);
-        model.addAttribute("material", material);
-        model.addAttribute("diamond", diamond);
-        model.addAttribute("diamondPriceList", diamondPriceList);
-        return "employee/sales_staff/viewInforQuote";
-    }
+    // model.addAttribute("productMaterial", productMaterial);
+    // model.addAttribute("productionOrder", productionOrder);
+    // model.addAttribute("customer", customer);
+    // model.addAttribute("product", product);
+    // model.addAttribute("material", material);
+    // model.addAttribute("diamond", diamond);
+    // model.addAttribute("diamondPriceList", diamondPriceList);
+    // return "employee/sales_staff/viewInforQuote";
+    // }
 
     @GetMapping("/viewEditPage")
     public String viewEditPage(@RequestParam("productionOrderId") String productionOrderId, Model model) {
@@ -316,86 +325,99 @@ public class ProductionOrderController {
         return "redirect:/viewQuotesforSS";
     }
 
-    @PostMapping("/saveEditedRequest")
-    public String saveEditedRequest(@RequestParam("productionOrderId") String productionOrderId,
-            @RequestParam("customerId") String customerId,
-            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-            @RequestParam("material") int materialId,
-            @RequestParam("materialWeight") double materialWeight,
-            @RequestParam("diamond") int diamondId,
-            @RequestParam("diamondWeight") double diamondWeight,
-            @RequestParam("productSize") int productSize,
-            @RequestParam("gender") String gender,
-            Model model) {
+    // @PostMapping("/saveEditedRequest")
+    // public String saveEditedRequest(@RequestParam("productionOrderId") String
+    // productionOrderId,
+    // @RequestParam("customerId") String customerId,
+    // @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+    // @RequestParam("material") int materialId,
+    // @RequestParam("materialWeight") double materialWeight,
+    // @RequestParam("diamond") int diamondId,
+    // @RequestParam("diamondWeight") double diamondWeight,
+    // @RequestParam("productSize") int productSize,
+    // @RequestParam("gender") String gender,
+    // Model model) {
 
-        Material material = materialService.getMaterialById(materialId);
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(materialId);
-        Diamond diamond = diamondService.getDiamondById(diamondId);
-        Diamond_Price_List dpl = diamondPriceListService.getDiamondPrice(diamond.getColor(), diamond.getClarity(),
-                diamond.getCut(), diamond.getOrigin(), diamondWeight);
+    // Material material = materialService.getMaterialById(materialId);
+    // MaterialPriceList mpl =
+    // materialPriceListService.getMaterialPriceListByMaterialId(materialId);
+    // // Diamond diamond = diamondService.getDiamondById(diamondId);
+    // Diamond_Price_List dpl =
+    // diamondPriceListService.getDiamondPrice(diamond.getColor(),
+    // diamond.getClarity(),
+    // diamond.getCut(), diamond.getOrigin(), diamondWeight);
 
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        Product product = productionOrder.getProduct();
-        product.setSize(productSize);
-        product.setGender(gender);
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
+    // Product product = productionOrder.getProduct();
+    // product.setSize(productSize);
+    // product.setGender(gender);
 
-        ProductMaterial productMaterial = new ProductMaterial();
-        ProductMaterialId productMaterialId = new ProductMaterialId();
+    // ProductMaterial productMaterial = new ProductMaterial();
+    // ProductMaterialId productMaterialId = new ProductMaterialId();
 
-        productMaterialId.setMaterial_Id(materialId);
-        productMaterialId.setProduct_Id(product.getProduct_Id());
-        productMaterial.setId(productMaterialId);
-        productMaterial.setMaterial_Weight(materialWeight);
-        productMaterial.setQ_Price(productMaterial.getMaterial_Weight() * mpl.getPrice());
+    // productMaterialId.setMaterial_Id(materialId);
+    // productMaterialId.setProduct_Id(product.getProduct_Id());
+    // productMaterial.setId(productMaterialId);
+    // productMaterial.setMaterial_Weight(materialWeight);
+    // productMaterial.setQ_Price(productMaterial.getMaterial_Weight() *
+    // mpl.getPrice());
 
-        diamond.setProduct(product);
-        diamond.setStatus(false);
-        diamond.setCarat_Weight(diamondWeight);
+    // diamond.setProduct(product);
+    // diamond.setStatus(false);
+    // diamond.setCarat_Weight(diamondWeight);
 
-        productionOrder.setProduct_Size(productSize);
-        productionOrder.setQ_Material_Amount(productMaterial.getQ_Price());
-        productionOrder.setQ_Diamond_Amount(dpl.getPrice());
+    // productionOrder.setProduct_Size(productSize);
+    // productionOrder.setQ_Material_Amount(productMaterial.getQ_Price());
+    // productionOrder.setQ_Diamond_Amount(dpl.getPrice());
 
-        // productionOrder.setQ_Diamond_Amount(diamondWeight*dia);
+    // // productionOrder.setQ_Diamond_Amount(diamondWeight*dia);
 
-        productService.saveProduct(product);
-        diamondService.saveDiamond(diamond);
-        productMaterialService.saveProductMaterial(productMaterial);
-        productionOrderService.saveProductionOrder(productionOrder);
-        model.addAttribute("listRequests",
-                productionOrderService.getAllProductionOrders());
+    // productService.saveProduct(product);
+    // diamondService.saveDiamond(diamond);
+    // productMaterialService.saveProductMaterial(productMaterial);
+    // productionOrderService.saveProductionOrder(productionOrder);
+    // model.addAttribute("listRequests",
+    // productionOrderService.getAllProductionOrders());
 
-        return "redirect:/viewRequestsforSS";
-    }
+    // return "redirect:/viewRequestsforSS";
+    // }
 
-    @GetMapping("/prepareQuotePage")
-    public String prepareQuotePage(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+    // @GetMapping("/prepareQuotePage")
+    // public String prepareQuotePage(@RequestParam("productionOrderId") String
+    // productionOrderId, Model model) {
 
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        Customer customer = customerService.getCustomerByCustomerId(productionOrder.getCustomer_Id());
-        Product product = productionOrder.getProduct();
-        ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(product.getProduct_Id());
-        Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
-        Diamond diamond = diamondService.getDiamondByProductId(product.getProduct_Id());
-        Diamond_Price_List diamondPriceList = diamondPriceListService.getDiamondPriceList(diamond.getColor(),
-                diamond.getClarity(), diamond.getCut(), diamond.getOrigin());
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
+    // Customer customer =
+    // customerService.getCustomerByCustomerId(productionOrder.getCustomer_Id());
+    // Product product = productionOrder.getProduct();
+    // ProductMaterial productMaterial =
+    // productMaterialService.getProductMaterialByProductId(product.getProduct_Id());
+    // Material material =
+    // materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+    // // Diamond diamond =
+    // diamondService.getDiamondByProductId(product.getProduct_Id());
+    // Diamond_Price_List diamondPriceList =
+    // diamondPriceListService.getDiamondPriceList(diamond.getColor(),
+    // diamond.getClarity(), diamond.getCut(), diamond.getOrigin());
 
-        model.addAttribute("productMaterial", productMaterial);
-        model.addAttribute("productionOrder", productionOrder);
-        model.addAttribute("customer", customer);
-        model.addAttribute("product", product);
-        model.addAttribute("material", material);
-        model.addAttribute("diamond", diamond);
-        model.addAttribute("diamondPriceList", diamondPriceList);
-        return "employee/sales_staff/prepareQuotePage";
-    }
+    // model.addAttribute("productMaterial", productMaterial);
+    // model.addAttribute("productionOrder", productionOrder);
+    // model.addAttribute("customer", customer);
+    // model.addAttribute("product", product);
+    // model.addAttribute("material", material);
+    // model.addAttribute("diamond", diamond);
+    // model.addAttribute("diamondPriceList", diamondPriceList);
+    // return "employee/sales_staff/prepareQuotePage";
+    // }
 
-    @GetMapping("/viewMaterialAndGem")
-    public String getViewAssets(Model model) {
-        List<Material> material = materialService.getAllMaterials();
-        model.addAttribute("material", material);
-        return "employee/sales_staff/materialAndGem";
-    }
+    // @GetMapping("/viewMaterialAndGem")
+    // public String getViewAssets(Model model) {
+    // List<Material> material = materialService.getAllMaterials();
+    // model.addAttribute("material", material);
+    // return "employee/sales_staff/materialAndGem";
+    // }
 
     // MANAGER
     @PostMapping("/saveProductionOrder")

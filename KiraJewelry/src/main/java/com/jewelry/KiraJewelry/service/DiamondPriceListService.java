@@ -22,7 +22,7 @@ public class DiamondPriceListService {
         return diamondPriceListRepository.findDiamondPriceList(color, clarity, cut, origin);
     }
 
-    public Diamond_Price_List findPriceListByCriteria(double caratWeight, String color, String clarity,
+    public List<Diamond_Price_List> findPriceListByCriteria(double caratWeight, String color, String clarity,
             String cut, String origin) {
         return diamondPriceListRepository.findPriceListByCriteria(caratWeight, color, clarity, cut, origin);
     }

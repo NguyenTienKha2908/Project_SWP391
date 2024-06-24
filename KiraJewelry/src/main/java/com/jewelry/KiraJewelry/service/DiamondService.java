@@ -18,28 +18,28 @@ public class DiamondService {
         return diamondRepository.findAll();
     }
 
-    public Diamond getDiamondByProductId(int productId) {
-        return diamondRepository.findDiamondByProductId(productId);
-    }
+    // public Diamond getDiamondByProductId(int productId) {
+    // return diamondRepository.findDiamondByProductId(productId);
+    // }
 
-    public Diamond getDiamondById(int dia_Id) {
-        return diamondRepository.findDiamondById(dia_Id);
-    }
+    // public Diamond getDiamondById(int dia_Id) {
+    // return diamondRepository.findDiamondById(dia_Id);
+    // }
 
     public void saveDiamond(Diamond diamond) {
         diamondRepository.save(diamond);
     }
 
-    public List<Diamond> findByName(String name) {
-        return diamondRepository.findByNameContaining(name);
-    }
+    // public List<Diamond> findByName(String name) {
+    // return diamondRepository.findByNameContaining(name);
+    // }
 
-    public List<Diamond> findByCriteria(String name, Double caratWeight, String color, String clarity, String cut,
-            String origin) {
-        Specification<Diamond> spec = DiamondSpecification.findByCriteria(name, caratWeight, color, clarity, cut,
-                origin);
-        return diamondRepository.findAll(spec);
-    }
+    // public List<Diamond> findByCriteria(String name, Double caratWeight, String color, String clarity, String cut,
+    //         String origin) {
+    //     Specification<Diamond> spec = DiamondSpecification.findByCriteria(name, caratWeight, color, clarity, cut,
+    //             origin);
+    //     return diamondRepository.findAll(spec);
+    // }
 
     public List<Diamond> getByListDiamonds(String name, Double caratWeight, String color, String clarity, String cut,
             String origin) {
