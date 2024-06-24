@@ -1,6 +1,8 @@
 package com.jewelry.KiraJewelry.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import com.jewelry.KiraJewelry.dto.LoginRequest;
@@ -49,15 +51,26 @@ public class UserController {
         if (redirectAttributes.getFlashAttributes().containsKey("message")) {
             model.addAttribute("message", redirectAttributes.getAttribute("message"));
         }
+
+        if (redirectAttributes.getFlashAttributes().containsKey("error"))
+            model.addAttribute("error", redirectAttributes.getAttribute("error"));
+
         return "register";
     }
 
     @PostMapping("/registration")
-    public String registerSave(@Valid @ModelAttribute("user") LoginRequest registerDto,
+    public String registerSave(@Valid @ModelAttribute("user") LoginRequest registerDto, BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
-        // if (registerDto.getRole() == 0) {
-        // registerDto.setRole(1); // Default role to 1
-        // }
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+
+            for (FieldError err : bindingResult.getFieldErrors()) {
+                errors.put(err.getField(), err.getDefaultMessage());
+            }
+            redirectAttributes.addFlashAttribute("error", errors);
+            return "redirect:/registration?error"; // Add this return statement to handle the case when there are
+                                                   // binding errors
+        }
 
         // Validate fullname field for containing numbers
         if (containsNumbers(registerDto.getFullname())) {
@@ -71,11 +84,11 @@ public class UserController {
         }
 
         // Validate email format
-        if (!isValidEmail(registerDto.getEmail())) {
-            // Add error message as flash attribute for redirection
-            redirectAttributes.addFlashAttribute("emailError", "Invalid Email Format");
-            return "redirect:/registration?error";
-        }
+        // if (!isValidEmail(registerDto.getEmail())) {
+        // // Add error message as flash attribute for redirection
+        // redirectAttributes.addFlashAttribute("emailError", "Invalid Email Format");
+        // return "redirect:/registration?error";
+        // }
 
         // Validate password complexity
         if (!isValidPassword(registerDto.getPassword())) {
@@ -105,9 +118,10 @@ public class UserController {
     }
 
     // Validate email
-    private boolean isValidEmail(String email) {
-        return email != null && email.matches("[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|example\\.com|fpt\\.edu\\.vn)");
-    }
+    // private boolean isValidEmail(String email) {
+    // return email != null &&
+    // email.matches("[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|example\\.com|fpt\\.edu\\.vn)");
+    // }
 
     // Validate password
     private boolean isValidPassword(String password) {

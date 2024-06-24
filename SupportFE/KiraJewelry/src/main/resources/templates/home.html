@@ -8,6 +8,18 @@
     <title>Kira Jewelry</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <style>
+        .dropdown-item{
+            width: 50%;
+            transition: 0.45s ease-in-out;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f2f7fd;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -55,12 +67,14 @@
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
                         <li class="dropdown-item">
-                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
-                                Jewelry Now</a>
-                            <a th:href="@{/}" th:unless="${session.customerName != null}"
-                                class="sidebar-link">Customize Your Jewelry</a>
-                            <a th:href="@{/login}" th:unless="${session.customerName != null}"
-                                class="sidebar-link">Order Jewelry Now</a>
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/customize}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
                         </li>
                         <li class="dropdown-item">
                             <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>

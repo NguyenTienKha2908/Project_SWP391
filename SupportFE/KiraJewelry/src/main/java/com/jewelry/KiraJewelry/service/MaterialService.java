@@ -41,4 +41,8 @@ public class MaterialService {
     public void deleteMaterialById(int id) {
         materialRepository.deleteById(id);
     }
+
+    public List<Material> getMaterialsForProductDesignShell(int productId) {
+        return materialRepository.findMaterialsForProductDesignShell(productId);
+    }
 }

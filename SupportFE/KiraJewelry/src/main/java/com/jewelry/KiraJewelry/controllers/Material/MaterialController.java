@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Material;
+import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 
 import jakarta.validation.Valid;
@@ -28,6 +29,9 @@ import java.nio.file.Paths;
 public class MaterialController {
 
     private final Path rootLocation = Paths.get("upload-dir");
+
+    @Autowired
+    ImageService imageService;
 
     @Autowired
     private MaterialService materialService;
@@ -142,10 +146,8 @@ public class MaterialController {
                     Files.createDirectories(rootLocation);
                 }
 
-                String filename = imgFile.getOriginalFilename();
-                Files.copy(imgFile.getInputStream(), this.rootLocation.resolve(filename));
-                material.setImgUrl("/materials/image/" + filename);
-                material.setImageData(imgFile.getBytes());
+                String url = imageService.upload(imgFile);
+                material.setImgUrl(url);
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
             }
@@ -161,8 +163,6 @@ public class MaterialController {
                         baos.write(buffer, 0, n);
                     }
                 }
-                byte[] imageBytes = baos.toByteArray();
-                material.setImageData(imageBytes);
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage",
                         "Could not retrieve image from URL: " + e.getMessage());
@@ -170,20 +170,20 @@ public class MaterialController {
         }
     }
 
-    @GetMapping("/materials/image/{filename:.+}")
-    @ResponseBody
-    public Resource getImage(@PathVariable String filename) {
-        try {
-            Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
+    // @GetMapping("/materials/image/{filename:.+}")
+    // @ResponseBody
+    // public Resource getImage(@PathVariable String filename) {
+    //     try {
+    //         Path file = rootLocation.resolve(filename);
+    //         Resource resource = new UrlResource(file.toUri());
 
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Could not read file: " + filename);
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Could not read file: " + filename, e);
-        }
-    }
+    //         if (resource.exists() || resource.isReadable()) {
+    //             return resource;
+    //         } else {
+    //             throw new RuntimeException("Could not read file: " + filename);
+    //         }
+    //     } catch (MalformedURLException e) {
+    //         throw new RuntimeException("Could not read file: " + filename, e);
+    //     }
+    // }
 }

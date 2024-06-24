@@ -80,16 +80,19 @@ public class Diamond {
     @Column(name = "product_id", nullable = true)
     private Integer product_Id;
 
-    @NotBlank(message = "Image URL is mandatory")
     @Column(name = "img_url", nullable = false)
     private String img_Url;
 
-    @Lob
-    @Column(name = "image_data", nullable = true)
-    private byte[] image_Data;
+    // @Transient
+    // private MultipartFile img_File;
 
-    @Transient
-    private MultipartFile img_File;
+    @NotNull(message = "Q Price is mandatory")
+    @Column(name = "q_price", nullable = false)
+    private Float q_price;
+
+    @NotNull(message = "O Price is mandatory")
+    @Column(name = "o_price", nullable = false)
+    private Float o_price;
 
     // Getters and setters
     public int getDiaId() {
@@ -211,20 +214,19 @@ public class Diamond {
     public void setImgUrl(String img_Url) {
         this.img_Url = img_Url;
     }
-
-    public byte[] getImageData() {
-        return image_Data;
+    public Float getQ_price() {
+        return q_price;
     }
 
-    public void setImageData(byte[] image_Data) {
-        this.image_Data = image_Data;
+    public void setQ_price(Float q_price) {
+        this.q_price = q_price;
     }
 
-    public MultipartFile getImgFile() {
-        return img_File;
+    public Float getO_price() {
+        return o_price;
     }
 
-    public void setImgFile(MultipartFile img_File) {
-        this.img_File = img_File;
+    public void setO_price(Float o_price) {
+        this.o_price = o_price;
     }
 }

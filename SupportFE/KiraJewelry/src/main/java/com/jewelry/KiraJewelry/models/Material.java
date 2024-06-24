@@ -44,10 +44,6 @@ public class Material {
     @Column(name = "status", nullable = false)
     private int status; // 1 for active, 0 for inactive
 
-    @Lob
-    @Column(name = "image_data")
-    private byte[] imageData;
-
     @Column(name = "img_url")
     private String img_Url;
 
@@ -93,14 +89,6 @@ public class Material {
 
     public void setImgUrl(String img_Url) {
         this.img_Url = img_Url;
-    }
-
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
     }
 
     public MultipartFile getImgFile() {

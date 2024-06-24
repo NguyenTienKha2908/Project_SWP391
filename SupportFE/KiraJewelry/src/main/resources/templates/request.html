@@ -98,11 +98,13 @@
                         <li class="dropdown-item">
                             <a th:href="@{/request}" th:if="${session.customerName != null}" class="active-link">Order
                                 Jewelry Now</a>
-                            <a th:href="@{/login}" th:unless="${session.customerName != null}" class="active-link">Order
-                                Jewelry Now</a>
                         </li>
                         <li class="dropdown-item">
                             <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/}" th:unless="${session.customerName != null}" class="sidebar-link">Customize
+                                Your Jewelry</a>
                         </li>
                     </ul>
                 </li>
@@ -183,7 +185,7 @@
                     <div class="row my-2">
                         <label for="file">Upload image: </label>
                         <input class="form-control" type="file" id="file" name="file"
-                            accept="image/png, image/svg, image/jpeg" required/><br />
+                            accept="image/png, image/svg, image/jpeg" required /><br />
                         <button type="submit" class="btn-customize my-4">Send request</button>
 
                     </div>

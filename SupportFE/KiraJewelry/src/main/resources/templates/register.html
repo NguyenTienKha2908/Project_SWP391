@@ -71,11 +71,12 @@
                 </a>
             </div>
             <div class="toast-body" style="color:#b10101">
-                <p th:if="${userexist}">Registered Failed: Email is Taken</p>
+                <p th:each="error : ${error.values()}" th:text="${error}"></p>
+                <!-- <p th:if="${userexist}">Registered Failed: Email is Taken</p>
                 <p th:if="${fullNameError}">Invalid Full Name: [[${fullNameError}]]</p>
                 <p th:if="${emailError}">[[${emailError}]]</p>
                 <p th:if="${passwordError}">Invalid Password: [[${passwordError}]]</p>
-                <p th:if="${phoneError}">Invalid Phone: [[${phoneError}]]</p>
+                <p th:if="${phoneError}">Invalid Phone: [[${phoneError}]]</p> -->
             </div>
         </div>
     </div>
@@ -89,7 +90,8 @@
                 </div>
                 <div class="col-md-8">
                     <div class="wrapper">
-                        <form th:action="@{/registration}" method="post" role="form" th:object="${user}" style="margin-top:-50px;">
+                        <form th:action="@{/registration}" method="post" role="form" th:object="${user}"
+                            style="margin-top:-50px;">
                             <h1 class="login-title">Create Account</h1>
 
                             <div class="input-box form-floating">

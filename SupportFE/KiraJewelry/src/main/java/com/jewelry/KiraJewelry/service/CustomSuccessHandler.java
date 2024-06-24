@@ -140,13 +140,17 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                         return;
                     case 3:
                         session.setAttribute("role", "Sales Staff");
-                        response.sendRedirect("/homeSalesStaff");
+                        response.sendRedirect("/homeManager");
                         return;
                     case 4:
                         session.setAttribute("role", "Design Staff");
-                        response.sendRedirect("/homeDesignStaff");
+                        response.sendRedirect("/homeSalesStaff");
                         return;
                     case 5:
+                        session.setAttribute("role", "Production Staff");
+                        response.sendRedirect("/homeDesignStaff");
+                        return;
+                    case 6:
                         session.setAttribute("role", "Production Staff");
                         response.sendRedirect("/homeProductionStaff");
                         return;
@@ -155,7 +159,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                         break;
                 }
             }
-        }  else {
+        } else {
             response.sendRedirect("/login?error");
         }
         response.sendRedirect("/");

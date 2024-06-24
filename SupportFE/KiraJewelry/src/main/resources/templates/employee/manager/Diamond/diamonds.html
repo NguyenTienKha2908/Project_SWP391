@@ -3,11 +3,23 @@
 
 <head>
     <title>Diamond List</title>
+
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/staff.css}">
 </head>
 
+<style>
+    
+
+    .table-striped th,
+    .table-striped td {
+        padding: 10px;
+        text-align: left;
+    }
+</style>
+
 <body>
+
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -160,12 +172,12 @@
                 </nav>
                 <div class="container my-3">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Diamond ID</th>
-                                    <th>Diamond Code</th>
-                                    <th>Diamond Name</th>
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
                                     <th>Origin</th>
                                     <th>Carat Weight</th>
                                     <th>Color</th>
@@ -175,18 +187,21 @@
                                     <th>Polish</th>
                                     <th>Symmetry</th>
                                     <th>Fluorescence</th>
+                                    <th>Q_Price</th> <!-- Added Q Price -->
+                                    <th>O_Price</th> <!-- Added O Price -->
                                     <th>Status</th>
                                     <th>Image</th>
                                     <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="diamond : ${diamondPage.getContent()}">
-                                    <td th:text="${diamond.diaId}"></td>
-                                    <td th:text="${diamond.diaCode}"></td>
-                                    <td th:text="${diamond.diaName}"></td>
+                                    <td th:text="${diamond.dia_Id}"></td>
+                                    <td th:text="${diamond.dia_Code}"></td>
+                                    <td th:text="${diamond.dia_Name}"></td>
                                     <td th:text="${diamond.origin}"></td>
-                                    <td th:text="${diamond.caratWeight}"></td> <!-- Changed field name -->
+                                    <td th:text="${diamond.carat_Weight}"></td>
                                     <td th:text="${diamond.color}"></td>
                                     <td th:text="${diamond.clarity}"></td>
                                     <td th:text="${diamond.cut}"></td>
@@ -194,15 +209,21 @@
                                     <td th:text="${diamond.polish}"></td>
                                     <td th:text="${diamond.symmetry}"></td>
                                     <td th:text="${diamond.fluorescence}"></td>
+                                    <td th:text="${diamond.q_price}"></td> <!-- Display Q Price -->
+                                    <td th:text="${diamond.o_price}"></td> <!-- Display O Price -->
                                     <td th:text="${diamond.status == 1 ? 'Active' : 'Inactive'}"></td>
-                                    <td><img th:src="@{${diamond.imgUrl}}" alt="Diamond Image"
-                                            style="width:100px;height:100px;" /></td>
+                                    <td><img th:src="@{${diamond.img_Url}}" alt="Diamond Image"
+                                            style="width:100px;height:100px;" />
+                                    </td>
                                     <!-- Changed field name -->
                                     <td>
-                                        <a th:href="@{/showFormForUpdateDiamond/{id}(id=${diamond.diaId})}">Edit</a>
-                                        <a th:href="@{${diamond.status == 1 ? '/deactivateDiamond/' + diamond.diaId : '/activateDiamond/' + diamond.diaId}}"
-                                            th:text="${diamond.status == 1 ? 'Deactivate' : 'Activate'}"></a>
+                                        <a th:href="@{/showFormForUpdateDiamond/{id}(id=${diamond.dia_Id})}"
+                                            class="btn btn-secondary">Edit</a>
+                                        
                                     </td>
+                                    <td><a th:href="@{${diamond.status == 1 ? '/deactivateDiamond/' + diamond.dia_Id : '/activateDiamond/' + diamond.dia_Id}}"
+                                        th:text="${diamond.status == 1 ? 'Deactivate' : 'Activate'}"
+                                        class="btn btn-secondary"></a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -223,8 +244,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>
