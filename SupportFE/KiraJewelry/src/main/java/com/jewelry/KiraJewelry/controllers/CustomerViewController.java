@@ -14,6 +14,7 @@ import com.jewelry.KiraJewelry.models.Product;
 import com.jewelry.KiraJewelry.models.ProductDesign;
 import com.jewelry.KiraJewelry.models.ProductDesignShell;
 import com.jewelry.KiraJewelry.models.ProductMaterial;
+import com.jewelry.KiraJewelry.models.ProductMaterialId;
 import com.jewelry.KiraJewelry.repository.MaterialRepository;
 import com.jewelry.KiraJewelry.service.CategoryService;
 import com.jewelry.KiraJewelry.service.MaterialService;
@@ -124,6 +125,7 @@ public class CustomerViewController {
         return "customer/customizeJewelry/chooseMaterial";
     }
 
+
     @PostMapping("/saveCustomerMaterial")
     @Transactional
     public String saveCustomerMaterial(@RequestParam("productId") int productId,
@@ -133,8 +135,12 @@ public class CustomerViewController {
 
         // Save the ProductMaterial entity
         ProductMaterial productMaterial = new ProductMaterial();
-        productMaterial.setProduct_Id(productId);
-        productMaterial.setMaterial_Id(selectedMaterialId);
+        ProductMaterialId productMaterialId = new ProductMaterialId();
+        productMaterialId.setProduct_Id(productId);
+        productMaterialId.setMaterial_Id(selectedMaterialId);
+        // productMaterial.setProduct_Id(productId);
+        // productMaterial.setMaterial_Id(selectedMaterialId);
+        productMaterial.setId(productMaterialId);
         productMaterial.setMaterial_Weight(selectedMaterialWeight);
         productMaterial.setQ_Price(300);
         productMaterial.setO_Price(0); // Setting O_Price to null
