@@ -32,7 +32,7 @@ GO
 CREATE TABLE [dbo].[Users](
 	[User_Id] [int] IDENTITY(1,1),
 	[Email] [varchar](255) NOT NULL,
-	[Password] [char](64) NOT NULL,
+	[Password] [varchar](255) NOT NULL,
 	[Role_Id] [int] NOT NULL,
 	[Status] bit NOT NULL,
 CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
@@ -59,16 +59,7 @@ CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 
-/* 
-Origin: Natural
-Color: D, E, F,J
-Clarity: IF, VSS1, VSS2, VS1, VS2
-Cut: Excellent, Shallow, Poor
-Proportions: Ideal
-Polish: Excellent
-Symmetry: Excellent
-Flourescence: None
-*/
+
 
 /* Table [Customer] */ 
 SET ANSI_NULLS ON
@@ -917,3 +908,4 @@ select * from Product_Design_Shell
 select * from Product_Design
 
 use JewelryStore
+select * from Diamond where Carat_Weight=2.75
