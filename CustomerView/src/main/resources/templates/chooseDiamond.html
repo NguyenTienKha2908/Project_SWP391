@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Choose Diamond</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
+        .container { width: 80%; margin: auto; overflow: hidden; }
+        h1 { background: #333; color: #fff; padding: 10px 0; text-align: center; }
+        form { background: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
+        label { display: block; margin-bottom: 10px; }
+        input[type="number"], input[type="submit"] {
+            padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px; width: calc(100% - 22px); }
+        input[type="submit"] {
+            display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; }
+        input[type="submit"]:hover {background-color: #3e8e41}
+        input[type="submit"]:active {background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px);}
+        .diamond-item { border: 1px solid #ccc; padding: 10px; width: 150px; text-align: center; background-color: #222; color: #fff; margin: 10px; border-radius: 5px; }
+        .diamond-item img { max-width: 100%; height: auto; }
+        #diamondList { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Diamond</h1>
+        <form method="post" action="/saveDiamondRange">
+            <input type="hidden" name="productId" th:value="${productId}" />
+            <label for="minWeight">Min Weight:</label>
+            <input type="number" id="minWeight" name="minWeight" step="0.01" min="0" th:value="${minWeight}" required oninput="validateMinMaxWeight()" />
+            <label for="maxWeight">Max Weight:</label>
+            <input type="number" id="maxWeight" name="maxWeight" step="0.01" min="0" th:value="${maxWeight}" required oninput="validateMinMaxWeight()" />
+            <input type="submit" value="Submit" />
+        </form>
+        <div id="diamondList"></div>
+    </div>
+
+    <script type="text/javascript">
+        function validateMinMaxWeight() {
+            const minWeightInput = document.getElementById("minWeight");
+            const maxWeightInput = document.getElementById("maxWeight");
+
+            const minWeight = parseFloat(minWeightInput.value) || 0;
+            const maxWeight = parseFloat(maxWeightInput.value) || 0;
+
+            maxWeightInput.min = minWeight;
+            maxWeightInput.max = maxWeight;
+        }
+
+        document.querySelector("form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const queryString = new URLSearchParams(formData).toString();
+
+            fetch(`/saveDiamondRange?${queryString}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const diamondList = document.getElementById("diamondList");
+                diamondList.innerHTML = "";
+
+                data.forEach(diamond => {
+                    fetch(`/getProductDesign?productId=${formData.get('productId')}`)
+                    .then(response => response.json())
+                    .then(productDesign => {
+                        const diamondDiv = document.createElement("div");
+                        diamondDiv.className = "diamond-item";
+                        diamondDiv.innerHTML = `
+                            <img src="${diamond.img_Url}" alt="Diamond Image" />
+                            <p>Weight: ${diamond.carat_Weight.toFixed(2)}</p>
+                            <p>Price: ${diamond.q_Price}</p>
+                            <p>Origin: ${diamond.origin}</p>
+                            <p>Color: ${diamond.color}</p>
+                            <p>Clarity: ${diamond.clarity}</p>
+                            <p>Cut: ${diamond.cut}</p>
+                            <p>Proportions: ${diamond.proportions}</p>
+                            <p>Polish: ${diamond.polish}</p>
+                            <p>Symmetry: ${diamond.symmetry}</p>
+                            <p>Fluorescence: ${diamond.fluorescence}</p>
+                            <form method="post" action="/selectDiamond">
+                                <input type="hidden" name="diamondId" value="${diamond.dia_Id}" />
+                                <input type="hidden" name="productId" value="${formData.get('productId')}" />
+                                <input type="hidden" name="categoryId" value="${productDesign.category_Id}" />
+                                <input type="hidden" name="productSize" value="${productDesign.product_Size}" />
+                                <input type="hidden" name="description" value="Some description" /> <!-- Example value, replace with actual -->
+                                <input type="submit" value="Select" />
+                            </form>
+                        `;
+                        diamondList.appendChild(diamondDiv);
+                    });
+                });
+            });
+        });
+
+        function selectDiamond(diamondId, productId) {
+            fetch(`/getProductDesign?productId=${productId}`)
+            .then(response => response.json())
+            .then(productDesign => {
+                const formData = new URLSearchParams();
+                formData.append('diamondId', diamondId);
+                formData.append('productId', productId);
+                formData.append('categoryId', productDesign.category_Id);
+                formData.append('productSize', productDesign.product_Size);
+                formData.append('description', 'Some description'); // Example value, replace with actual
+
+                fetch("/selectDiamond", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = `/orderSummary?productId=${productId}`;
+                    } else {
+                        alert("Error selecting diamond");
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
