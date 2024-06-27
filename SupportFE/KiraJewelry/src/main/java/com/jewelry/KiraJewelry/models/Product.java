@@ -41,11 +41,13 @@ public class Product {
     // @JoinColumn(name="Collection_Id", nullable = true)
     // private Collection collection;
 
-    @Column(name = "Collection_Id", nullable = true)
-    private Integer collection_Id;
+    @OneToOne
+    @JoinColumn(name="Category_Id", nullable = true)
+    private Category category;
 
-    @Column(name = "Category_Id", nullable = false)
-    private int category_Id;
+    @OneToOne
+    @JoinColumn(name="Collection_Id", nullable = true)
+    private Collection collection;
 
     @Column(name = "Description", nullable = true)
     private String description;

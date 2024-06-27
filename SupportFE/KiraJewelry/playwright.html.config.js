@@ -7,7 +7,7 @@ const config = {
     }]],
 };
 
-
 module.exports = config;
+
 
 //npx playwright test --config=playwright.html.config.js

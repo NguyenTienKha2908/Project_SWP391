@@ -1,6 +1,9 @@
 package com.jewelry.KiraJewelry.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +61,7 @@ public class RequestController {
             @RequestParam("file") MultipartFile file,
             HttpSession session, Model model) {
 
-            // Get user info from session
+        // Get user info from session
         String customerId = (String) session.getAttribute("customerId");
 
         // Generate production_Order_Id
@@ -69,11 +72,6 @@ public class RequestController {
 
         // Create ProductionOrder object from form data
         ProductionOrder productionOrder = new ProductionOrder();
-        try {
-            String url = imageService.upload(file);
-            productionOrder.setImg_Url(url);
-        } catch (Exception e) {
-        }
 
         productionOrder.setProduction_Order_Id(productionOrderId);
         productionOrder.setDate(currentDate);
@@ -99,6 +97,14 @@ public class RequestController {
 
         System.out.println(productionOrder.getProduction_Order_Id());
         // Save ProductionOrder to database
+
+        try {
+            String url = imageService.uploadForProductionOrder(file, "Customer_Production_Order", customerId,
+                    productionOrder.getProduction_Order_Id());
+            productionOrder.setImg_Url(url);
+        } catch (Exception e) {
+        }
+
         try {
             productionOrderRepository.save(productionOrder);
         } catch (Exception e) {
@@ -108,6 +114,18 @@ public class RequestController {
         }
 
         Customer customer = customerService.getCustomerIdByCustomerName((String) session.getAttribute("customerName"));
+
+        List<String> imagesByCustomerId = null;
+
+        try {
+            imagesByCustomerId = imageService.getImgByCustomerID(customerId, productionOrder.getProduction_Order_Id());
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
+        System.out.println(imagesByCustomerId);
         model.addAttribute("customer", customer);
         model.addAttribute("productionOrder", productionOrder);
         String catergoryName = categoryService.getCateNameById(productionOrder.getCategory_Id());

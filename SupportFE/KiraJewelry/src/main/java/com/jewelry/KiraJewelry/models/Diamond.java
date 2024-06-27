@@ -75,7 +75,7 @@ public class Diamond {
     private String fluorescence;
 
     @Column(name = "status", nullable = false)
-    private int status; // 1 for active, 0 for inactive
+    private boolean status; // 1 for active, 0 for inactive
 
     @Column(name = "product_id", nullable = true)
     private Integer product_Id;
@@ -191,11 +191,11 @@ public class Diamond {
         this.fluorescence = fluorescence;
     }
 
-    public int getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

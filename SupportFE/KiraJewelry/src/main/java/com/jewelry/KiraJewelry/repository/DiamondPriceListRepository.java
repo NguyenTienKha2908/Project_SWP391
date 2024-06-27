@@ -32,4 +32,19 @@ public interface DiamondPriceListRepository extends JpaRepository<DiamondPriceLi
                         @Param("color") String color,
                         @Param("clarity") String clarity,
                         @Param("cut") String cut);
+
+        @Query("SELECT d FROM DiamondPriceList d WHERE d.color = :color AND d.clarity = :clarity AND d.cut = :cut AND d.origin = :origin")
+
+        DiamondPriceList findDiamondPriceList(
+                        @Param("color") String color,
+                        @Param("clarity") String clarity,
+                        @Param("cut") String cut,
+                        @Param("origin") String origin);
+
+        @Query("SELECT dpl FROM DiamondPriceList dpl WHERE dpl.carat_Weight_From <= :caratWeight AND dpl.carat_Weight_To >= :caratWeight AND dpl.color = :color AND dpl.clarity = :clarity AND dpl.cut = :cut AND dpl.origin = :origin")
+        List<DiamondPriceList> findPriceListByCriteria(@Param("caratWeight") float caratWeight,
+                        @Param("color") String color,
+                        @Param("clarity") String clarity,
+                        @Param("cut") String cut, @Param("origin") String origin);
+
 }

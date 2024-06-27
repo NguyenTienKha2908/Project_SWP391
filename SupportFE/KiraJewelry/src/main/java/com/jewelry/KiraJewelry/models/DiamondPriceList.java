@@ -2,6 +2,8 @@ package com.jewelry.KiraJewelry.models;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,6 +54,8 @@ public class DiamondPriceList {
 
     @PastOrPresent
     @Column(name = "eff_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+
     private Date eff_Date;
 
     // Getters and Setters

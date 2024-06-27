@@ -47,9 +47,6 @@ public class Material {
     @Column(name = "img_url")
     private String img_Url;
 
-    @Transient
-    private MultipartFile imgFile;
-
     // Getters and setters
     public int getMaterialId() {
         return material_Id;
@@ -89,13 +86,5 @@ public class Material {
 
     public void setImgUrl(String img_Url) {
         this.img_Url = img_Url;
-    }
-
-    public MultipartFile getImgFile() {
-        return imgFile;
-    }
-
-    public void setImgFile(MultipartFile imgFile) {
-        this.imgFile = imgFile;
     }
 }

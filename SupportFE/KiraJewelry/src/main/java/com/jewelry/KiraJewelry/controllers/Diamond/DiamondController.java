@@ -87,8 +87,8 @@ public class DiamondController {
 
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
-                String url = imageService.upload(imgFile);
-                diamond.setImgUrl(url);
+                // String url = imageService.upload(imgFile);
+                // diamond.setImgUrl(url);
             } catch (Exception e) {
                 model.addAttribute("errorMessage", "Could not save image file: " + e.getMessage());
                 return "employee/manager/Diamond/new_diamond";
@@ -98,7 +98,7 @@ public class DiamondController {
         if (diamond.getDiaId() == 0) { // Only generate a new code if the diamond is new
             diamond.setDiaCode(generateDiamondCode());
         }
-        diamond.setStatus(1); // Set status to active by default
+        diamond.setStatus(true); // Set status to active by default
         diamond.setO_price(0.0f); // Ensure O Price is set to 0
 
         DiamondPriceList priceList = diamondPriceListService.getPriceByDetails(
@@ -152,8 +152,8 @@ public class DiamondController {
 
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
-                String url = imageService.upload(imgFile);
-                diamond.setImgUrl(url);
+                // String url = imageService.upload(imgFile);
+                // diamond.setImgUrl(url);
             } catch (Exception e) {
                 model.addAttribute("errorMessage", "Could not save image file: " + e.getMessage());
                 return "employee/manager/Diamond/new_diamond";
@@ -225,7 +225,7 @@ public class DiamondController {
             if (diamond == null) {
                 redirectAttributes.addFlashAttribute("message", "Diamond not found.");
             } else {
-                diamond.setStatus(0); // Set status to inactive
+                diamond.setStatus(false); // Set status to inactive
                 diamondService.saveDiamond(diamond);
                 redirectAttributes.addFlashAttribute("message", "Diamond deactivated successfully.");
             }
@@ -242,7 +242,7 @@ public class DiamondController {
             if (diamond == null) {
                 redirectAttributes.addFlashAttribute("message", "Diamond not found.");
             } else {
-                diamond.setStatus(1); // Set status to active
+                diamond.setStatus(true); // Set status to active
                 diamondService.saveDiamond(diamond);
                 redirectAttributes.addFlashAttribute("message", "Diamond activated successfully.");
             }

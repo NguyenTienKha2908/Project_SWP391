@@ -14,7 +14,7 @@ public class LoginRequest {
     @NotBlank(message = "Email is mandatory")
     @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid Email")
     private String email;
-    @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W]).{8,64})", message="Invalid Password: Password must be 8 - 6 characters")
+    @Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W]).{8,64})", message="Invalid Password: Password must be 8 - 6 characters, 1 special character, 1 digit, and 1 uppercase")
     private String password;
 
     @NotNull

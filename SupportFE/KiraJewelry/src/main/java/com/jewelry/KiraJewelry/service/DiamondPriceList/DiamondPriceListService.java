@@ -71,4 +71,19 @@ public class DiamondPriceListService {
         }
         return priceList;
     }
+
+
+    public DiamondPriceList getDiamondPrice(String color, String clarity, String cut, String origin,
+            float carat_Weight) {
+        return diaPriceListRepository.findByOriginCaratWeightColorClarityAndCut(origin, carat_Weight, color, clarity, cut);
+    }
+
+    public DiamondPriceList getDiamondPriceList(String color, String clarity, String cut, String origin) {
+        return diaPriceListRepository.findDiamondPriceList(color, clarity, cut, origin);
+    }
+
+    public List<DiamondPriceList> findPriceListByCriteria(float caratWeight, String color, String clarity,
+            String cut, String origin) {
+        return diaPriceListRepository.findPriceListByCriteria(caratWeight, color, clarity, cut, origin);
+    }
 }

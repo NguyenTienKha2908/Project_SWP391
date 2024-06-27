@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jewelry.KiraJewelry.models.Category;
 import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.models.Product;
 import com.jewelry.KiraJewelry.models.ProductDesign;
@@ -72,14 +73,14 @@ public class CustomerViewController {
         // Increment the product ID and generate the new product code
         int newProductId = maxProductId + 1;
         String newProductCode = generateNewProductCode(maxProductCode);
-
+        Category category = categoryService.getCategoryById(categoryId);
         // Create a new product instance and set its fields
         Product product = new Product();
-        product.setCategory_Id(categoryId);;
+        product.setCategory(category);
         product.setProduct_Id(newProductId);
         product.setProduct_Code(newProductCode);
         product.setProduct_Name("Default Name"); // Example default name, change as needed
-        product.setCollection_Id(null); // Setting collection ID to null
+        product.setCollection(null); // Setting collection ID to null
         product.setDescription("Default Description"); // Example description, change as needed
         product.setGender("Unspecified"); // Example gender, change as needed
         product.setSize(size); // Set the size from the slider
@@ -131,7 +132,7 @@ public class CustomerViewController {
     public String saveCustomerMaterial(@RequestParam("productId") int productId,
                                @RequestParam Map<String, String> requestParams) {
         int selectedMaterialId = Integer.parseInt(requestParams.get("materialId"));
-        int selectedMaterialWeight = Integer.parseInt(requestParams.get("materialWeight_" + selectedMaterialId));
+        Float selectedMaterialWeight = Float.parseFloat(requestParams.get("materialWeight_" + selectedMaterialId));
 
         // Save the ProductMaterial entity
         ProductMaterial productMaterial = new ProductMaterial();

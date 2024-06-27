@@ -25,7 +25,7 @@ public class ProductMaterial {
     private ProductMaterialId id;
 
     @JoinColumn(name="Material_Weight")
-    private int material_Weight;
+    private Float material_Weight;
 
     @Column(name = "Q_Price")
     private float q_price;
@@ -33,11 +33,11 @@ public class ProductMaterial {
     @Column(name = "O_Price")
     private float o_price;
 
-    public int getMaterial_Weight() {
+    public Float getMaterial_Weight() {
         return material_Weight;
     }
 
-    public void setMaterial_Weight(int material_Weight) {
+    public void setMaterial_Weight(Float material_Weight) {
         this.material_Weight = material_Weight;
     }
 

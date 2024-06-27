@@ -21,7 +21,7 @@ public class DiamondService {
     }
 
     public List<Diamond> getAllActiveDiamonds() {
-        return diamondRepository.findByStatus(1);
+        return diamondRepository.findByStatus(true);
     }
 
     public Diamond getDiamondById(int id) {
@@ -31,5 +31,25 @@ public class DiamondService {
 
     public void saveDiamond(Diamond diamond) {
         diamondRepository.save(diamond);
+    }
+
+    public List<Diamond> getAllDiamonds() {
+        return diamondRepository.findAll();
+    }
+
+    public List<Diamond> getByListDiamonds(String name, Double caratWeight, String color, String clarity, String cut,
+            String origin) {
+        System.out.println("List Diamonds - diamondName: " + name + ", caratWeight: " + caratWeight + ", color: "
+                + color + ", clarity: " + clarity + ", cut: " + cut + ", origin: " + origin);
+
+        return diamondRepository.findByListDiamonds(name, caratWeight, color, clarity, cut, origin);
+    }
+
+    public List<Diamond> getByListDiamondsLackWeight(String name, String color, String clarity, String cut,
+            String origin) {
+        System.out.println("List Diamonds - diamondName: " + name
+                + ", color: " + color + ", clarity: " + clarity + ", cut: " + cut + ", origin: " + origin);
+
+        return diamondRepository.findByListDiamondsLackWeight(name, color, clarity, cut, origin);
     }
 }

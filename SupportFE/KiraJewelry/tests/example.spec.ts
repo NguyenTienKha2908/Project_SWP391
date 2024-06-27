@@ -24,11 +24,11 @@ test('successful registration with valid data', async ({ page }) => {
   await page.goto('http://localhost:8081/registration');
 
   // VALID data test
-  await page.fill('#fullname', 'Test User');
-  await page.fill('#email', 'testo@example.com');
-  await page.fill('#phone', '1234567890');
+  await page.fill('#fullname', 'Sayuri');
+  await page.fill('#email', 'sayuri@gmail.com');
+  await page.fill('#phone', '0908123123');
   await page.fill('#password', 'H@ello218');
-  await page.fill('#address', 'Test Address');
+  await page.fill('#address', 'ABC 204 Road');
 
   await Promise.all([
     page.waitForNavigation(), // Ensure navigation completes
@@ -101,32 +101,32 @@ test('registration with existing email', async ({ page }) => {
 // });
 
 /********* Test Email Format ***********/
-// test('registration with invalid Email', async ({ page }) => {
-//   await page.goto('http://localhost:8081/registration');
+test('registration with invalid Email', async ({ page }) => {
+  await page.goto('http://localhost:8081/registration');
 
-//   // Fill form test data
-//   await page.fill('#fullname', 'An Dao');
-//   await page.fill('#email', 'ilo@veugmail.com');
-//   await page.fill('#phone', '0908123123');
-//   await page.fill('#password', 'P@ssw0rd');
-//   await page.fill('#address', '18B ABC Road');
+  // Fill form test data
+  await page.fill('#fullname', 'An Dao');
+  await page.fill('#email', 'ilo@veugmail.com');
+  await page.fill('#phone', '0908123123');
+  await page.fill('#password', 'P@ssw0rd');
+  await page.fill('#address', '18B ABC Road');
 
-//   await Promise.all([
-//     page.waitForNavigation(),
-//     page.click('.btn-register')
-//   ]);
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.btn-register')
+  ]);
 
-//   // Assert redirection to error page or message
-//   const url = page.url();
-//   expect(url).toContain('/registration?error');
+  // Assert redirection to error page or message
+  const url = page.url();
+  expect(url).toContain('/registration?error');
 
-//   // Check for error message in toast
-//   const errorToast = page.locator('.mess-content:has-text("Invalid Email Format")');
-//   await errorToast.waitFor({ state: 'visible' });
-//   await page.waitForTimeout(500);
-//   console.log('Registration failed with error message visible');
-//   await page.screenshot({ path: 'screenshots/errorRegister.png' });
-// });
+  // Check for error message in toast
+  const errorToast = page.locator('.mess-content:has-text("Invalid Email")');
+  await errorToast.waitFor({ state: 'visible' });
+  await page.waitForTimeout(500);
+  console.log('Registration failed with error message visible');
+  await page.screenshot({ path: 'screenshots/errorRegister.png' });
+});
 
 /********* Test Phone Format ***********/
 // test('registration with invalid Phone', async ({ page }) => {
@@ -149,7 +149,7 @@ test('registration with existing email', async ({ page }) => {
 //   expect(url).toContain('/registration?error');
 
 //   // Check for error message in toast
-//   const errorToast = page.locator('.mess-content:has-text("Invalid Phone: Phone number must be exactly 10 digits")');
+//   const errorToast = page.locator('.mess-content:has-text("Invalid Phone Number: Must start with 0 and have 10 digits")');
 //   await errorToast.waitFor({ state: 'visible' });
 //   await page.waitForTimeout(500);
 //   console.log('Registration failed with error message visible');
@@ -178,7 +178,7 @@ test('registration with invalid Password', async ({ page }) => {
   expect(url).toContain('/registration?error');
 
   // Check for error message in toast
-  const errorToast = page.locator('.mess-content:has-text("Invalid Password: Password must have at least 1 special character, 1 uppercase letter, and 1 digit")');
+  const errorToast = page.locator('.mess-content:has-text("Invalid Password: Password must be 8 - 6 characters, 1 special character, 1 digit, and 1 uppercase")');
   await errorToast.waitFor({ state: 'visible' });
   await page.waitForTimeout(500);
   console.log('Registration failed with error message visible');
@@ -189,13 +189,13 @@ test('registration with invalid Password', async ({ page }) => {
 test('check login', async ({ page }) => {
   await page.goto('http://localhost:8081/login');
 
-  //VALID email and password
-  await page.locator('input[name="username"]').type('customer1@example.com');
-  await page.locator('input[name="password"]').type('Cust1#Secure                                                    ');
+  // //VALID email and password
+  // await page.locator('input[name="username"]').type('customer1@example.com');
+  // await page.locator('input[name="password"]').type('Cust1#Secure                                                    ');
 
   //INVALID email and password
-  // await page.locator('input[name="username"]').type('hoola@gmail.com');
-  // await page.locator('input[name="password"]').type('12345');
+  await page.locator('input[name="username"]').type('hoola@gmail.com');
+  await page.locator('input[name="password"]').type('12345');
 
   await page.locator('input[name="btn-login"]').click();
 
@@ -232,7 +232,7 @@ test('check making request', async ({ page }) => {
 
   // VALID email and password
   await page.locator('input[name="username"]').type('customer4@example.com');
-  await page.locator('input[name="password"]').type('Cust4%Tough                                                     ');
+  await page.locator('input[name="password"]').type('Cust4%Tough');
 
   await page.locator('input[name="btn-login"]').click();
 

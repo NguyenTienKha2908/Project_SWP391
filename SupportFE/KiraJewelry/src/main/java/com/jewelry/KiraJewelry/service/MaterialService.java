@@ -45,4 +45,8 @@ public class MaterialService {
     public List<Material> getMaterialsForProductDesignShell(int productId) {
         return materialRepository.findMaterialsForProductDesignShell(productId);
     }
+
+    public List<Material> findByName(String name) {
+        return materialRepository.findByNameContaining(name);
+    }
 }

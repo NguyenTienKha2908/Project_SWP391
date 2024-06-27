@@ -20,6 +20,6 @@ public interface FilesStorageService {
 
   public Stream<Path> loadAll();
   
-  public List<String> listFiles();
+  // public List<String> listFiles();
   
 }

@@ -17,6 +17,7 @@ import com.jewelry.KiraJewelry.service.MaterialService;
 import jakarta.validation.Valid;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -24,6 +25,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MaterialController {
@@ -38,7 +41,27 @@ public class MaterialController {
 
     @GetMapping("/materials")
     public String viewMaterialsPage(Model model) {
-        model.addAttribute("listMaterials", materialService.getAllMaterials());
+        // Get all materials
+        List<Material> allMaterials = materialService.getAllMaterials();
+
+        // Initialize list to hold image URLs for each material
+        List<String> imagesByMaterials = new ArrayList<>();
+
+        // Iterate through each material to get its image URL
+        for (Material material : allMaterials) {
+            try {
+                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterialId()));
+                imagesByMaterials.add(imageUrl);
+                System.out.println(imageUrl);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
+        // Add lists to the model
+        model.addAttribute("imagesByMaterials", imagesByMaterials);
+        model.addAttribute("listMaterials", allMaterials);
         return "employee/manager/Material/materials";
     }
 
@@ -59,16 +82,21 @@ public class MaterialController {
             return "redirect:/showNewMaterialForm";
         }
 
-        handleImageUpload(material, imgFile, redirectAttributes);
-
         materialService.saveMaterial(material);
+        boolean resultSaveImg = handleImageUpload(material, imgFile, redirectAttributes);
+        if (resultSaveImg == true) {
+            System.out.println("Image is saved successfully on Firebase!");
+        }
         return "redirect:/materials";
     }
 
     @GetMapping("/showFormForUpdateMaterial/{id}")
-    public String showFormForUpdateMaterial(@PathVariable(value = "id") int id, Model model) {
+    public String showFormForUpdateMaterial(@PathVariable(value = "id") int id, Model model) throws IOException {
         if (!model.containsAttribute("material")) {
             Material material = materialService.getMaterialById(id);
+            String url = imageService.getImgByMaterialID(String.valueOf(material.getMaterialId()));
+
+            model.addAttribute("img_Url", url);
             model.addAttribute("material", material);
         }
         return "employee/manager/Material/update_material";
@@ -83,9 +111,11 @@ public class MaterialController {
             return "redirect:/showFormForUpdateMaterial/" + material.getMaterialId();
         }
 
-        handleImageUpload(material, imgFile, redirectAttributes);
-
         materialService.saveMaterial(material);
+        boolean resultSaveImg = handleImageUpdate(material, imgFile, redirectAttributes);
+        if (resultSaveImg == true) {
+            System.out.println("Image is saved successfully on Firebase!");
+        }
         return "redirect:/materials";
     }
 
@@ -139,51 +169,51 @@ public class MaterialController {
         return "redirect:/materials";
     }
 
-    private void handleImageUpload(Material material, MultipartFile imgFile, RedirectAttributes redirectAttributes) {
+    private boolean handleImageUpload(Material material, MultipartFile imgFile, RedirectAttributes redirectAttributes) {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
                 if (!Files.exists(rootLocation)) {
                     Files.createDirectories(rootLocation);
                 }
 
-                String url = imageService.upload(imgFile);
-                material.setImgUrl(url);
+                String url = imageService.upload(imgFile, "Material", String.valueOf(material.getMaterialId()));
+                return true;
+                // material.setImgUrl(url);
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
             }
-        } else if (material.getImgUrl() != null && !material.getImgUrl().isEmpty()) {
-            try {
-                @SuppressWarnings("deprecation")
-                URL url = new URL(material.getImgUrl());
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                try (InputStream is = url.openStream()) {
-                    byte[] buffer = new byte[1024];
-                    int n;
-                    while ((n = is.read(buffer)) != -1) {
-                        baos.write(buffer, 0, n);
-                    }
-                }
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("errorMessage",
-                        "Could not retrieve image from URL: " + e.getMessage());
-            }
         }
+        return false;
     }
 
-    // @GetMapping("/materials/image/{filename:.+}")
-    // @ResponseBody
-    // public Resource getImage(@PathVariable String filename) {
-    //     try {
-    //         Path file = rootLocation.resolve(filename);
-    //         Resource resource = new UrlResource(file.toUri());
+    private boolean handleImageUpdate(Material material, MultipartFile imgFile, RedirectAttributes redirectAttributes) {
+        if (imgFile != null && !imgFile.isEmpty()) {
+            try {
+                if (!Files.exists(rootLocation)) {
+                    Files.createDirectories(rootLocation);
+                }
 
-    //         if (resource.exists() || resource.isReadable()) {
-    //             return resource;
-    //         } else {
-    //             throw new RuntimeException("Could not read file: " + filename);
-    //         }
-    //     } catch (MalformedURLException e) {
-    //         throw new RuntimeException("Could not read file: " + filename, e);
-    //     }
-    // }
+                // Get the old image URL
+                String oldUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterialId()));
+
+                // Delete the old image if it exists
+                if (oldUrl != null && !oldUrl.isEmpty()) {
+                    boolean deleted = imageService.deleteImage(oldUrl);
+                    if (!deleted) {
+                        redirectAttributes.addFlashAttribute("errorMessage", "Could not delete old image file.");
+                        return false;
+                    }
+                }
+                boolean resultSaveImg = handleImageUpload(material, imgFile, redirectAttributes);
+                if (resultSaveImg == true) {
+                    System.out.println("Image is updated successfully on Firebase!");
+                }
+                return true;
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
 }

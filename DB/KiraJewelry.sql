@@ -193,7 +193,7 @@ CREATE TABLE [dbo].[Product](
 
 	[Gender] [nvarchar](50) NOT NULL,
 	[Size] [int] NOT NULL,
-	[Img_Url] varchar(255) NOT NULL,
+	[Img_Url] varchar(255),
 
 	[Status] bit NOT NULL,
 	--[Warranty_Card_Id] int,
@@ -341,7 +341,7 @@ CREATE TABLE [dbo].[Diamond](
 	[Symmetry] [nvarchar](255) NOT NULL,
 	[Fluorescence] [char](10) NOT NULL,
 	[Status] [bit] NOT NULL, -- 1/Active | 0/Inactive (Used by some Pro)
-	[Img_Url] varchar(255) NOT NULL,
+	[Img_Url] varchar(255),
 
 	[Q_Price] float,
 	[O_Price] float,
@@ -1135,3 +1135,5 @@ select * from Product_Design
 
 use JewelryStore
 select * from users
+
+delete from production_Order

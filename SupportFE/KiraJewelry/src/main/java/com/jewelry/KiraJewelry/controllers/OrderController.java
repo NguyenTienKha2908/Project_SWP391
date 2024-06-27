@@ -1,6 +1,6 @@
 package com.jewelry.KiraJewelry.controllers;
 
-import java.util.Date;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import com.jewelry.KiraJewelry.models.ProductionOrder;
 import com.jewelry.KiraJewelry.service.CategoryService;
 import com.jewelry.KiraJewelry.service.CustomerService;
 import com.jewelry.KiraJewelry.service.EmployeeService;
+import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.ProductionOrderService;
 
 @Controller
@@ -31,28 +32,25 @@ public class OrderController {
         return "customer/userPage";
     }
 
-    // @Autowired
-    // private ProductionOrderRepository productionOrderRepository;
-
     @Autowired
     private ProductionOrderService productionOrderService;
-
-    // @Autowired
-    // private UserService userService;
-
-    // @Autowired
-    // private EmployeeService employeeService;
-
     @Autowired
     private CustomerService customerService;
     @Autowired
     private EmployeeService employeeService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    ImageService imageService;
 
     @GetMapping("/userRequest")
     public String userViewRequest(@RequestParam("customerName") String customerName, Model model) {
         List<ProductionOrder> productionList = productionOrderService.getAllProductionOrders();
+        List<String> imagesByCustomerId = null;
+
+        
+
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
 
         Customer customer = customerService.getCustomerIdByCustomerName(customerName);
         String customerId = customer.getCustomer_Id();
@@ -74,6 +72,14 @@ public class OrderController {
             } else {
                 model.addAttribute("sale_staff_name", employee.getFull_Name());
             }
+            try {
+                imagesByCustomerId = imageService.getImgByCustomerID(customerId, newestProductionOrder.getProduction_Order_Id());
+    
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            model.addAttribute("imagesByCustomerId", imagesByCustomerId);
             model.addAttribute("customer", customer);
             model.addAttribute("productionOrder", newestProductionOrder);
             String catergoryName = categoryService.getCateNameById(newestProductionOrder.getCategory_Id());
