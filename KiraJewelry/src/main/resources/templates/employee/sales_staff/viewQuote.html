@@ -22,15 +22,16 @@
                 </div>
             </div>
             <ul class="sidebar-nav">
-                <li class="sidebar-item">
-                    <a th:href="@{/homeSalesStaff}" class="sidebar-link">
+                <li class=" sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeSalesStaff}'|"
+                        class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
                             alt="profile">
                         <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsForSS}'|"
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
                         class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
                             alt="request">
@@ -38,7 +39,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesForSS}'|"
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
                         class="active sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
                             alt="quote">
@@ -71,6 +72,7 @@
                             Welcome, <span th:text="${session.employeeName}"></span>
                         </span>
                     </div>
+                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
                 </div>
             </div>
             <div class="content">
@@ -88,7 +90,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="productionOrder : ${listQuotes}">
+                            <tr th:each="productionOrder : ${listRequests}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
                                 <td th:text="${productionOrder.customer_Id}"></td>

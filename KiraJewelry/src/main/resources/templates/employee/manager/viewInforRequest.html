@@ -126,11 +126,11 @@
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Customer ID</td>
-                                    <td><span th:text="${productionOrder.customer_Id}"></span></td>
+                                    <td><span th:text="${productionOrder.customer.customer_Id}"></span></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Category ID</td>
-                                    <td><span th:text="${productionOrder.category_Id}"></span></td>
+                                    <td><span th:text="${productionOrder.category.category_Id}"></span></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Product Size</td>
@@ -142,11 +142,15 @@
                                 </tr>
                                 <tr>
                                     <td class="fw-bold">Image</td>
-                                    <td><img th:src="${productionOrder.img_Url}" alt="Production Order Image"
-                                            style="max-width: 50%; height: auto;" /></td>
+                                    <td>
+                                        <div th:each="imageUrl : ${imagesByCustomerId}" class="col-md-6">
+                                            <img th:src="${imageUrl}" alt="Production Order Image"
+                                                style="max-width: 100%; height: auto;" />
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td class="fw-bold">Sales Staff</td>
+                                    <td class="fw-bold">Sales Staff Name</td>
                                     <td>
                                         <span th:if="${productionOrder.sales_Staff_Id != null}"
                                             th:text="${productionOrder.sales_Staff_Id}"></span>

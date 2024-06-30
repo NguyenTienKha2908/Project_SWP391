@@ -1,7 +1,5 @@
 package com.jewelry.KiraJewelry.models;
 
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,30 +26,34 @@ public class Product {
     @Column(name = "product_Id")
     private int product_Id;
 
-    @Column(name="product_Name")
+    @Column(name = "product_Name", nullable = true)
     private String product_Name;
 
-    @Column(name="product_Code")
+    @NotBlank(message = "Product code is mandatory")
+    @Column(name = "product_Code", nullable = false)
     private String product_Code;
 
     @OneToOne
-    @JoinColumn(name="Category_Id")
+    @JoinColumn(name = "Category_Id")
     private Category category;
 
     @OneToOne
-    @JoinColumn(name="Collection_Id")
+    @JoinColumn(name = "Collection_Id")
     private Collection collection;
 
-    @Column(name="Description")
+    @Column(name = "Description", nullable = true)
     private String description;
 
-    @Column(name="Gender")
+    @Column(name = "Gender", nullable = true)
     private String gender;
 
-    @Column(name="Size")
-    private int size;
+    @Column(name = "Size", nullable = true)
+    private Integer size;
 
-    @Column(name="Status")
+    @Column(name = "Status", nullable = true)
     private boolean status;
+
+    @Column(name = "Img_Url", nullable = true)
+    private String img_Url;
 
 }

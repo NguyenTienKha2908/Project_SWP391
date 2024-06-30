@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,24 @@ public class MaterialPriceListService {
         return materialPriceListRepository.findAll();
     }
 
-    public MaterialPriceList getMaterialPriceListByMaterialId(int material_Id) {
-        return materialPriceListRepository.findMaterialPriceListByMaterialId(material_Id);
+    public MaterialPriceList getMaterialPriceListById(int id) {
+        Optional<MaterialPriceList> optional = materialPriceListRepository.findById(id);
+        return optional.orElse(null);
     }
 
+    public void saveMaterialPriceList(MaterialPriceList materialPriceList) {
+        materialPriceListRepository.save(materialPriceList);
+    }
 
+    public void deleteMaterialPriceListById(int id) {
+        materialPriceListRepository.deleteById(id);
+    }
+
+    // public MaterialPriceList getMaterialPriceListByMaterialId(int material_Id) {
+    //     return materialPriceListRepository.findMaterialPriceListByMaterialId(material_Id);
+    // }
+
+    public MaterialPriceList findTopByMaterialId(int materialId) {
+        return materialPriceListRepository.findTopByMaterialId(materialId);
+    }
 }

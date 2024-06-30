@@ -16,7 +16,7 @@
             <div class="d-flex">
                 <div class="sidebar-logo">
                     <a href="#">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
+                        <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706"
                             alt="logo">
                         <span>KIRA JEWELRY</span>
                     </a>
@@ -112,9 +112,8 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Production Order ID</th>
+                                <th>Request ID</th>
                                 <th>Date</th>
-                                <th>Customer ID</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -123,14 +122,14 @@
                             <tr th:each="productionOrder : ${listRequests}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
-                                <td th:text="${productionOrder.customer_Id}"></td>
                                 <td th:text="${productionOrder.status}"></td>
-                                <td class="d-flex">
+                                <td>
                                     <form th:action="@{/viewInformationRequestForManager}" method="get">
                                         <input type="hidden" name="productionOrderId"
                                             th:value="${productionOrder.production_Order_Id}" />
-                                        <button class="text-decoration-none" type="submit">View</button>
+                                        <button class="text-decoation-none" type="submit">View</button>
                                     </form>
+
                                 </td>
                             </tr>
                         </tbody>

@@ -18,20 +18,21 @@
                 <div class="sidebar-logo">
                     <a th:href="@{#}">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
-                            alt="logo"> <span>KIRA JEWELRY</span>
+                        alt="logo">                        <span>KIRA JEWELRY</span>
                     </a>
                 </div>
             </div>
             <ul class="sidebar-nav">
-                <li class="sidebar-item">
-                    <a th:href="@{/homeSalesStaff}" class="sidebar-link">
+                <li class=" sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeSalesStaff}'|"
+                        class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
                             alt="profile">
                         <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsForSS}'|"
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
                         class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
                             alt="request">
@@ -39,7 +40,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesForSS}'|"
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
                         class="active sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
                             alt="quote">
@@ -119,18 +120,22 @@
                                     <div class="container-box col-md-12">
                                         <h1>Material Informarion</h1>
                                         <div class="information">
-                                            <h2>Material</h2>
-                                            <p th:text="${material.material_Name}"></p>
+                                            <h2>Material (Main)</h2>
+                                            <p th:text="${productionOrder.material_Name}"></p>
                                         </div>
                                         <div class="information">
                                             <h2>Weight</h2>
                                             <p>
-                                            <p th:text="${productMaterial.material_Weight}"></p> <span
+                                            <p th:text="${productionOrder.material_Weight}"></p> <span
                                                 style="color: grey; font-size: 0.7rem;">(mace)</span></p>
                                         </div>
                                         <div class="information">
+                                            <h2>Color</h2>
+                                            <p th:text="${productionOrder.material_Color}"></p>
+                                        </div>
+                                        <div class="information">
                                             <h2>Price per unit</h2>
-                                            <p th:text="${material.}"></p>
+                                            <p>$ 100.99</p>
                                         </div>
                                         <div class="information">
                                             <h2>Material (Side)</h2>

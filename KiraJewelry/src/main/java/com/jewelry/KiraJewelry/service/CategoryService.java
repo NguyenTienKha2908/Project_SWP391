@@ -18,7 +18,16 @@ public class CategoryService {
     public String getCateNameById(int catergory_Id) {
         return categoryRepository.getCateNameById(catergory_Id);
     }
-    public Category getCategoryById(int catergory_Id) {
-        return categoryRepository.findByCategoryId(catergory_Id);
+    
+    public Category getCategoryById(int id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
+    public void saveCategory(Category category) {
+        categoryRepository.save(category);
+    }
+
+    public void deleteCategoryById(int id) {
+        categoryRepository.deleteById(id);
     }
 }

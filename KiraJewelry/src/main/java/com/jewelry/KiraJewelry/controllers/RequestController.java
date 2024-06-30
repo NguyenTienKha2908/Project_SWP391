@@ -1,6 +1,10 @@
 package com.jewelry.KiraJewelry.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,13 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jewelry.KiraJewelry.models.Customer;
-// import com.jewelry.KiraJewelry.models.Diamond;
 import com.jewelry.KiraJewelry.models.Product;
-// import com.jewelry.KiraJewelry.models.ProductMaterial;
-// import com.jewelry.KiraJewelry.models.ProductMaterialId;
 import com.jewelry.KiraJewelry.models.ProductionOrder;
-// import com.jewelry.KiraJewelry.repository.DiamondRepository;
-// import com.jewelry.KiraJewelry.repository.ProductMaterialRepository;
 import com.jewelry.KiraJewelry.repository.ProductRepository;
 import com.jewelry.KiraJewelry.repository.ProductionOrderRepository;
 import com.jewelry.KiraJewelry.service.CategoryService;
@@ -26,7 +25,6 @@ import com.jewelry.KiraJewelry.service.FilesStorageService;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.ProductionOrderService;
 
-// import jakarta.mail.Multipart;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -39,15 +37,6 @@ public class RequestController {
 
     @Autowired
     private ProductionOrderRepository productionOrderRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    // @Autowired
-    // private DiamondRepository diamondRepository;
-
-    // @Autowired
-    // private ProductMaterialRepository productMaterialRepository;
 
     @GetMapping("/request")
     public String requestPage(Model model, HttpSession session) {
@@ -67,14 +56,20 @@ public class RequestController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+
     @PostMapping("/submitRequest")
     public String submitRequest(@RequestParam("category") int categoryId,
             @RequestParam("productSize") int productSize,
             @RequestParam("description") String description,
             @RequestParam("file") MultipartFile file,
             HttpSession session, Model model) {
+
         // Get user info from session
         String customerId = (String) session.getAttribute("customerId");
+        Customer customer = customerService.getCustomerByCustomerId(customerId);
 
         // Generate production_Order_Id
         String productionOrderId = generateProductionOrderId();
@@ -84,16 +79,11 @@ public class RequestController {
 
         // Create ProductionOrder object from form data
         ProductionOrder productionOrder = new ProductionOrder();
-        try {
-            String url = imageService.upload(file);
-            productionOrder.setImg_Url(url);
-        } catch (Exception e) {
-        }
 
         productionOrder.setProduction_Order_Id(productionOrderId);
         productionOrder.setDate(currentDate);
-        productionOrder.setCustomer_Id(customerId);
-        productionOrder.setCategory_Id(categoryId);
+        productionOrder.setCustomer(customer);
+        productionOrder.setCategory(categoryService.getCategoryById(categoryId));
         productionOrder.setProduct_Size(productSize);
         productionOrder.setDescription(description);
         productionOrder.setStatus("Created");
@@ -110,6 +100,7 @@ public class RequestController {
         productionOrder.setSales_Staff_Id(null);
         productionOrder.setDesign_Staff_Id(null);
         productionOrder.setProduction_Staff_Id(null);
+        productionOrder.setProduct(null);
 
         // Create and save Product entity
         Product product = new Product();
@@ -123,63 +114,61 @@ public class RequestController {
         product.setGender("no gender");
         product.setStatus(false);
 
-        // Diamond diamond = new Diamond();
-        // ProductMaterial product_Material = new ProductMaterial();
+        System.out.println(productionOrder.getProduction_Order_Id());
+        // Save ProductionOrder to database
 
-        // diamond.setProduct(product);
-
-        // ProductMaterialId productMaterialId = new ProductMaterialId();
-        // productMaterialId.setProduct_Id(product.getProduct_Id());
-        // productMaterialId.setMaterial_Id(0); // Set appropriate material ID
-
-        // ProductMaterial productMaterial = new ProductMaterial();
-        // productMaterial.setId(productMaterialId);
-        // productMaterial.setMaterial_Weight(0); // Set appropriate material weight
-        // productMaterial.setQ_Price(0.0); // Set appropriate Q price
-        // productMaterial.setO_Price(0.0); // Set appropriate O price
         try {
+            String url = imageService.uploadForProductionOrder(file, "Customer_Production_Order", customerId,
+                    productionOrder.getProduction_Order_Id());
             productRepository.save(product);
-            // diamondRepository.save(diamond);
-            // productMaterialRepository.save(product_Material);
+            // productionOrder.setImg_Url(url);
         } catch (Exception e) {
-            e.printStackTrace();
-            // Handle exception (log it, show error message, etc.)
-            return "error";
         }
 
-        // Associate product with production order
-        productionOrder.setProduct(product);
-
-        // Save ProductionOrder to database
         try {
             productionOrderRepository.save(productionOrder);
         } catch (Exception e) {
             e.printStackTrace();
             // Handle exception (log it, show error message, etc.)
-            return "error";
+            return "redirect:/request?error";
         }
 
-        Customer customer = customerService.getCustomerIdByCustomerName((String) session.getAttribute("customerName"));
+        List<String> imagesByCustomerId = null;
+
+        try {
+            imagesByCustomerId = imageService.getImgByCustomerID(customerId, productionOrder.getProduction_Order_Id());
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
+        System.out.println(imagesByCustomerId);
         model.addAttribute("customer", customer);
         model.addAttribute("productionOrder", productionOrder);
-        String categoryName = categoryService.getCateNameById(productionOrder.getCategory_Id());
-        model.addAttribute("categoryName", categoryName);
+        String catergoryName = categoryService.getCateNameById(productionOrder.getCategory().getCategory_Id());
+        model.addAttribute("categoryName", catergoryName);
 
         // Redirect to success page
-        return "customer/userRequest";
+        // return "customer/userRequest";
+        return "redirect:/request?success";
     }
 
     private String generateProductionOrderId() {
         // Lấy production_Order_Id cuối cùng đã được chèn vào
         ProductionOrder lastOrder = productionOrderService.getTopByOrderByProduction_Order_IdDesc();
         if (lastOrder != null) {
-            String lastId = lastOrder.getProduction_Order_Id();
-            // Trích xuất phần số và tăng lên
-            int numericPart = Integer.parseInt(lastId.substring(3)) + 1;
-            // Định dạng lại ID mới theo mẫu mong muốn
-            return String.format("POI%03d", numericPart);
+            if (lastOrder.getProduction_Order_Id() != null) {
+                String lastId = lastOrder.getProduction_Order_Id();
+                // Trích xuất phần số và tăng lên
+                int numericPart = Integer.parseInt(lastId.substring(3)) + 1;
+                // Định dạng lại ID mới theo mẫu mong muốn
+                return String.format("POI%03d", numericPart);
+            } else {
+                // Nếu không có order nào trước đó, bắt đầu với POI001
+                return "POI001";
+            }
         } else {
-            // Nếu không có order nào trước đó, bắt đầu với POI001
             return "POI001";
         }
     }

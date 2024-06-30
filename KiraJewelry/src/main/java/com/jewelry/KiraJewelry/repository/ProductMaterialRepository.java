@@ -17,4 +17,7 @@ public interface ProductMaterialRepository extends JpaRepository<ProductMaterial
 
     @Query("SELECT p FROM ProductMaterial p WHERE p.id.product_Id= :product_Id")
     List<ProductMaterial> findListProductMaterialByProductId(@Param("product_Id") int product_Id);
+
+    @Query("SELECT pm FROM ProductMaterial pm WHERE pm.id.product_Id = :product_Id")
+    ProductMaterial findByProduct_Id(@Param("product_Id") int product_Id);
 }

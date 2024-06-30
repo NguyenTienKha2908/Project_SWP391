@@ -35,7 +35,7 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   @Override
   public void save(MultipartFile file) {
     try {
-      String imgUrl = imageService.upload(file);
+    //   String imgUrl = imageService.upload(file);
       //System.out.println(imgUrl);
       Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
     } catch (Exception e) {
@@ -77,16 +77,16 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     }
   }
 
-  @Override
-  public List<String> listFiles() {
-    try {
-      return Files.walk(this.root, 1)
-          .filter(path -> !path.equals(this.root))
-          .map(this.root::relativize)
-          .map(Path::toString)
-          .collect(Collectors.toList());
-    } catch (IOException e) {
-      throw new RuntimeException("Could not load the files!");
-    }
-  }
+  // @Override
+  // public List<String> listFiles() {
+  //   try {
+  //     return Files.walk(this.root, 1)
+  //         .filter(path -> !path.equals(this.root))
+  //         .map(this.root::relativize)
+  //         .map(Path::toString)
+  //         .collect(Collectors.toList());
+  //   } catch (IOException e) {
+  //     throw new RuntimeException("Could not load the files!");
+  //   }
+  // }
 }

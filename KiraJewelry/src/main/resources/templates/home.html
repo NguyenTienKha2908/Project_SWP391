@@ -8,6 +8,18 @@
     <title>Kira Jewelry</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <style>
+        .dropdown-item{
+            width: 50%;
+            transition: 0.45s ease-in-out;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f2f7fd;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -22,7 +34,9 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        Welcome, <span th:text="${session.customerName}"></span> |
+                        <a th:href="@{/userRequest(customerName=${session.customerName})}"> Welcome, <span
+                                th:text="${session.customerName}"></span></a>
+                        |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
                     <span th:if="${session.customerName == null}">
@@ -53,10 +67,14 @@
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
                         <li class="dropdown-item">
-                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
-                                Jewelry Now</a>
-                            <a th:href="@{/login}" th:unless="${session.customerName != null}"
-                                class="sidebar-link">Order Jewelry Now</a>
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/chooseCategory}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
                         </li>
                         <li class="dropdown-item">
                             <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
@@ -399,15 +417,18 @@
         </ul>
         <div id="desgin_img" class="row">
             <div id="img" class="col-md-4">
-                <img class="w-100" th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_10K_Gold_Diamond_Signet_Ring_A_chic_10K_gold_signet_ri_0.jpg?alt=media&token=edf66af2-1c33-4e3a-a357-4a4d22cf07f5}"
+                <img class="w-100"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_10K_Gold_Diamond_Signet_Ring_A_chic_10K_gold_signet_ri_0.jpg?alt=media&token=edf66af2-1c33-4e3a-a357-4a4d22cf07f5}"
                     alt="Ring_1" />
             </div>
             <div id="img" class="col-md-4">
-                <img class="w-100" th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_22K_Gold_Diamond_Wedding_Band_A_22K_gold_wedding_band_0.jpg?alt=media&token=2619ffed-9c99-4e1e-95c7-7545e638ecf9}"
+                <img class="w-100"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_22K_Gold_Diamond_Wedding_Band_A_22K_gold_wedding_band_0.jpg?alt=media&token=2619ffed-9c99-4e1e-95c7-7545e638ecf9}"
                     alt="Ring_2" />
             </div>
             <div id="img" class="col-md-4">
-                <img class="w-100" th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_A_24K_gold_wedding_band_with_a_single_diamond_inlay_fo_0.jpg?alt=media&token=cd29dd3a-8716-449d-8f3e-48915adad767}"
+                <img class="w-100"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_A_24K_gold_wedding_band_with_a_single_diamond_inlay_fo_0.jpg?alt=media&token=cd29dd3a-8716-449d-8f3e-48915adad767}"
                     alt="Ring_3" />
             </div>
         </div>
@@ -446,19 +467,19 @@
             <div class="col-md-6">
                 <div id="img" class="row">
                     <div class="col-md-7">
-                        <img class="img-responsive w-100" style="object-fit: cover; height: 450px;" th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F1.svg?alt=media&token=5a21b6ea-f34c-4e75-ab7e-98df0838d106}"
+                        <img class="img-responsive w-100" style="object-fit: cover; height: 450px;"
+                            th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F1.svg?alt=media&token=5a21b6ea-f34c-4e75-ab7e-98df0838d106}"
                             alt="" />
                     </div>
 
                     <div class="col-md-5">
                         <div class="col-md-12 h-50">
-                            <img class="img-responsive" 
+                            <img class="img-responsive"
                                 th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F2.svg?alt=media&token=b9c1c603-d90a-4c5c-9a9d-0c5e32dddbd4}"
                                 alt="" />
                         </div>
                         <div class="col-md-12 h-50" style="grid-area: simg2">
-                            <img 
-                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F3.svg?alt=media&token=9ace3095-884c-4b90-8f8d-61fc5db2d1d8}"
+                            <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F3.svg?alt=media&token=9ace3095-884c-4b90-8f8d-61fc5db2d1d8}"
                                 alt="" />
                         </div>
                     </div>
@@ -468,19 +489,17 @@
                 <div id="img" class="row">
                     <div class="col-md-7">
                         <img class="img-responsive w-100" style="object-fit: cover; height: 450px;"
-                         th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F4.svg?alt=media&token=784222ec-bd52-45ad-a030-b9507fca4c34}"
+                            th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F4.svg?alt=media&token=784222ec-bd52-45ad-a030-b9507fca4c34}"
                             alt="" />
                     </div>
 
                     <div class="col-md-5">
                         <div class="col-md-12 h-50" style="grid-area: simg3">
-                            <img 
-                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F5.svg?alt=media&token=8fc9eeb7-141d-4b5e-ba9f-de1308b5912e}"
+                            <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F5.svg?alt=media&token=8fc9eeb7-141d-4b5e-ba9f-de1308b5912e}"
                                 alt="" />
                         </div>
                         <div class="col-md-12 h-50" style="grid-area: simg4">
-                            <img 
-                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F6.svg?alt=media&token=9b924197-3c35-4514-9573-3073433757b3}"
+                            <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F6.svg?alt=media&token=9b924197-3c35-4514-9573-3073433757b3}"
                                 alt="" />
                         </div>
                     </div>

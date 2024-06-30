@@ -177,6 +177,10 @@ a.sidebar-link:hover,
         padding: 1% 2%;
         margin-right: -7%;
     }
+
+    a:hover {
+        background-color: #717988;
+    }
 }
 
 .bottom-content {
@@ -305,7 +309,8 @@ table {
     justify-content: start;
     align-items: center;
 
-    p, a {
+    p,
+    a {
         margin: 0;
         text-align: left;
         font-size: 0.8rem;
@@ -445,6 +450,7 @@ table {
             width: 130px;
         }
     }
+
     input::placeholder {
         font-size: 0.75rem;
     }
@@ -456,6 +462,7 @@ table {
     textarea {
         width: 50%;
     }
+
     textarea::placeholder {
         font-size: 0.75rem;
     }
@@ -693,6 +700,7 @@ table {
     input {
         width: 50%;
     }
+
     input::placeholder {
         font-size: 0.8rem;
     }
@@ -921,6 +929,7 @@ tr td input {
 
 .quote {
     width: 80%;
+
     h3 {
         font-size: 1rem;
     }
@@ -945,4 +954,93 @@ tr td input {
     .sidebar-item a:hover {
         color: #00BDD6;
     }
+}
+
+/* General */
+.btn {
+    display: inline-block;
+    padding: 7px 25px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.btn:hover {
+    color: #FFFFFF ! important;
+    background-color: #3e8e41
+}
+
+.btn:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+.btn-secondary {
+    background-color: #303030;
+}
+
+.btn-secondary:hover {
+    background-color: #585858;
+}
+
+.btn-secondary:active {
+    background-color: #585858;
+}
+
+.btn-danger {
+    background-color: #d9534f;
+}
+
+.btn-danger:hover {
+    background-color: #c9302c;
+}
+
+.btn-danger:active {
+    background-color: #c9302c;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+.button-div {
+    width: 100%;
+    text-align: center;
+
+    a {
+        float: right;
+        margin: 5% 10%;
+    }
+}
+
+.btnform-group {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.switch-page-nav {
+    a {
+        color: #303030;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+    a:hover, .active-nav {
+        font-weight: 600;
+        color: #f7b050;
+        border-bottom: 1px soild #f7b050;
+
+    }
+}
+
+.error-tooltip {
+    color: #f00;
+    font-size: 12px;
+    padding: 2% 0%;
 }

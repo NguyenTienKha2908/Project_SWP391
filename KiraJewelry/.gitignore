@@ -36,6 +36,4 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-
-
 src/main/resources/serviceAccountKey.json
