@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Staff Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a th:href="@{#}">
+                        <img th:src="@{/img/icon-fig/logoWhite.svg}" alt="logo">
+                        <span>KIRA JEWELRY</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a th:href="@{/homeSalesStaff}" class="sidebar-link">
+                        <img th:src="@{/img/icon-fig/profile.svg}" alt="profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
+                        class="active sidebar-link">
+                        <img th:src="@{/img/icon-fig/request.svg}" alt="request">
+                        <span>Requests</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
+                        class="sidebar-link">
+                        <img th:src="@{/img/icon-fig/quote.svg}" alt="quote">
+                        <span>Quotes</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
+                        class="sidebar-link">
+                        <img th:src="@{/img/icon-fig/quote.svg}" alt="materialAndGem">
+                        <span>Material & Gem</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a th:href="@{/logout}" class="sidebar-link">
+                    <img th:src="@{/img/icon-fig/logout.svg}" alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="out">
+                <div class="top-header">
+                    <div class="first-ele">
+                        <img th:src="@{/img/person/profile1.svg}" alt="person">
+                        <span th:if="${session.employeeName != null}">
+                            Welcome, <span th:text="${session.employeeName}"></span>
+                        </span>
+                    </div>
+                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
+                </div>
+            </div>
+            <div class="content ">
+                <div class="border bg-white shadow w-75 m-auto p-5 mt-5">
+                    <h1>Edit Requests</h1>
+                    <hr>
+                    <div class="container">
+
+                        <form th:action="@{/saveEditedRequest}" method="post">
+                            <input type="hidden" name="productionOrderId"
+                                th:value="${productionOrder.production_Order_Id}" />
+
+                            <table class="w-75">
+                                <tr>
+                                    <td><label for="materialName">Material Name:</label></td>
+                                    <td><input type="text" id="materialName" name="materialName"
+                                            th:value="${productionOrder.material_Name}" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="materialColor">Material Color:</label></td>
+                                    <td><input type="text" id="materialColor" name="materialColor"
+                                            th:value="${productionOrder.material_Color}" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="materialWeight">Material Weight:</label></td>
+                                    <td><input type="text" id="materialWeight" name="materialWeight"
+                                            th:value="${productionOrder.material_Weight}" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="gemName">Gem Name:</label></td>
+                                    <td><input type="text" id="gemName" name="gemName"
+                                            th:value="${productionOrder.gem_Name}" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="gemColor">Gem Color:</label></td>
+                                    <td><input type="text" id="gemColor" name="gemColor"
+                                            th:value="${productionOrder.gem_Color}" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="gemWeight">Gem Weight:</label></td>
+                                    <td><input type="text" id="gemWeight" name="gemWeight"
+                                            th:value="${productionOrder.gem_Weight}" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="productSize">Product Size:</label></td>
+                                    <td><input type="text" id="productSize" name="productSize"
+                                            th:value="${productionOrder.product_Size}" /></td>
+                                </tr>
+                            </table>
+
+                            <button class="text-decoration-none border ms-5 mt-3" type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="content">
+                <h1>Material Information</h1>
+                <hr>
+                <div class="container">
+                    <div class="materialAndGem">
+                        <table class="table">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">Material ID</th>
+                                    <th scope="col">Material Code</th>
+                                    <th scope="col">Material Name</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="material : ${materials}">
+                                    <td th:text="${material.material_Id}"></td>
+                                    <td th:text="${material.material_Code}"></td>
+                                    <td th:text="${material.material_Name}"></td>
+                                    <td th:text="${material.status}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

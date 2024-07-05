@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Material List</title>
+  </head>
+  <body>
+    <div class="container my-3">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Price</th>
+              <th>Effective Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="materialPriceList : ${listMaterialPriceLists}">
+              <td th:text="${materialPriceList.material.material_Name}"></td>
+              <td th:text="${materialPriceList.price}"></td>
+              <td
+                th:text="${#dates.format(materialPriceList.eff_Date, 'yyyy-MM-dd')}"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <ul class="pagination" style="display:inline-flex">
+                        <li th:classappend="${diamondPage.hasPrevious()} ? '' : 'disabled'">
+                            <a th:href="@{/diamonds(page=${diamondPage.number - 1})}">Previous</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, diamondPage.totalPages)}"
+                            th:classappend="${i == diamondPage.number + 1} ? 'active-pg'">
+                            <a th:href="@{/diamonds(page=${i - 1})}" th:text="${i}"></a>
+                        </li>
+                        <li th:classappend="${diamondPage.hasNext()} ? '' : 'disabled'">
+                            <a th:href="@{/diamonds(page=${diamondPage.number + 1})}">Next</a>
+                        </li>
+                    </ul> -->
+    </div>
+  </body>
+</html>

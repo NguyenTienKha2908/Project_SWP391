@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Customer Requests</title>
+</head>
+
+<body>
+    <div class="container my-3">
+        <table class="table table-responsive-md table-hover">
+            <thead>
+                <tr>
+                    <th>Customized Order ID</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order, index : ${customerOrders}">
+                    <td th:text="${order.production_Order_Id}"></td>
+                    <td th:text="${order.date}"></td>
+                    <td>
+                        <a th:href="@{/userCustomizedOrder(orderId=${order.production_Order_Id})}"
+                            class="btn btn-secondary">View</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
