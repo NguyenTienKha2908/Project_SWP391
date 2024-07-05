@@ -1,0 +1,355 @@
+::after,
+::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+p {
+    font-size: 0.9rem;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+hr {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.wrapper {
+    display: flex;
+}
+
+.main {
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+}
+
+#menu-items-mainUp {
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 3px 0 rgba(0, 0, 0, 0.19);
+
+    li {
+        padding: 0;
+        text-align: left;
+    }
+
+    a {
+        padding: 10px;
+    }
+
+    a:hover {
+        background-color: #FFF;
+        border-bottom: none;
+        border-right: 2px solid #f7b050;
+    }
+}
+
+#sidebar {
+    width: 250px;
+    min-width: 250px;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-item img,
+.sidebar-footer img {
+    width: 15%;
+    margin-right: 5%;
+}
+
+.sidebar-item span,
+.sidebar-footer span {
+    display: inline-block;
+    font-size: 16px;
+    color: #565E6C;
+    padding: 1%;
+}
+
+.sidebar-logo {
+    &:nth-of-type(1) {
+        margin: 5%;
+    }
+}
+
+.toggle-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
+
+.sidebar-logo {
+    margin: auto 0;
+
+    a {
+        color: #FFF;
+        font-size: 1.25rem;
+        font-weight: 100;
+    }
+}
+
+.sidebar-nav {
+    padding: 2rem 0;
+    flex: 1 1 auto;
+}
+
+a.mainUp {
+    padding: 1rem 1.625rem;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+a.mainUp:hover,
+.active-mainUp {
+    border-bottom: 2px solid #f7b050;
+
+    span {
+        color: #f7b050;
+        font-weight: 600;
+    }
+
+    img {
+        filter: brightness(0) saturate(100%) invert(72%) sepia(69%) saturate(4932%) hue-rotate(147deg) brightness(98%) contrast(101%);
+    }
+}
+
+#auth,
+#auth1 {
+    .sidebar-item a {
+        color: #565E6C;
+        font-size: 0.8rem;
+    }
+
+    :hover {
+        a {
+            color: #f7b050;
+            font-weight: 600;
+        }
+    }
+}
+
+/* Request & Quote */
+
+.top-cover {
+    padding: 4%;
+
+}
+
+.request,
+.quote {
+    margin: 5%;
+
+    h1 {
+        width: 30%;
+        padding-bottom: 1%;
+        border-bottom: 2px solid #f7b050;
+        color: #f7b050
+    }
+
+}
+
+.container-fluid {
+    h1 {
+        width: 30%;
+        padding-bottom: 1%;
+        border-bottom: 2px solid #f7b050;
+        color: #f7b050
+    }
+}
+
+.information {
+    margin: 5%;
+
+    h2 {
+        margin-top: 5%;
+        color: #565E6C;
+    }
+}
+
+.bottom-note {
+    margin: 0 auto;
+
+    p {
+        font-style: italic;
+
+        &:nth-of-type(1) {
+            color: #A11A33;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+    }
+
+    span {
+        text-transform: uppercase;
+        font-style: normal;
+        text-decoration: underline;
+        font-size: 1.1rem;
+        color: #A11A33;
+        font-weight: 600;
+    }
+}
+
+/* QUOTE */
+
+.btnGroup {
+    text-align: center;
+    margin: 10% auto;
+
+    a:nth-of-type(1),
+    a:nth-of-type(2) {
+        color: #FFF;
+        margin-right: 5%;
+        padding: 0.75rem 2rem;
+        border-radius: 5px;
+        font-weight: 600;
+
+        &:nth-of-type(1) {
+            background-color: #1B8633;
+        }
+
+        &:nth-of-type(2) {
+            background-color: #A11A33;
+        }
+
+        transition: 0.2s ease-in-out;
+    }
+
+    a:nth-of-type(1):hover,
+    a:nth-of-type(2):hover {
+        color: #f7b050;
+        background-color: #fcfaf9;
+        border: 1px solid #f7b050
+    }
+
+    a:nth-of-type(3) {
+        display: block;
+        margin-top: 5%;
+
+        text-decoration: underline;
+    }
+
+}
+
+.gemstone-info {
+    margin: 0;
+
+    h2,
+    p {
+        margin: 2% 5%;
+        display: inline-block;
+    }
+
+    h2 {
+        margin-top: 0;
+        width: 150px;
+    }
+}
+
+.total-price {
+    p {
+        width: 30%;
+        border-bottom: 1px solid #565E6C;
+    }
+}
+
+.price-view {
+    span:nth-child(2) {
+        font-style: italic;
+        font-size: 0.8rem;
+        color: #a8a8aa;
+    }
+}
+
+.total {
+    text-align: right;
+    margin-right: 28%;
+
+    h2,
+    p {
+        display: inline-block;
+        width: 150px;
+    }
+
+    p {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+}
+
+/*  ORDER PAGE */
+.payment-info {
+    h2 {
+        display: inline-block;
+        width: 120px;
+        font-size: 1rem;
+        ;
+    }
+
+    input::placeholder {
+        font-size: 0.75rem;
+    }
+}
+
+.payment-option {
+    a {
+        margin: 5% 0;
+        display: block;
+        padding: 1.5% 2%;
+        width: 100%;
+        background-color: #f7b050;
+        color: #FFF;
+        border-radius: 4px;
+        transition: 0.2s ease-out;
+    }
+
+    a:hover {
+        background-color: #fcfaf9;
+        color: #f7b050;
+        border: 1px solid #f7b050;
+    }
+}
+
+/* DESIGN 3D */
+.img-ab {
+    model-viewer {
+        height: 400px;
+        width: 400px;
+    }
+}
+
+a.active-mini-link {
+    color: #f7b050;
+    font-weight: 600;
+}

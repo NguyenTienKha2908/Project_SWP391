@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepare Quote Page</title>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <span th:if="${session.employeeName != null}">
+                Welcome, <span th:text="${session.employeeName}"></span> |
+                <a th:href="@{/logout}">Log out</a>
+            </span>
+        </div>
+        <a th:href="@{/viewRequestsforSS}">Back to List</a>
+        <h1>Prepare Quote</h1>
+        <form th:action="@{/saveEditedProductionOrder}" method="post">
+            <label>Quote ID:</label>
+            <input type="text" name="productionOrderId" th:value="${productionOrder.production_Order_Id}"
+                disabled /><br>
+            <input type="hidden" name="productionOrderId" th:value="${productionOrder.production_Order_Id}" />
+
+            <label for="customerId">Customer ID:</label>
+            <input type="text" id="customerId" name="customerId" th:value="${productionOrder.customer_Id}"
+                disabled /><br>
+
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" name="customerName" th:value="${customer.full_Name}" disabled /><br>
+
+            <label for="date">Date:</label>
+            <input type="text" id="date" name="date"
+                th:value="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}" /><br>
+
+            <label for="categoryId">Category Id:</label>
+            <input type="text" id="categoryId" name="categoryId" th:value="${productionOrder.category_Id}"
+                disabled /><br>
+
+            <label for="materialId">Material Id:</label>
+            <input type="text" id="materialId" name="materialId" th:value="${productionOrder.material_Id}" /><br>
+
+            <label for="materialName">Material Name:</label>
+            <input type="text" id="materialName" name="materialName" th:placeholder="${productionOrder.material_Name}"
+                th:value="${productionOrder.material_Name}" /><br>
+
+            <label for="materialWeight">Material Weight:</label>
+            <input type="text" id="materialWeight" name="materialWeight"
+                th:value="${productionOrder.material_Weight}" /><br>
+
+            <label for="materialColor">Material Color:</label>
+            <input type="text" id="materialColor" name="materialColor"
+                th:value="${productionOrder.material_Color}" /><br>
+
+
+
+            <label for="materialColor">Material Amount:</label>
+            <input type="text" id="materialAmount" name="materialAmount"
+                th:value="${productionOrder.material_Amount}" /><br>
+
+            <label for="materialColor">Diamond Amount:</label>
+            <input type="text" id="diamondAmount" name="diamondAmount"
+                th:value="${productionOrder.diamond_Amount}" /><br>
+
+            <label for="materialColor">Side Material Amount:</label>
+            <input type="text" id="sideMaterialCost" name="sideMaterialCost"
+                th:value="${productionOrder.side_Material_Cost}" /><br>
+
+            <label for="materialColor">Side Diamond Amount:</label>
+            <input type="text" id="sideGemCost" name="sideGemCost" th:value="${productionOrder.side_Gem_Cost}" /><br>
+
+            <label for="productAmount">Production Amount:</label>
+            <input type="text" id="productionAmount" name="productionAmount"
+                th:value="${productionOrder.production_Amount}" /><br>
+
+            <label for="materialColor">Total Amount:</label>
+            <input type="text" id="totalAmount" name="totalAmount" th:value="${productionOrder.total_Amount}" /><br>
+
+            <label for="gemId">Gem Id:</label>
+            <input type="text" id="gemId" name="gemId" th:value="${productionOrder.gem_Id}" /><br>
+
+            <label for="gemName">Gem Name:</label>
+            <input type="text" id="gemName" name="gemName" th:value="${productionOrder.gem_Name}" /><br>
+
+            <label for="gemColor">Gem Color:</label>
+            <input type="text" id="gemColor" name="gemColor" th:value="${productionOrder.gem_Color}" /><br>
+
+            <label for="gemWeight">Gem Weight:</label>
+            <input type="text" id="gemWeight" name="gemWeight" th:value="${productionOrder.gem_Weight}" /><br>
+
+            <label for="productSize">Product Size:</label>
+            <input type="text" id="productSize" name="productSize" th:value="${productionOrder.product_Size}" /><br>
+
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" th:value="${productionOrder.description}" /><br>
+
+            <button type="submit">Save</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

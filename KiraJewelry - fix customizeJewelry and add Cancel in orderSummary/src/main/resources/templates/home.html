@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kira Jewelry</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <style>
+        .dropdown-item {
+            width: 50%;
+            transition: 0.45s ease-in-out;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f2f7fd;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Page header-->
+    <header id="myHeader">
+        <div class="top_header">
+            <h1 class="header_logo">
+                <a th:href="@{/}"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3" />Kira
+                    Jewelry</a>
+            </h1>
+            <div class="tools_header">
+                <div>
+                    <span th:if="${session.customerName != null}">
+                        <a th:href="@{/userRequests(customerName=${session.customerName})}"> Welcome, <span
+                                th:text="${session.customerName}"></span></a>
+                        |
+                        <a th:href="@{/logout}">Log out</a>
+                    </span>
+                    <span th:if="${session.customerName == null}">
+                        <a th:href="@{/login}">
+                            Log in</a>
+                    </span>
+                </div>
+
+                <a th:href="@{/currentOrder}" class="cart"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
+                <a th:href="@{/}" class="search"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
+            </div>
+        </div>
+        <nav class="home_categories">
+            <ul>
+                <li><a class="active-link" th:href="@{/}">Home</a></li>
+                <li>
+                    <a th:href="@{/}">Blogs</a>
+                </li>
+                <li>
+                    <a th:href="@{/}">Collections</a>
+                </li>
+                <li class="active dropdown">
+                    <a th:href="@{/currentOrder}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Jewelry</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/customizeJewelry}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Diamonds</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/customerDiamondsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Diamonds
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerDiaPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Diamonds Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Materials</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Materials
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Materials Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a th:href="@{#education}">Education</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--Page information-->
+    <!-- Carousel -->
+    <div id="demo" class="content carousel slide" data-bs-ride="carousel">
+        <!-- Indicators/dots -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+        </div>
+
+        <!-- The slideshow/carousel -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FSlider%2FDefault_generate_for_me_a_background_of_diamond_pendant_with_a_1.jpg?alt=media&token=2f3e6479-9b46-4c54-9432-4af8338a4d52}"
+                    alt="Necklace" class="d-block" style="width: 100%" />
+            </div>
+            <div class="carousel-item">
+                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FSlider%2FDefault_generate_for_me_a_background_of_diamond_ring_with_a_bl_1.jpg?alt=media&token=10fb285b-6634-4c6d-9331-a285d92eeb98}"
+                    alt="Earrings" class="d-block" style="width: 100%" />
+            </div>
+            <div class="carousel-item">
+                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FSlider%2FDefault_generate_for_me_a_background_of_diamond_earrings_with_1.jpg?alt=media&token=d1abdfd2-e4f5-42e8-93e4-208646ff3dd9}"
+                    alt="Ring" class="d-block" style="width: 100%" />
+            </div>
+        </div>
+
+        <!-- Left and right controls/icons -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!--About Us-->
+    <div id="about" class="row">
+        <h1>
+            <span style="color: #59caff">KIRA Jewelry -</span> The
+            paradise of diamond jewelry
+        </h1>
+        <p>
+            Welcome to KIRA Jewelry, where the beauty of each unique gemstone
+            jewelry meets exquisite craftsmanship. Our curated collection features a
+            diverse range of precious and semi-precious gemstones, including Ruby,
+            Sapphire, Emerald, Topaz, Garnet, Peridot, Quartz, and Tourmaline, each
+            chosen for its unique beauty and symbolism. Crafted with precision and
+            attention to detail, our pieces exude elegance and sophistication,
+            making them perfect for any occasion. Whether you're searching for a
+            statement necklace, a pair of sparkling earrings, or a meaningful
+            bracelet, KIRA Jewelry offers timeless pieces designed to inspire
+            harmony and elevate your style.
+        </p>
+    </div>
+
+    <div id="achievement" class="row">
+        <h5>WE ARE PROUD FOR</h5>
+        <div class="col-md-3">
+            <div class="row">
+                <p><img
+                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FAbout%2Fno1.svg?alt=media&token=8823af45-c09a-4b93-b5cc-6a950507e703}" />
+                </p>
+                <p>PREMIUM QUALITY</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <p><img
+                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FAbout%2Fproduct.svg?alt=media&token=0ed689fa-38e8-466e-911d-8042fa25c437}" />
+                </p>
+                <p>DIVERSE PRODUCTS</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <p><img
+                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FAbout%2Fticked.svg?alt=media&token=12ab31ff-e519-4096-b91b-9b0edd4fd4d2}" />
+                </p>
+                <p>3-YEAR WARRANTY</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <p><img
+                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FAbout%2Fpersonal.svg?alt=media&token=61f51911-9a50-4a35-b21e-720b78ee27e6}" />
+                </p>
+                <p>JOIN OUR FANPAGE</p>
+            </div>
+        </div>
+    </div>
+
+    <!--Special Collection-->
+    <div id="collection" class="row">
+        <div id="introduce">
+            <h1 style="color: rgb(247, 176, 80)">Special Collection</h1>
+            <p style="color: white">
+                Our newest collection made from precious metals at Himalayas mountain
+                range.
+            </p>
+        </div>
+        <div id="collection_img" class="row">
+            <div class="col-md-6">
+                <img class="w-100"
+                    src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Collections%2F893e69de69123ff7862ff40d56999db0.jpg?alt=media&token=6335f0bd-e19b-4db0-9aa3-5b15c8e7448e" />
+            </div>
+            <div class="col-md-6">
+                <img class="w-100"
+                    src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Collections%2F2022-10-2910.13.16_e3d0212c-a298-4ed4-a661-1aee76c86592_1500x.jpg?alt=media&token=f20b895b-2539-45ae-8b9f-46864f170896" />
+            </div>
+        </div>
+        <div class="explore_more">
+            <a href="/html/collection/collectionPage.html" style="text-decoration: none; color: white">EXPLORE MORE</a>
+        </div>
+    </div>
+
+    <!--Recent Blogs-->
+    <div id="blogs" class="row">
+        <div id="introduce">
+            <h1>Recent <span style="color: #59caff">Blogs</span></h1>
+            <p style="color: rgb(144, 149, 160)">
+                Mutiple blogs about different types of jewelry. Easy for you to find
+                your favourite products.
+            </p>
+        </div>
+        <div id="link">
+            <a href="#">EXPLORE MORE</a>
+        </div>
+        <div id="demo" class="carousel slide" data-bs-ride="carousel">
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="blog" class="col-md-3">
+                            <div class="row">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Blogs%2FDefault_10K_Gold_Diamond_Ear_Cuffs_Stylish_10K_gold_ear_cuffs_0.jpg?alt=media&token=fc2b418b-a061-463a-8804-5cbef3cce6dd}"
+                                    class="d-block img-fluid" />
+                                <div id="author_button" class="">
+                                    <div id="main">
+                                        <div>
+                                            <h5>Chloe Martinez</h5>
+                                            <h6>Aug 19</h6>
+                                        </div>
+                                        <div>
+                                            <button style="border-radius: 15%" type="button">
+                                                Read
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <h4>Wellness Wisdom</h4>
+                                    <p>
+                                        From fitness hacks to stress-busting strategies, we're
+                                        here to...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Left and right controls/icons -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <!--Inspring Design-->
+    <div id="design" class="row">
+        <h1>Inspiring <span style="color: white">Design</span></h1>
+        <ul class="product_categories">
+            <li><a href="#">Ring</a></li>
+            <li><a href="#">Necklace</a></li>
+            <li><a href="#">Bracelet</a></li>
+            <li><a href="#">Earrings</a></li>
+            <li><a href="#">Charms</a></li>
+        </ul>
+        <div id="desgin_img" class="row">
+            <div id="img" class="col-md-4">
+                <img class="w-100"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_10K_Gold_Diamond_Signet_Ring_A_chic_10K_gold_signet_ri_0.jpg?alt=media&token=edf66af2-1c33-4e3a-a357-4a4d22cf07f5}"
+                    alt="Ring_1" />
+            </div>
+            <div id="img" class="col-md-4">
+                <img class="w-100"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_22K_Gold_Diamond_Wedding_Band_A_22K_gold_wedding_band_0.jpg?alt=media&token=2619ffed-9c99-4e1e-95c7-7545e638ecf9}"
+                    alt="Ring_2" />
+            </div>
+            <div id="img" class="col-md-4">
+                <img class="w-100"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fring%2FDefault_A_24K_gold_wedding_band_with_a_single_diamond_inlay_fo_0.jpg?alt=media&token=cd29dd3a-8716-449d-8f3e-48915adad767}"
+                    alt="Ring_3" />
+            </div>
+        </div>
+        <div id="link">
+            <a href="#">EXPLORE MORE</a>
+        </div>
+    </div>
+
+    <!--Order Form-->
+    <div class="all-collection-sect">
+        <div class="sect-content">
+            <h1>Every piece of jewelry have their own story</h1>
+            <p>
+                Modern jewelry is made of gold, silver, or platinum, often with
+                precious of semiprecious stones.
+            </p>
+            <a th:href="@{/request}">Order Now</a>
+        </div>
+    </div>
+    </div>
+
+    <div id="process" class="row"></div>
+
+    <!--Advertise-->
+    <div id="advertise" class="row">
+        <div class="text">
+            <h1>Be a Part of Something Brilliant</h1>
+            <p>
+                Follow us on Instagram for gorgeous engagement rings and wedding
+                bands, real life proposals, and dreamy wedding day inspiration. Be
+                sure to tag us in your Blue Nile jewelry pics @bluenilediamond for a
+                chance to be featured.
+            </p>
+        </div>
+        <div id="bottom_img" class="row m-5">
+            <div class="col-md-6">
+                <div id="img" class="row">
+                    <div class="col-md-7">
+                        <img class="img-responsive w-100" style="object-fit: cover; height: 450px;"
+                            th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F1.svg?alt=media&token=5a21b6ea-f34c-4e75-ab7e-98df0838d106}"
+                            alt="" />
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="col-md-12 h-50">
+                            <img class="img-responsive"
+                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F2.svg?alt=media&token=b9c1c603-d90a-4c5c-9a9d-0c5e32dddbd4}"
+                                alt="" />
+                        </div>
+                        <div class="col-md-12 h-50" style="grid-area: simg2">
+                            <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F3.svg?alt=media&token=9ace3095-884c-4b90-8f8d-61fc5db2d1d8}"
+                                alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="img" class="row">
+                    <div class="col-md-7">
+                        <img class="img-responsive w-100" style="object-fit: cover; height: 450px;"
+                            th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F4.svg?alt=media&token=784222ec-bd52-45ad-a030-b9507fca4c34}"
+                            alt="" />
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="col-md-12 h-50" style="grid-area: simg3">
+                            <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F5.svg?alt=media&token=8fc9eeb7-141d-4b5e-ba9f-de1308b5912e}"
+                                alt="" />
+                        </div>
+                        <div class="col-md-12 h-50" style="grid-area: simg4">
+                            <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Advertise%2F6.svg?alt=media&token=9b924197-3c35-4514-9573-3073433757b3}"
+                                alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Page footer-->
+    <footer>
+        <div class="container-fluid">
+            <div id="others_info" class="row">
+                <div class="footer col-md-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="footer_logo">
+                                <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b}"
+                                    class="logo" /> Kira
+                                Jewelry
+                            </h2>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <p>Hotline: 123123123</p>
+                                <p>Address: 12AS, Austin, 123</p>
+                                <p>Email: abc1234@fpt.edu.vn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#policy">Policy</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Return and Refund</a></li>
+                                    <li><a href="#">Cancellation</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#resources">Resources</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Gold price</a></li>
+                                    <li><a href="#">Blogs</a></li>
+                                    <li><a href="#">Jewelry price</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#company">Company</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#about">About</a></li>
+                                    <li><a href="#">Join us</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#support">Support</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Help center</a></li>
+                                    <li><a href="#">Chat support</a></li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sercurity_contact" class="row">
+                <div class="copyright col-md-4">
+                    <p>&copy; 2022 Kira Jewelry, Inc</p>
+                </div>
+                <div id="sercurity" class="copyright col-md-4">
+                    <a href="#privacy">Privacy</a>
+                    <a href="#terms">Terms</a>
+                    <a href="#sitemap">Sitemap</a>
+                </div>
+                <div id="contact" class="copyright col-md-4">
+                    <div class="contact_footer">
+                        <a class="twitter"><img
+                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d}" /></a>
+                        <a class="facebook"><img
+                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd}" /></a>
+                        <a class="linkedin"><img
+                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84}" /></a>
+                        <a class="youtube"><img
+                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c}" /></a>
+                        <a class="instagram"><img
+                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e}" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        window.onscroll = function () { myFunction() };
+        var header = document.getElementById("myHeader");
+        var sticky = header.offsetTop;
+        function myFunction() {
+            if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+    </script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

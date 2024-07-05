@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Home Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/mainUp.css}">
+
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <!--Page header-->
+    <header>
+        <div class="top_header">
+            <h1 class="header_logo">
+                <a th:href="@{/}"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3" />Kira
+                    Jewelry</a>
+            </h1>
+            <div class="tools_header">
+                <div>
+                    <span th:if="${session.customerName != null}">
+                        Welcome, <span th:text="${session.customerName}"></span> |
+                        <a th:href="@{/logout}">Log out</a>
+                    </span>
+                    <span th:if="${session.customerName == null}">
+                        <a th:href="@{/login}">
+                            Log in</a>
+
+                    </span>
+                </div>
+
+                <a th:href="@{/currentOrder}" class="cart"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
+                <a th:href="@{/}" class="search"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
+            </div>
+        </div>
+        <nav class="home_categories">
+            <ul>
+                <li><a class="active-link" th:href="@{/}">Home</a></li>
+                <li>
+                    <a th:href="@{/}">Blogs</a>
+                </li>
+                <li>
+                    <a th:href="@{/}">Collections</a>
+                </li>
+                <li class="active dropdown">
+                    <a th:href="@{/currentOrder}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Jewelry</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
+                                Jewelry Now</a>
+                            <a th:href="@{/login}" th:unless="${session.customerName != null}"
+                                class="sidebar-link">Order Jewelry Now</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#gemstones">Gemstones</a></li>
+                <li><a href="/html/price/Material.html">Materials</a></li>
+                <li><a href="#education">Education</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="main">
+        <!--Page information-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <aside id="sidebar">
+                        <ul class="sidebar-nav">
+                            <li class="sidebar-item">
+                                <a href="Profile.html" class="sidebar-link">
+                                    <span>Profile</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="History.html" class="sidebar-link">
+                                    <span>History Orders</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="CurrentOrder.html" class="sidebar-link collapsed has-dropdown"
+                                    data-bs-toggle="collapse" data-bs-target="#auth1" aria-expanded="false"
+                                    aria-controls="auth1">
+                                    <span>Current Order</span>
+                                </a>
+                                <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                                    <li class="sidebar-item">
+                                        <a th:href="@{/userRequests(customerName=${session.customerName})}"
+                                            class="sidebar-link">Request</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a th:href="@{/userQuotes(customerName=${session.customerName})}"
+                                            class="sidebar-link">Quote</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a th:href="@{/userOrders(customerName=${session.customerName})}"
+                                            class="sidebar-link">Order</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+                <div class="col-md-9">
+                    <div class="quote container-fluid px-5">
+                        <h1>Profile Section</h1>
+                        <div class="row mx-auto justify-content-md-center">
+                            <div class="order-one col-md-6">
+                                <div class="information">
+                                    <h2>Customer ID</h2>
+                                    <p th:text="${session.customerId}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Customer Name</h2>
+                                    <p th:text="${session.customerName}"></p>
+                                </div>
+
+                                <div class="information">
+                                    <h2>Customer Email</h2>
+                                    <p th:text="${session.customerEmail}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Customer Email</h2>
+                                    <p th:text="${session.customerAddress}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Phone</h2>
+                                    <p th:text="${session.customerPN}"></p>
+                                </div>
+                            </div>
+                            <div class="order-one col-md-6">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--Page footer-->
+    <footer>
+        <div class="container-fluid">
+            <div id="others_info" class="row">
+                <div class="footer col-md-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="footer_logo">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b" class="logo" /> Kira
+                                Jewelry
+                            </h2>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <p>Hotline: 123123123</p>
+                                <p>Address: 12AS, Austin, 123</p>
+                                <p>Email: abc1234@fpt.edu.vn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#policy">Policy</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Return and Refund</a></li>
+                                    <li><a href="#">Cancellation</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#resources">Resources</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Gold price</a></li>
+                                    <li><a href="#">Blogs</a></li>
+                                    <li><a href="#">Jewelry price</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#company">Company</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#about">About</a></li>
+                                    <li><a href="#">Join us</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#support">Support</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Help center</a></li>
+                                    <li><a href="#">Chat support</a></li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sercurity_contact" class="row">
+                <div class="copyright col-md-4">
+                    <p>&copy; 2022 Kira Jewelry, Inc</p>
+                </div>
+                <div id="sercurity" class="copyright col-md-4">
+                    <a href="#privacy">Privacy</a>
+                    <a href="#terms">Terms</a>
+                    <a href="#sitemap">Sitemap</a>
+                </div>
+                <div id="contact" class="copyright col-md-4">
+                    <div class="contact_footer">
+                        <a class="twitter"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
+                        <a class="facebook"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
+                        <a class="linkedin"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
+                        <a class="youtube"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
+                        <a class="instagram"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

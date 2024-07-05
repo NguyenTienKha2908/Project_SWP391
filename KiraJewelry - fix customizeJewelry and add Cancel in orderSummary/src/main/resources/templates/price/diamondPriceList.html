@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Diamond Price List</title>
+  </head>
+  <body>
+    <div class="container my-3">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Origin</th>
+              <th>Ct From</th>
+              <th>Ct To</th>
+              <th>Color</th>
+              <th>Clarity</th>
+              <th>Cut</th>
+              <th>Price</th>
+              <th>Effective Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="diamondPriceList : ${diaPriceListPage?.content}">
+              <td th:text="${diamondPriceList.id}"></td>
+              <td th:text="${diamondPriceList.origin}"></td>
+              <td th:text="${diamondPriceList.carat_Weight_From}"></td>
+              <td th:text="${diamondPriceList.carat_Weight_To}"></td>
+              <td th:text="${diamondPriceList.color}"></td>
+              <td th:text="${diamondPriceList.clarity}"></td>
+              <td th:text="${diamondPriceList.cut}"></td>
+              <td th:text="${diamondPriceList.price}"></td>
+              <td
+                th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd')}"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="pagination" style="display: inline-flex">
+        <li
+          th:classappend="${diaPriceListPage.hasPrevious()} ? '' : 'disabled'"
+        >
+          <a
+            th:href="@{/viewCustomerDiaPriceListPage(page=${diaPriceListPage.number - 1})}"
+            >Previous</a
+          >
+        </li>
+        <li
+          th:each="i : ${#numbers.sequence(1, diaPriceListPage.totalPages)}"
+          th:classappend="${i == diaPriceListPage.number + 1} ? 'active-pg'"
+        >
+          <a
+            th:href="@{/viewCustomerDiaPriceListPage(page=${i - 1})}"
+            th:text="${i}"
+          ></a>
+        </li>
+        <li th:classappend="${diaPriceListPage.hasNext()} ? '' : 'disabled'">
+          <a
+            th:href="@{/viewCustomerDiaPriceListPage(page=${diaPriceListPage.number + 1})}"
+            >Next</a
+          >
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
