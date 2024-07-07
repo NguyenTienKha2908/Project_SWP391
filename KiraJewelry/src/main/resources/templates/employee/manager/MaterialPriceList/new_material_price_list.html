@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add New Material Price List</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/staff/staff.css}">
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a href="#">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
+                            alt="logo">
+                        <span>KIRA JEWELRY</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeManager}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
+                            alt="profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforManager}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
+                            alt="request">
+                        <span>Requests</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforManager}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
+                            alt="quote">
+                        <span>Quotes</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewOrdersforManager}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Forder.svg?alt=media&token=4c84e51d-8091-4951-94b3-87579b4581bf}"
+                            alt="order">
+                        <span>Orders</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#auth"
+                        aria-expanded="false" aria-controls="auth">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fuser_account.svg?alt=media&token=79b117df-aacb-4931-859f-15f8bf3c3dcf}"
+                            alt="Accounts">
+                        <span>Accounts</span>
+                    </a>
+                    <ul id="auth" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a th:href="@{/customers}" class="sidebar-link">Customers</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/staff}" class="sidebar-link">Staff</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class=" active sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#auth1" aria-expanded="false" aria-controls="auth1">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
+                            alt="products">
+                        <span>Products</span>
+                    </a>
+                    <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a th:href="@{/materials}" class="sidebar-link">Material</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/materialPriceLists}" class="sidebar-link">Material Price List</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/diamonds}" class="sidebar-link">Diamond</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/diaPriceLists}" class="sidebar-link">Diamond Price List</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/categories}" class="sidebar-link">Category</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/collections}" class="sidebar-link">Collection</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a th:href="@{/blogs}" class="sidebar-link">Blog</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="manager-dashboard.html" class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fdashboard.svg?alt=media&token=63cd9703-6839-4fa4-81e9-ae34f1806023}"
+                            alt="dashboard">
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fmail.svg?alt=media&token=6acdd8ff-9718-4afa-97cc-019be10ed134}"
+                            alt="mail">
+                        <span>Mails</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a th:href="@{/logout}" class="sidebar-link">
+                    <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Flogout.svg?alt=media&token=a42d85ca-8e13-44a6-a054-a98137802c4e}"
+                        alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="out">
+                <div class="top-header">
+                    <div class="first-ele">
+                        <img th:src="@{/img/person/profile1.svg}" alt="person">
+                        <span th:if="${session.employeeName != null}">
+                            Welcome, <span th:text="${session.employeeName}"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <h1>Adding a New Material Price</h1>
+                <hr>
+                <nav class="navbar navbar-expand-sm switch-page-nav">
+                    <div class="container justify-content-center">
+                        <!-- Links -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/homeManager}">Back to Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/materialPriceLists}">Material Price List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active-nav" th:href="@{/showNewMaterialPriceListForm}">Add New
+                                    Material
+                                    Price</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/materials}">All Materials</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container my-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-8">
+                                <form th:action="@{/saveMaterialPriceList}" th:object="${materialPriceList}"
+                                    method="post">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="materialId">Material:</label>
+                                            <select class="form-control" th:field="*{material.materialId}">
+                                                <option th:each="material : ${materials}"
+                                                    th:value="${material.materialId}"
+                                                    th:text="${material.materialName}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-12 my-3">
+                                            <label for="price">Price:</label>
+                                            <input type="number" class="form-control" th:field="*{price}" required
+                                                min="0" />
+                                            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"
+                                                class="error">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-12 my-3">
+                                            <label for="effDate">Effective Date:</label>
+                                            <input class="form-control" type="date" th:field="*{effDate}" required />
+                                            <div th:if="${#fields.hasErrors('effDate')}" th:errors="*{effDate}"
+                                                class="error"></div>
+
+                                        </div>
+                                        <div class="form-group col-md-12 my-3">
+                                            <div class="btnform-group">
+                                                <input class="btn btn-secondary" type="submit" value="Save" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/validation.js"></script>
+</body>
+
+</html>

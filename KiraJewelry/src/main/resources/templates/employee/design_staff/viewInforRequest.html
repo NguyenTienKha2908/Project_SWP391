@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Staff Page</title>
+    <!-- Font awesome for fa icons -->
+    <script src="https://use.fontawesome.com/fe459689b4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
+
+</head>
+
+<body>
+
+    <div class="mess-container" th:if="${param.success}">
+        <div class="mess-content close" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#155724">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b12a">
+                <p>Upload Design Successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.error}">
+        <div class="mess-content close" id="error-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Upload failed! Please try again!</p>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a href="#">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
+                            alt="logo">
+                        <span>KIRA JEWELRY</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeDesignStaff}'|"
+                        class="active sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
+                            alt="profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforDE}'|"
+                        class="active-link sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
+                            alt="orders">
+                        <span>Orders</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a th:href="@{/viewAllDesign}" class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fdashboard.svg?alt=media&token=63cd9703-6839-4fa4-81e9-ae34f1806023}"
+                            alt="dashboard">
+                        <span>All Designs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fmail.svg?alt=media&token=6acdd8ff-9718-4afa-97cc-019be10ed134}"
+                            alt="mail">
+                        <span>Mails</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a th:href="@{/logout}" class="sidebar-link">
+                    <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Flogout.svg?alt=media&token=a42d85ca-8e13-44a6-a054-a98137802c4e}"
+                        alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="out">
+                <div class="top-header">
+                    <div class="first-ele">
+                        <img th:src="@{/img/person/profile1.svg}" alt="person">
+                        <span th:if="${session.employeeName != null}">
+                            Welcome, <span th:text="${session.employeeName}"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <h1 class="my-3" style="text-align: center;">Customer Order Detail</h1>
+                <div th:each="productionOrder : ${listRequests}">
+                    <div class="container-fluid container-fluid-one-request mb-5">
+                        <h1>General Information</h1>
+                        <div class="row mx-auto">
+                            <div class="order-one col-md-6">
+                                <div class="information">
+                                    <h2>Production Order ID</h2>
+                                    <p th:text="${productionOrder.production_Order_Id}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Customer ID</h2>
+                                    <p th:text="${productionOrder.customer.customer_Id}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Date</h2>
+                                    <p th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h1>Product Information</h1>
+
+                        <div class="row mx-auto">
+                            <div class="order-one col-md-6">
+                                <div class="information">
+                                    <h2>Description</h2>
+                                    <p th:text="${productionOrder.description}"></p>
+                                </div>
+                            </div>
+                            <div class="order-one col-md-6">
+                                <div class="information">
+                                    <h2>Category</h2>
+                                    <p th:text="${productionOrder.category.category_Name}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Product Size</h2>
+                                    <p th:text="${productionOrder.product_Size}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row mx-auto">
+                            <div class="order-one col-md-6">
+                                <div class="information info-special">
+                                    <h2>Material</h2>
+                                    <p class="my-3">
+                                        <span th:text="${material.material_Name}"></span> -
+                                        <span th:text="${productMaterial.material_Weight}"></span> mace
+                                    </p>
+                                    <!-- <img class="w-75" th:src="@{${materialUrl}}" alt="Material Image" style="width:100%" /> -->
+                                </div>
+                            </div>
+                            <div class="order-one col-md-6">
+                                <div class="information info-special">
+                                    <h2>Diamond</h2>
+                                    <p class="my-3">
+                                        <span th:text="${diamond.dia_Name}"></span>,
+                                        <span th:text="${diamond.carat_Weight}"></span> ct,
+                                        <span th:text="${diamond.origin}"></span>,
+                                        <span th:text="${diamond.color}"></span>,
+                                        <span th:text="${diamond.clarity}"></span>,
+                                        <span th:text="${diamond.cut}"></span>, cut,
+                                    </p>
+                                    <div class="other-diamond-info" style="font-style: italic;">
+                                        <p>Proportion: <span th:text=" ${diamond.proportions}"></span></p>
+                                        <p>Symmetry: <span th:text=" ${diamond.symmetry}"></span></p>
+                                        <p>Fluorescence: <span th:text=" ${diamond.fluorescence}"></span></p>
+                                        <p>Polish: <span th:text=" ${diamond.polish}"></span></p>
+                                    </div>
+                                    <!-- <img class="w-75" th:src="@{${diamondUrl}}" alt="Diamond Image" /> -->
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <h1>Image</h1>
+                        <div class="row mx-auto">
+                            <div class="order-one col-md-6">
+
+                                <div class="information mx-3">
+                                    <div class="information info-special">
+                                        <h2 class="my-2">From customer</h2>
+                                        <div th:each="imageUrl : ${imagesByCustomerId}">
+                                            <img th:src="${imageUrl}" alt="Production Order Image"
+                                                style="max-width: 100%; height: auto;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="order-one col-md-6">
+                                <div class="information mx-3">
+                                    <div class="information info-special">
+                                        <h2 class="my-2">From staff</h2>
+                                        <div th:each="entry : ${imagesByStaffId}">
+                                            <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                                data-bs-ride="carousel" data-bs-interval="2000">
+                                                <div class="carousel-inner">
+                                                    <div th:each="img, iterStat : ${entry.value}">
+                                                        <div
+                                                            th:classappend="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                                            <img th:src="@{${img}}" alt="Material Image"
+                                                                class="d-block w-100" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button"
+                                                    data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button"
+                                                    data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${messageReject!=null}">
+                            <hr>
+                            <h1>Note</h1>
+                            <div class="row mx-auto">
+                                <div class="order-one col-md-6">
+                                    <div class="information">
+                                        <h2 class="my-2">From customer</h2>
+                                        <p th:text="${messageReject}"></p>
+                                    </div>
+                                </div>
+
+                                <div class="order-one col-md-6">
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mx-auto">
+                            <h1>Staff Assignment</h1>
+                            <div class="row mx-auto">
+                                <div class="order-one col-md-6">
+                                    <div class="information">
+                                        <h2>Design Staff</h2>
+                                        <p th:text="${employee.full_Name}"></p>
+                                    </div>
+                                </div>
+                                <div class="order-one col-md-6">
+                                    <div class="information">
+                                        <h2>Status</h2>
+                                        <p th:text="${productionOrder.status}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex" style="justify-content: end; margin-top: 30px;">
+                                <a class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-danger"
+                                    th:href="@{/viewRequestsforDE}">
+                                    Back to order list</a>
+                                <a href="#" class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#myModal">
+                                    Upload Design</a>
+
+                            </div>
+                        </div>
+
+                        <!-- The Modal -->
+                        <div class="modal fade" id="myModal">
+                            <div class="modal-dialog modal-xl">
+                                <form th:action="@{/uploadDesignForDE}" method="post" enctype="multipart/form-data">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Upload Design</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <div class="profile-picture">
+                                                <h1 class="upload-icon">
+                                                    <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+                                                </h1>
+                                                <input class="file-uploader" name="file" id="file" type="file"
+                                                    onchange="upload()" accept="image/*" required />
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <input type="hidden" name="productionOrderId"
+                                                th:value="${productionOrder.production_Order_Id}" />
+                                            <input type="submit" name="btnSubmit" class="btn btn-secondary">
+                                        </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+            function upload() {
+
+                const fileUploadInput = document.querySelector('.file-uploader');
+
+                if (!fileUploadInput.value) {
+                    return;
+                }
+                const image = fileUploadInput.files[0];
+                if (!image.type.includes('image')) {
+                    return alert('Only images are allowed!');
+                }
+                if (image.size > 10_000_000) {
+                    return alert('Maximum upload size is 10MB!');
+                }
+
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(image);
+
+                fileReader.onload = (fileReaderEvent) => {
+                    const profilePicture = document.querySelector('.profile-picture');
+                    profilePicture.style.backgroundImage = `url(${fileReaderEvent.target.result})`;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                const logoutMessage = document.getElementById('logout-message');
+
+                if (urlParams.has('success')) {
+                    successMessage.classList.remove('close');
+                    successMessage.classList.add('open');
+                    setTimeout(() => {
+                        successMessage.classList.remove('open');
+                        successMessage.classList.add('close');
+                    }, 2000);
+                } else if (urlParams.has('error')) {
+                    errorMessage.classList.remove('close');
+                    errorMessage.classList.add('open');
+                    setTimeout(() => {
+                        errorMessage.classList.remove('open');
+                        errorMessage.classList.add('close');
+                    }, 2000);
+                } else if (urlParams.has('logout')) {
+                    logoutMessage.classList.remove('close');
+                    logoutMessage.classList.add('open');
+                    setTimeout(() => {
+                        logoutMessage.classList.remove('open');
+                        logoutMessage.classList.add('close');
+                    }, 2000);
+                }
+            });
+
+        </script>
+        <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+            integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+            crossorigin="anonymous"></script>
+
+</body>
+
+</html>

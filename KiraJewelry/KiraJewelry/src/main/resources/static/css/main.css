@@ -1,0 +1,175 @@
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+
+body {
+    background-color: #FFFBF3;
+    margin: 0;
+    font-family: 'Inter';
+}
+
+.content {
+    margin: 5% 0;
+    left: 50%; 
+    position: relative; 
+    top: 5%; 
+    transform: translateY(0);
+    transform: translate(-50%, 0%);
+    background-color: #fff7f7;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.19);
+    padding: 3% 7%;
+    width: 70%;
+    text-align: center;
+
+    h1 {
+        margin-top: 0;
+        font-size: 1.5em;
+        margin-bottom: 1%;
+        color: #358a96;
+    }
+
+    p {
+        font-size: 0.75rem;
+        margin-bottom: 5%;
+    }
+
+    .img-container {
+        display: inline-flex;
+        justify-content: space-evenly;
+        width: 100%;
+        gap: 5%;
+        align-items: center;
+
+        img {
+            width: 100%;
+        }
+
+        img:hover, .selected {
+            box-shadow: 0 1px 10px 0 #96c7ff, 0 2px 2px 0 #96c7ff;
+
+        }
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    .button-group {
+        margin: 5%;
+        justify-content: space-between;
+        align-items: center;
+        input[type="submit"] {
+            padding: 7px 20px;
+            margin: 5%;
+            background-color: #358a96;
+            color: #FFFFFF;
+            border-radius: 5px;
+            border: none;
+            transition: 0.25s ease-in-out;
+        }
+        a {
+            padding: 9px 20px;
+            margin: 5%;
+            background-color: #963535;
+            color: #FFFFFF;
+            border-radius: 5px;
+            border: none;
+            transition: 0.25s ease-in-out;
+        }
+
+        input[type="submit"]:hover{
+            background-color: transparent;
+            color: #358a96;
+            border: 1px solid #358a96;
+
+        }
+
+        a:hover {
+            background-color: transparent;
+            color: #963535;
+            border: 1px solid #963535;
+        }
+    }
+}
+
+label {
+    font-size: 0.75rem;
+}
+
+.weight-box {
+    margin: 5%;
+}
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 20px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px;
+    height: 23px;
+    border-radius: 50px;
+    border: 0;
+    background: url('https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(2).jpg?alt=media&token=2fa766eb-5963-44c9-8022-b9bb7e4d4fb3');
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 23px;
+    height: 23px;
+    border-radius: 50px;
+    border: 0;
+    background: url('https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2FDiamond%2FE-Color%2FDefault_generate_for_me_a_picture_of_a_round_brilliant_cut_dia_0%20(2).jpg?alt=media&token=2fa766eb-5963-44c9-8022-b9bb7e4d4fb3');
+    cursor: pointer;
+}
+
+.ct-weight-choser {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.material {
+    display: inline-block;
+    width: 30%;
+    margin: 1%;
+    vertical-align: top;
+}
+
+.material img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.material input[type="radio"] {
+    display: none;
+}
+
+.material label {
+    display: block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.material img:hover{
+    box-shadow: 0 1px 8px 0 #96c7ff, 0 2px 2px 0 #96c7ff;
+}

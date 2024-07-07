@@ -8,39 +8,80 @@
     <title>Kira Jewelry - Request</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+
+    <!-- <style>
+        .btn-customize {
+            padding: 10px 20px;
+            background-color: #f09f0a;
+            border-radius: 5px;
+            transition: 0.25s ease-in-out;
+            outline: none;
+            border: none;
+            color: #FFFFFF;
+        }
+
+        .btn-customize:hover {
+            background-color: transparent;
+            border: 1px solid #f09f0a;
+            color: #f09f0a
+        }
+
+        .mess-container {
+            .mess-content {
+                position: fixed;
+                top: 20px;
+                right: 35px;
+                z-index: 999;
+                background-color: #FFFFFF;
+                width: 30%;
+                padding: 5px 20px;
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+                border-radius: 4px;
+                transition: transform 0.75s ease-in-out;
+            }
+        }
+
+        .close {
+            transform: translateX(120%);
+        }
+
+        .open {
+            transform: translateX(-20%);
+        }
+    </style> -->
 </head>
 
 <body>
-    <header>
+    <header id="myHeader">
         <div class="top_header">
             <h1 class="header_logo">
                 <a th:href="@{/}"><img
-                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3}" />Kira
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3" />Kira
                     Jewelry</a>
             </h1>
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        Welcome, <span th:text="${session.customerName}"></span> |
+                        <a th:href="@{/userRequests(customerName=${session.customerName})}"> Welcome, <span
+                                th:text="${session.customerName}"></span></a>
+                        |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
                     <span th:if="${session.customerName == null}">
-                        <a th:href="@{/login}"><img class="img-b"
-                                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_profile.svg?alt=media&token=f445f94a-a2f3-43b4-8195-d9ad3df02a12}" />
-                            Log
-                            in</a>
+                        <a th:href="@{/login}">
+                            Log in</a>
                     </span>
                 </div>
 
                 <a th:href="@{/currentOrder}" class="cart"><img
-                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7}" /></a>
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
                 <a th:href="@{/}" class="search"><img
-                        th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b}" /></a>
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
             </div>
         </div>
         <nav class="home_categories">
             <ul>
-                <li><a class="sidebar-link" th:href="@{/}">Home</a></li>
+                <li><a class="active-link" th:href="@{/}">Home</a></li>
                 <li>
                     <a th:href="@{/}">Blogs</a>
                 </li>
@@ -54,30 +95,96 @@
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
                         <li class="dropdown-item">
-                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="active-link">Order
-                                Jewelry Now</a>
-                            <a th:href="@{/login}" th:unless="${session.customerName != null}" class="active-link">Order
-                                Jewelry Now</a>
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/chooseCategory}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
                         </li>
                         <li class="dropdown-item">
                             <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#gemstones}">Gemstones</a></li>
-                <li><a th:href="@{/html/price/Material.html}">Materials</a></li>
+                <li class="active dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Diamonds</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/customerDiamondsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Diamonds
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerDiaPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Diamonds Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="active dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Materials</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Materials
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Materials Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li><a th:href="@{#education}">Education</a></li>
             </ul>
         </nav>
     </header>
-    <div class="container container-request">
 
+    <div class="mess-container" th:if="${param.success}">
+        <div class="mess-content open" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#155724">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b12a">
+                <p>Sending Request Successfully</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.error}">
+        <div class="mess-content close" id="error-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Sending Request Failed</p>
+            </div>
+        </div>
+    </div>
+    <div class="container container-request">
         <!--Order Form-->
-        <div class="top-cover"></div>
         <div id="order" class="row">
             <h1>
-                Order Your
-                <span style="color: rgb(240, 159, 10)">Own Jewelry Today!</span>
+                Order Your <span style="color: #f09f0a">Own Jewelry Today!</span>
             </h1>
             <div class="col-md-5">
                 <h2>Contact Our Team</h2>
@@ -106,16 +213,21 @@
                     <div class="row">
                         <label for="productSize">Product size</label>
                         <input type="number" name="productSize" id="productSize"
-                            placeholder="Ring Size (14-25mm), Other (35-140cm)">
+                            placeholder="Ring Size (14-25mm), Other (35-140cm)" required>
                     </div>
 
                     <div class="row">
                         <label for="text">Anything else we need to know</label>
-                        <textarea name="description" id="description" cols="20" rows="5"></textarea>
+                        <textarea name="description" id="description" cols="20" rows="5" required></textarea>
                     </div>
-                    <label for="file">Upload image: </label>
-                    <input type="file" id="file" name="file" accept="image/png, image/svg, image/jpeg" /><br />
-                    <button type="submit">Send request</button>
+                    <div class="row my-2">
+                        <label for="file">Upload image: </label>
+                        <input class="form-control" type="file" id="file" name="file"
+                            accept="image/png, image/svg, image/jpeg" required /><br />
+                        <button type="submit" class="btn-customize my-4">Send request</button>
+
+                    </div>
+
             </div>
             <div class="col-md-6">
                 <div id="img_container" class="row">
@@ -241,6 +353,44 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const logoutMessage = document.getElementById('logout-message');
+
+            if (urlParams.has('success')) {
+                successMessage.classList.remove('close');
+                successMessage.classList.add('open');
+                setTimeout(() => {
+                    successMessage.classList.remove('open');
+                    successMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('error')) {
+                errorMessage.classList.remove('close');
+                errorMessage.classList.add('open');
+                setTimeout(() => {
+                    errorMessage.classList.remove('open');
+                    errorMessage.classList.add('close');
+                }, 2000);
+            }
+        });
+        window.onscroll = function () { myFunction() };
+        var header = document.getElementById("myHeader");
+        var sticky = header.offsetTop;
+        function myFunction() {
+            if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+    </script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

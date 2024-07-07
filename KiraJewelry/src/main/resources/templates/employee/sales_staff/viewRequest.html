@@ -22,15 +22,16 @@
                 </div>
             </div>
             <ul class="sidebar-nav">
-                <li class="sidebar-item">
-                    <a th:href="@{/homeSalesStaff}" class="sidebar-link">
+                <li class=" sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeSalesStaff}'|"
+                        class=" sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
                             alt="profile">
                         <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsForSS}'|"
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
                         class="active sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
                             alt="request">
@@ -38,7 +39,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesForSS}'|"
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
                         class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
                             alt="quote">
@@ -91,20 +92,15 @@
                             <tr th:each="productionOrder : ${listRequests}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
-                                <td th:text="${productionOrder.customer_Id}"></td>
+                                <td th:text="${productionOrder.customer.customer_Id}"></td>
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
-                                        <a class="mx-0 "
+                                        <a class="mx-0"
                                             th:href="@{/viewInformationRequestForSS(productionOrderId=${productionOrder.production_Order_Id})}">
-                                            <button class="text-decoration-none" type="button">View</button>
+                                            <button type="button">View</button>
                                         </a>
 
-                                        <a class="text-decoration-none"
-                                            th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
-                                            <button class="text-decoration-none" style="color:orangered"
-                                                type="button">Quote</button>
-                                        </a>
                                     </div>
 
                                 </td>

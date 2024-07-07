@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,10 +29,16 @@ public class ProductionOrderService {
     productionOrderRepository.save(productionOrder);
   }
 
-  public List<ProductionOrder> getProductionOrderByStatusAndId(String status,
-      String employee_Id) {
-    return productionOrderRepository.findProductionOrderByStatusAndId(status,
-        employee_Id);
+  public List<ProductionOrder> getProductionOrderByStatusAndID(String status,
+      String employee_Name) {
+    return productionOrderRepository.findProductionOrderByStatusAndID(status,
+        employee_Name);
+  }
+
+  public List<ProductionOrder> getProductionOrderByStatusAndDEId(String status,
+      String employee_Name) {
+    return productionOrderRepository.findProductionOrderByStatusAndDEId(status,
+        employee_Name);
   }
 
   public void deleteProductionOrderById(String productionOrderId) {
@@ -52,5 +59,15 @@ public class ProductionOrderService {
     return results.isEmpty() ? null : results.get(0);
   }
 
+  public ProductionOrder findLatestByCustomerIdAndStatusIn(String customerId, List<String> statuses) {
+    Pageable pageable = PageRequest.of(0, 1);
+    List<ProductionOrder> results = productionOrderRepository.findByCustomerIdAndStatusIn(customerId, statuses,
+        pageable);
+    return results.isEmpty() ? null : results.get(0);
+  }
+
+  public ProductionOrder getProductionOrderByProductId(int productId) {
+    return productionOrderRepository.findProductionOrderByProductId(productId);
+  }
 
 }

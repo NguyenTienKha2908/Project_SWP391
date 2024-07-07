@@ -1,3 +1,4 @@
+
 package com.jewelry.KiraJewelry.service;
 
 import java.util.List;
@@ -29,5 +30,12 @@ public class ProductMaterialService {
         return productMaterialRepository.findListProductMaterialByProductId(productId);
     }
 
+    public ProductMaterial getProductMaterialByProduct_id(int product_id) { // Use the exact field name
+        return productMaterialRepository.findByProduct_Id(product_id);
+    }
+
+    public void deleteProductMaterial(ProductMaterial productMaterial) {
+        productMaterialRepository.delete(productMaterial);
+    }
     
 }

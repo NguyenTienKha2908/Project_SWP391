@@ -76,7 +76,6 @@
         </nav>
     </header>
     <div class="main">
-        <div class="top-cover"></div>
         <!--Page information-->
         <div class="container-fluid">
             <div class="row">
@@ -101,15 +100,15 @@
                                 </a>
                                 <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                     <li class="sidebar-item">
-                                        <a th:href="@{/userRequest(customerName=${session.customerName})}"
+                                        <a th:href="@{/userRequests(customerName=${session.customerName})}"
                                             class="sidebar-link">Request</a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a th:href="@{/userQuote(customerName=${session.customerName})}"
+                                        <a th:href="@{/userQuotes(customerName=${session.customerName})}"
                                             class="sidebar-link">Quote</a>
                                     </li>
                                     <li class="sidebar-item">
-                                        <a th:href="@{/userOrder(customerName=${session.customerName})}"
+                                        <a th:href="@{/userOrders(customerName=${session.customerName})}"
                                             class="sidebar-link">Order</a>
                                     </li>
                                 </ul>

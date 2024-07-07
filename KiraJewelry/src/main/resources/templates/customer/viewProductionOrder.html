@@ -80,7 +80,7 @@
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
-                                    <form th:action="@{/viewInformationPOForCustomer}" method="get">
+                                    <form th:action="@{/viewInformationPOForCustomer}" method="GET">
                                         <input type="hidden" name="productionOrderId"
                                             th:value="${productionOrder.production_Order_Id}" />
                                         <button class="text-decoation-none" type="submit">View</button>
@@ -103,96 +103,5 @@
 
 </body>
 
-<!-- <footer>
-    <div class="container-fluid">
-        <div id="others_info" class="row">
-            <div class="footer col-md-3">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="footer_logo">
-                            <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b" class="logo" /> Kira
-                            Jewelry
-                        </h2>
-                    </div>
-                    <div class="col-md-12">
-                        <div>
-                            <p>Hotline: 123123123</p>
-                            <p>Address: 12AS, Austin, 123</p>
-                            <p>Email: abc1234@fpt.edu.vn</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer col-md-9">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="col-md-12">
-                            <h4><a href="#policy">Policy</a></h4>
-                        </div>
-                        <div class="col-md-12">
-                            <div>
-                                <li><a href="#">Return and Refund</a></li>
-                                <li><a href="#">Cancellation</a></li>
-                                <li><a href="#">Delivery</a></li>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="col-md-12">
-                            <h4><a href="#resources">Resources</a></h4>
-                        </div>
-                        <div class="col-md-12">
-                            <div>
-                                <li><a href="#">Gold price</a></li>
-                                <li><a href="#">Blogs</a></li>
-                                <li><a href="#">Jewelry price</a></li>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="col-md-12">
-                            <h4><a href="#company">Company</a></h4>
-                        </div>
-                        <div class="col-md-12">
-                            <div>
-                                <li><a href="#about">About</a></li>
-                                <li><a href="#">Join us</a></li>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="col-md-12">
-                            <h4><a href="#support">Support</a></h4>
-                        </div>
-                        <div class="col-md-12">
-                            <div>
-                                <li><a href="#">Help center</a></li>
-                                <li><a href="#">Chat support</a></li>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="sercurity_contact" class="row">
-            <div class="copyright col-md-4">
-                <p>&copy; 2022 Kira Jewelry, Inc</p>
-            </div>
-            <div id="sercurity" class="copyright col-md-4">
-                <a href="#privacy">Privacy</a>
-                <a href="#terms">Terms</a>
-                <a href="#sitemap">Sitemap</a>
-            </div>
-            <div id="contact" class="copyright col-md-4">
-                <div class="contact_footer">
-                    <a class="twitter"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
-                    <a class="facebook"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
-                    <a class="linkedin"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
-                    <a class="youtube"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
-                    <a class="instagram"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer> -->
+
 </html>

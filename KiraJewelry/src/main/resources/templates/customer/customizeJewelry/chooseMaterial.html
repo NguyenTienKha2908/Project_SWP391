@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Choose Material</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <style>
+        .cover-button {
+            display: none;
+        }
+
+        .cover-open {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="content">
+            <h1>Pick Product Shell</h1>
+            <p>Seeking the perfect shell for your material, and let us know the size you wish to have for your jewelry
+            </p>
+            <div class="container" style="width: 80%">
+                <form th:action="@{/saveCustomerMaterial}" method="post" onsubmit="return validateMaterialForm()">
+                    <input type="hidden" name="productId" th:value="${productId}" />
+                    <input type="hidden" name="productOrderId" th:value="${productOrderId}">
+                    <input type="hidden" id="selectedMaterialWeight" name="selectedMaterialWeight" value="" />
+                    <input type="hidden" id="selectedMaterialId" name="selectedMaterialId" value="" />
+
+                    <div th:each="material, index : ${materials}" class="material">
+                        <div class="container-material">
+                            <input type="radio" th:id="'material-' + ${material.material_Id}" name="materialId"
+                                th:value="${material.material_Id}" style="display: none;" />
+                            <label th:for="'material-' + ${material.material_Id}">
+                                <div class="img-container">
+                                    <img th:src="@{${imagesByMaterials[index.index]}}" alt="Material Image"
+                                        class="w-100" th:attr="onclick=|toggleClass(event, ${material.material_Id})|" />
+                                </div>
+                                <div th:text="${material.material_Name}" class="my-2"></div>
+                            </label>
+                        </div>
+
+                        <div class="cover-button">
+                            <div class="slidecontainer my-2">
+                                <input type="range" min="1" max="4" value="1" class="slider"
+                                    th:name="'materialWeight_' + ${material.material_Id}"
+                                    th:id="'weightSlider-' + ${material.material_Id}">
+                                <p>Weight: <span th:id="'weightValue-' + ${material.material_Id}">1</span> mace</p>
+                            </div>
+                            <div class="button-group">
+                                <input type="hidden" th:id="'material-' + ${material.material_Id}" name="materialId"
+                                    th:value="${material.material_Id}" />
+                                <input type="submit" value="Next" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="button-group">
+                    <a th:href="@{/chooseCategory(productOrderId=${productOrderId}, productId=${productId})}">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const materials = /*[[${materials}]]*/[];
+        let materialSelected = false;
+        let weightSelected = false;
+
+        materials.forEach(function (material) {
+            var slider = document.getElementById("weightSlider-" + material.material_Id);
+            var output = document.getElementById("weightValue-" + material.material_Id);
+
+            slider.oninput = function () {
+                weightSelected = true;
+                output.innerHTML = this.value;
+                // Update the hidden input field with the current slider value
+                document.getElementById("selectedMaterialWeight").value = this.value;
+                document.getElementById("selectedMaterialId").value = material.material_Id;
+            }
+        });
+
+        function toggleClass(event, materialId) {
+            event.preventDefault(); // Prevent the default action if any
+
+            // Remove 'selected' class from any currently selected image
+            const currentlySelected = document.querySelector('.img-container .selected');
+            if (currentlySelected) {
+                currentlySelected.classList.remove('selected');
+            }
+
+            // Add 'selected' class to the clicked image
+            var img = event.currentTarget;
+            img.classList.add('selected');
+
+            // Hide all cover-button options
+            const allCoverButtons = document.querySelectorAll('.cover-button');
+            allCoverButtons.forEach(button => {
+                button.classList.remove('cover-open');
+            });
+
+            // Show the corresponding cover-button option
+            const coverButton = img.closest('.material').querySelector('.cover-button');
+            if (coverButton) {
+                coverButton.classList.add('cover-open');
+            }
+
+            // Reset the weight value
+            const selectedSlider = coverButton.querySelector('.slider');
+            var min = selectedSlider.min;
+            var max = selectedSlider.max;
+            var midValue = Math.round((parseInt(min) + parseInt(max)) / 2);
+            selectedSlider.value = midValue;
+            selectedSlider.disabled = false;
+            const output = coverButton.querySelector('span');
+            output.innerHTML = midValue;
+            document.getElementById("selectedMaterialWeight").value = "";
+            weightSelected = false;
+            materialSelected = true;
+        }
+
+        function validateMaterialForm() {
+            if (!materialSelected) {
+                alert("Please select a material.");
+                return false;
+            }
+
+            if (!weightSelected || document.getElementById("selectedMaterialWeight").value == "") {
+                alert("Please select a weight.");
+                return false;
+            }
+
+            return true;
+        }
+        /*]]>*/
+    </script>
+</body>
+
+</html>

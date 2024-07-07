@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -20,57 +22,68 @@ import lombok.Setter;
 @Setter
 @Table(name = "Diamond")
 public class Diamond {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dia_Id")
+    @Column(name = "dia_id")
     private int dia_Id;
 
-    @Column(name = "dia_Code")
+    @NotBlank(message = "Diamond code is mandatory")
+    @Column(name = "dia_code", nullable = false)
     private String dia_Code;
 
-    @Column(name = "dia_Name")
+    @NotBlank(message = "Diamond name is mandatory")
+    @Column(name = "dia_name", nullable = false)
     private String dia_Name;
 
-    @Column(name = "Origin")
+    @NotBlank(message = "Origin is mandatory")
+    @Column(name = "origin", nullable = false)
     private String origin;
 
-    @Column(name = "Carat_Weight")
+    @NotNull(message = "Carat weight is mandatory")
+    @Column(name = "carat_weight", nullable = false)
     private double carat_Weight;
 
-    @Column(name = "Color")
+    @NotBlank(message = "Color is mandatory")
+    @Column(name = "color", nullable = false)
     private String color;
 
-    @Column(name = "Clarity")
+    @NotBlank(message = "Clarity is mandatory")
+    @Column(name = "clarity", nullable = false)
     private String clarity;
 
-    @Column(name = "Cut")
+    @NotBlank(message = "Cut is mandatory")
+    @Column(name = "cut", nullable = false)
     private String cut;
 
-    @Column(name = "Proportions")
+    @NotBlank(message = "Proportions are mandatory")
+    @Column(name = "proportions", nullable = false)
     private String proportions;
 
-    @Column(name = "Polish")
+    @NotBlank(message = "Polish is mandatory")
+    @Column(name = "polish", nullable = false)
     private String polish;
 
-    @Column(name = "Symmetry")
+    @NotBlank(message = "Symmetry is mandatory")
+    @Column(name = "symmetry", nullable = false)
     private String symmetry;
 
-    @Column(name = "Fluorescence")
+    @NotBlank(message = "Fluorescence is mandatory")
+    @Column(name = "fluorescence", nullable = false)
     private String fluorescence;
 
-    @Column(name = "Status")
-    private boolean status;
+    @Column(name = "status", nullable = false)
+    private boolean status; // 1 for active, meaning available, 0 for inactive, meanig=ng inavailable
 
-    @Column(name = "Img_Url")
-    private String img_Url;
-
-    @Column(name = "Q_Price")
+    @NotNull(message = "Q Price is mandatory")
+    @Column(name = "q_price", nullable = false)
     private double q_Price;
 
-    @Column(name = "O_Price")
+    @NotNull(message = "O Price is mandatory")
+    @Column(name = "o_price", nullable = false)
     private double o_Price;
 
     @OneToOne
-    @JoinColumn(name = "Product_Id")
+    @JoinColumn(name = "product_Id", nullable = true)
     private Product product;
 }

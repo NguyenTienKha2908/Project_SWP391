@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Choose Category</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="content">
+            <h1>Pick Category </h1>
+            <p>Seeking the perfect ring, or another type of jewelry?</p>
+
+            <form th:action="@{/saveCustomerCategory}" method="post">
+                <div class="img-container">
+                    <div th:each="category, index : ${categories}" class="category">
+                        <div class="img-content">
+                            <input type="radio" th:id="'category-' + ${category.category_Id}" name="categoryId"
+                                th:value="${category.category_Id}" th:data-name="${category.category_Name}" />
+                            <label th:for="'category-' + ${category.category_Id}">
+                                <!-- <img th:src="@{${category.img_Url}}" alt="Category Image" /> -->
+                                <img th:src="@{${imagesByCategory[index.index]}}" alt="Material Image"
+                                style="width:100px;height:100px;" />
+                                <div th:text="${category.category_Name}" class="my-3"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="sizeSlider" name="size">
+                    <p>Size: <span id="sliderValue">50</span></p>
+                </div>
+
+                <div class="button-group">
+                    <a th:href="@{/}">Back To Home</a>
+                    <input type="submit" value="Next" />
+                </div>
+            </form>
+        </div>
+
+
+
+    </div>
+
+    <script>
+
+        function toggleClass(event) {
+            event.preventDefault(); // Prevent the default action if any
+
+            // Remove 'selected' class from any currently selected image
+            const currentlySelected = document.querySelector('.img-container .selected');
+            if (currentlySelected) {
+                currentlySelected.classList.remove('selected');
+            }
+
+            // Add 'selected' class to the clicked image
+            var img = event.currentTarget;
+            img.classList.add('selected');
+        }
+
+        var slider = document.getElementById("sizeSlider");
+        var output = document.getElementById("sliderValue");
+        var categoryInputs = document.getElementsByName("categoryId");
+
+        var sizeRanges = {
+            'ring': { min: 3, max: 14 },
+            'bracelet': { min: 15, max: 25 },
+            'necklace': { min: 35, max: 65 },
+            'earrings': { min: 5, max: 10 },
+            'cufflinks': { min: 3, max: 5 }
+        };
+
+        categoryInputs.forEach(function (input) {
+            input.addEventListener('change', function () {
+                var categoryName = input.dataset.name.toLowerCase();
+                var range = sizeRanges[categoryName];
+                updateSlider(range.min, range.max);
+            });
+        });
+
+        slider.oninput = function () {
+            updateOutput(slider.value);
+        }
+
+        function updateSlider(min, max) {
+            slider.min = min;
+            slider.max = max;
+            slider.value = min;
+            updateOutput(slider.value);
+        }
+
+        function updateOutput(value) {
+            output.innerHTML = value;
+        }
+
+    </script>
+</body>
+
+</html>
