@@ -13,7 +13,7 @@ public class HomeController {
 
     @GetMapping("/homeCustomer")
     public String homeCustomer(){
-        return "customer/home";
+        return "customer/Profile";
     }
 
     @GetMapping("/homeManager")

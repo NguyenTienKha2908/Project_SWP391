@@ -16,6 +16,10 @@ public class DiamondService {
     @Autowired
     private DiamondRepository diamondRepository;
 
+    public List<Diamond> getAllDiamonds() {
+        return diamondRepository.findAll();
+    }
+
     public Page<Diamond> getAllDiamonds(Pageable pageable) {
         return diamondRepository.findAll(pageable);
     }
@@ -29,12 +33,29 @@ public class DiamondService {
         return optional.orElse(null);
     }
 
+    public List<Diamond> getListDiamondByProductId(int product_Id) {
+        List<Diamond> diamondList = diamondRepository.findByProductId(product_Id);
+        return diamondList;
+    }
+
     public void saveDiamond(Diamond diamond) {
         diamondRepository.save(diamond);
     }
 
-    public List<Diamond> getAllDiamonds() {
-        return diamondRepository.findAll();
+    public float findMinWeight() {
+        return diamondRepository.findMinWeight();
+    }
+
+    public float findMaxWeight() {
+        return diamondRepository.findMaxWeight();
+    }
+
+    public List<Diamond> findAvailableDiamondsByWeightRange(double minWeight, double maxWeight) {
+        return diamondRepository.findAvailableDiamondsByWeightRange(minWeight, maxWeight);
+    }
+
+    public Diamond getDiamondByProductId(int product_Id) {
+        return diamondRepository.getDiamondByProductId(product_Id);
     }
 
     public List<Diamond> getByListDiamonds(String name, Double caratWeight, String color, String clarity, String cut,

@@ -87,4 +87,12 @@ public class DiamondPriceListController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
+
+    @GetMapping("/viewCustomerDiaPriceListPage")
+    public String viewCustomerDiaPriceListPage(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<DiamondPriceList> diaPriceListPage = diaPriceListService.getAllDiaPriceLists(pageable);
+        model.addAttribute("diaPriceListPage", diaPriceListPage);
+        return "price/diamondPriceList";
+    }
 }

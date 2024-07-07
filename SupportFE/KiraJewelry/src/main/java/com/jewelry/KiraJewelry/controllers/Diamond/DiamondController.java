@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Diamond;
 import com.jewelry.KiraJewelry.models.DiamondPriceList;
+import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.Diamond.DiamondService;
 import com.jewelry.KiraJewelry.service.DiamondPriceList.DiamondPriceListService;
@@ -23,7 +24,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class DiamondController {
@@ -34,7 +38,43 @@ public class DiamondController {
     @Autowired
     private DiamondPriceListService diamondPriceListService;
 
+    @Autowired
+    ImageService imageService;
+
     @GetMapping("/diamonds")
+    // public String viewDiamondsPage(Model model,
+    // @RequestParam(defaultValue = "0") int page,
+    // @RequestParam(defaultValue = "20") int size,
+    // @RequestParam(value = "message", required = false) String message) {
+    // Pageable pageable = PageRequest.of(page, size);
+    // Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
+
+    // // Initialize list to hold image URLs for each material
+    // List<String> imagesByDiamond = new ArrayList<>();
+
+    // for (Diamond diamond : diamondPage) {
+    // try {
+    // String imageUrl =
+    // imageService.getImgByMaterialID(String.valueOf(diamond.getDia_Id()));
+    // imagesByDiamond.add(imageUrl);
+    // System.out.println(imageUrl);
+    // } catch (IOException ex) {
+    // ex.printStackTrace();
+    // }
+
+    // }
+
+    // if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
+    // return "redirect:/diamonds?page=" + (diamondPage.getTotalPages() - 1) +
+    // "&size=" + size;
+    // }
+
+    // model.addAttribute("diamondPage", diamondPage);
+    // model.addAttribute("message", message);
+    // return "employee/manager/Diamond/diamonds";
+    // }
+
+    // @GetMapping("/diamonds")
     public String viewDiamondsPage(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -42,11 +82,25 @@ public class DiamondController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
 
+        // Initialize a list to hold image URLs
+        List<String> imagesByDiamond = new ArrayList<>();
+
+        for (Diamond diamond : diamondPage) {
+            try {
+                String imageUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+                imagesByDiamond.add(imageUrl);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                imagesByDiamond.add(null); // Add null if there is an error fetching the image
+            }
+        }
+
         if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
             return "redirect:/diamonds?page=" + (diamondPage.getTotalPages() - 1) + "&size=" + size;
         }
 
         model.addAttribute("diamondPage", diamondPage);
+        model.addAttribute("imagesByDiamond", imagesByDiamond);
         model.addAttribute("message", message);
         return "employee/manager/Diamond/diamonds";
     }
@@ -60,18 +114,15 @@ public class DiamondController {
     @GetMapping("/showNewDiamondForm")
     public String showNewDiamondForm(Model model) {
         Diamond diamond = new Diamond();
-        diamond.setDiaCode(generateDiamondCode());
+        diamond.setDia_Code(generateDiamondCode());
         ;
-        diamond.setO_price(0.0f); // Set default O Price
+        diamond.setO_Price(0.0); // Set default O Price
         model.addAttribute("diamond", diamond);
 
         List<String> origins = diamondPriceListService.getAllOrigins();
         model.addAttribute("origins", origins);
         return "employee/manager/Diamond/new_diamond";
     }
-
-    @Autowired
-    ImageService imageService;
 
     @PostMapping("/addDiamond")
     public String saveDiamond(@ModelAttribute("diamond") @Valid Diamond diamond,
@@ -95,17 +146,17 @@ public class DiamondController {
             }
         }
 
-        if (diamond.getDiaId() == 0) { // Only generate a new code if the diamond is new
-            diamond.setDiaCode(generateDiamondCode());
+        if (diamond.getDia_Id() == 0) { // Only generate a new code if the diamond is new
+            diamond.setDia_Code(generateDiamondCode());
         }
         diamond.setStatus(true); // Set status to active by default
-        diamond.setO_price(0.0f); // Ensure O Price is set to 0
+        diamond.setO_Price(0.0); // Ensure O Price is set to 0
 
         DiamondPriceList priceList = diamondPriceListService.getPriceByDetails(
-                diamond.getOrigin(), diamond.getCaratWeight(), diamond.getColor(),
+                diamond.getOrigin(), diamond.getCarat_Weight(), diamond.getColor(),
                 diamond.getClarity(), diamond.getCut());
         if (priceList != null) {
-            diamond.setQ_price(priceList.getPrice());
+            diamond.setQ_Price(priceList.getPrice());
         } else {
             model.addAttribute("errorMessage", "No matching price found for the provided diamond details.");
             return "employee/manager/Diamond/new_diamond";
@@ -113,7 +164,7 @@ public class DiamondController {
 
         diamondService.saveDiamond(diamond);
         redirectAttributes.addAttribute("message",
-                "Diamond " + diamond.getDiaCode() + " has been added successfully.");
+                "Diamond " + diamond.getDia_Code() + " has been added successfully.");
         return "redirect:/diamonds?";
     }
 
@@ -126,15 +177,15 @@ public class DiamondController {
         model.addAttribute("origins", origins);
 
         List<String> colors = diamondPriceListService.getColorsByOriginAndCaratWeight(diamond.getOrigin(),
-                diamond.getCaratWeight());
+                diamond.getCarat_Weight());
         model.addAttribute("colors", colors);
 
         List<String> clarities = diamondPriceListService.getClaritiesByOriginCaratWeightAndColor(diamond.getOrigin(),
-                diamond.getCaratWeight(), diamond.getColor());
+                diamond.getCarat_Weight(), diamond.getColor());
         model.addAttribute("clarities", clarities);
 
         List<String> cuts = diamondPriceListService.getCutsByOriginCaratWeightColorAndClarity(diamond.getOrigin(),
-                diamond.getCaratWeight(), diamond.getColor(), diamond.getClarity());
+                diamond.getCarat_Weight(), diamond.getColor(), diamond.getClarity());
         model.addAttribute("cuts", cuts);
         return "employee/manager/Diamond/update_diamond";
     }
@@ -161,10 +212,10 @@ public class DiamondController {
         }
 
         DiamondPriceList priceList = diamondPriceListService.getPriceByDetails(
-                diamond.getOrigin(), diamond.getCaratWeight(), diamond.getColor(),
+                diamond.getOrigin(), diamond.getCarat_Weight(), diamond.getColor(),
                 diamond.getClarity(), diamond.getCut());
         if (priceList != null) {
-            diamond.setQ_price(priceList.getPrice());
+            diamond.setQ_Price(priceList.getPrice());
             System.out.println("Price found: " + priceList.getPrice()); // Logging the price
         } else {
             model.addAttribute("errorMessage", "No matching price found for the provided diamond details.");
@@ -177,44 +228,32 @@ public class DiamondController {
         System.out.println("Diamond saved successfully");
 
         redirectAttributes.addAttribute("message",
-                "Diamond " + diamond.getDiaCode() + " has been updated successfully.");
+                "Diamond " + diamond.getDia_Code() + " has been updated successfully.");
         return "employee/manager/Diamond/update_diamond";
     }
 
-    // private void handleImageFile(Diamond diamond, MultipartFile imgFile) throws IOException {
-    //     if (imgFile != null && !imgFile.isEmpty()) {
-    //         String url = imageService.upload(imgFile);
-    //         diamond.setImgUrl(url);
-    //     }
+    // private void handleImageFile(Diamond diamond, MultipartFile imgFile) throws
+    // IOException {
+    // if (imgFile != null && !imgFile.isEmpty()) {
+    // String url = imageService.upload(imgFile);
+    // diamond.setImgUrl(url);
     // }
-
-    private byte[] fetchImageFromURL(String imageUrl) throws IOException {
-        URL url = new URL(imageUrl);
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                InputStream is = url.openStream()) {
-            byte[] buffer = new byte[1024];
-            int n;
-            while ((n = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, n);
-            }
-            return baos.toByteArray();
-        }
-    }
+    // }
 
     private void prepareModelForUpdateForm(Model model, Diamond diamond) {
         List<String> origins = diamondPriceListService.getAllOrigins();
         model.addAttribute("origins", origins);
 
         List<String> colors = diamondPriceListService.getColorsByOriginAndCaratWeight(diamond.getOrigin(),
-                diamond.getCaratWeight());
+                diamond.getCarat_Weight());
         model.addAttribute("colors", colors);
 
         List<String> clarities = diamondPriceListService.getClaritiesByOriginCaratWeightAndColor(diamond.getOrigin(),
-                diamond.getCaratWeight(), diamond.getColor());
+                diamond.getCarat_Weight(), diamond.getColor());
         model.addAttribute("clarities", clarities);
 
         List<String> cuts = diamondPriceListService.getCutsByOriginCaratWeightColorAndClarity(diamond.getOrigin(),
-                diamond.getCaratWeight(), diamond.getColor(), diamond.getClarity());
+                diamond.getCarat_Weight(), diamond.getColor(), diamond.getClarity());
         model.addAttribute("cuts", cuts);
     }
 
@@ -254,7 +293,7 @@ public class DiamondController {
 
     @GetMapping("/getPriceList")
     @ResponseBody
-    public List<Float> getPriceList(@RequestParam String origin) {
+    public List<Double> getPriceList(@RequestParam String origin) {
         return diamondPriceListService.getCaratWeightsByOrigin(origin);
     }
 
@@ -267,21 +306,52 @@ public class DiamondController {
     @GetMapping("/getPriceListByClarity")
     @ResponseBody
     public List<String> getPriceListByClarity(@RequestParam String origin, @RequestParam float carat_weight,
-                                              @RequestParam String color) {
+            @RequestParam String color) {
         return diamondPriceListService.getClaritiesByOriginCaratWeightAndColor(origin, carat_weight, color);
     }
 
     @GetMapping("/getPriceListByCut")
     @ResponseBody
     public List<String> getPriceListByCut(@RequestParam String origin, @RequestParam float carat_weight,
-                                          @RequestParam String color, @RequestParam String clarity) {
+            @RequestParam String color, @RequestParam String clarity) {
         return diamondPriceListService.getCutsByOriginCaratWeightColorAndClarity(origin, carat_weight, color, clarity);
     }
 
     @GetMapping("/getPriceListByDetails")
     @ResponseBody
-    public DiamondPriceList getPriceListByDetails(@RequestParam String origin, @RequestParam float carat_weight,
-                                                  @RequestParam String color, @RequestParam String clarity, @RequestParam String cut) {
+    public DiamondPriceList getPriceListByDetails(@RequestParam String origin, @RequestParam double carat_weight,
+            @RequestParam String color, @RequestParam String clarity, @RequestParam String cut) {
         return diamondPriceListService.getPriceByDetails(origin, carat_weight, color, clarity, cut);
+    }
+
+    @GetMapping("/customerDiamondsPage")
+    public String viewCustomerDiamondsPage(Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(value = "message", required = false) String message) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
+
+        // Initialize a list to hold image URLs
+        List<String> imagesByDiamond = new ArrayList<>();
+
+        for (Diamond diamond : diamondPage) {
+            try {
+                String imageUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+                imagesByDiamond.add(imageUrl);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                imagesByDiamond.add(null); // Add null if there is an error fetching the image
+            }
+        }
+
+        if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
+            return "redirect:/customerDiamondsPage?page=" + (diamondPage.getTotalPages() - 1) + "&size=" + size;
+        }
+
+        model.addAttribute("diamondPage", diamondPage);
+        model.addAttribute("imagesByDiamond", imagesByDiamond);
+        model.addAttribute("message", message);
+        return "price/customerDiamondsPage";
     }
 }

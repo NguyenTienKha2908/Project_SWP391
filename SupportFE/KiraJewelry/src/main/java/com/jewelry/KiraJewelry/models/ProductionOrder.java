@@ -17,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -36,17 +37,25 @@ public class ProductionOrder {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
 
-    @Column(name = "customer_Id")
-    private String customer_Id;
+    // @Column(name = "customer_Id")
+    // private String customer_Id;
 
-    @Column(name = "category_Id")
-    private int category_Id;
+    // @Column(name = "category_Id")
+    // private int category_Id;
+
+    @OneToOne
+    @JoinColumn(name="category_Id")
+    private Category category;
+
+    @OneToOne
+    @JoinColumn(name="customer_Id")
+    private Customer customer;
 
     @Column(name = "product_Size")
     private int product_Size;
 
-    @Column(name = "img_Url")
-    private String img_Url;
+    // @Column(name = "img_Url")
+    // private String img_Url;
 
     @Column(name = "description")
     private String description;
@@ -76,13 +85,13 @@ public class ProductionOrder {
     private double o_Total_Amount;
 
     @Column(name = "sales_Staff_Id")
-    private String sales_Staff_Id;
+    private String sales_Staff;
 
     @Column(name = "design_Staff_Id")
-    private String design_Staff_Id;
+    private String design_Staff;
 
     @Column(name = "production_Staff_Id")
-    private String production_Staff_Id;
+    private String production_Staff;
 
     @Column(name = "status")
     private String status;

@@ -73,42 +73,14 @@ test('registration with existing email', async ({ page }) => {
 });
 
 /********* Test Full Name Format ***********/
-// test('registration with invalid Full Name', async ({ page }) => {
-//   await page.goto('http://localhost:8081/registration');
-
-//   // Fill form test data
-//   await page.fill('#fullname', '123AnDao');
-//   await page.fill('#email', 'hello@gmail.com');
-//   await page.fill('#phone', '0908123123');
-//   await page.fill('#password', '@Hello218');
-//   await page.fill('#address', '18B ABC Road');
-
-//   await Promise.all([
-//     page.waitForNavigation(),
-//     page.click('.btn-register')
-//   ]);
-
-//   // Assert redirection to error page or message
-//   const url = page.url();
-//   expect(url).toContain('/registration?error');
-
-//   // Check for error message in toast
-//   const errorToast = page.locator('.mess-content:has-text("Invalid Full Name: Full Name cannot contain number!")');
-//   await errorToast.waitFor({ state: 'visible' });
-//   await page.waitForTimeout(1000);
-//   console.log('Registration failed with error message visible');
-//   await page.screenshot({ path: 'screenshots/errorRegister.png' });
-// });
-
-/********* Test Email Format ***********/
-test('registration with invalid Email', async ({ page }) => {
+test('registration with invalid Full Name', async ({ page }) => {
   await page.goto('http://localhost:8081/registration');
 
   // Fill form test data
-  await page.fill('#fullname', 'An Dao');
-  await page.fill('#email', 'ilo@veugmail.com');
+  await page.fill('#fullname', '123AnDao');
+  await page.fill('#email', 'hello@gmail.com');
   await page.fill('#phone', '0908123123');
-  await page.fill('#password', 'P@ssw0rd');
+  await page.fill('#password', '@Hello218');
   await page.fill('#address', '18B ABC Road');
 
   await Promise.all([
@@ -121,21 +93,21 @@ test('registration with invalid Email', async ({ page }) => {
   expect(url).toContain('/registration?error');
 
   // Check for error message in toast
-  const errorToast = page.locator('.mess-content:has-text("Invalid Email")');
+  const errorToast = page.locator('.mess-content:has-text("Invalid Full Name: Full Name cannot contain numbers!")');
   await errorToast.waitFor({ state: 'visible' });
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1000);
   console.log('Registration failed with error message visible');
   await page.screenshot({ path: 'screenshots/errorRegister.png' });
 });
 
-/********* Test Phone Format ***********/
-// test('registration with invalid Phone', async ({ page }) => {
+/********* Test Email Format ***********/
+// test('registration with invalid Email', async ({ page }) => {
 //   await page.goto('http://localhost:8081/registration');
 
 //   // Fill form test data
 //   await page.fill('#fullname', 'An Dao');
-//   await page.fill('#email', 'iloveu@gmail.com');
-//   await page.fill('#phone', '09081223');
+//   await page.fill('#email', 'ilo@veugmail.com');
+//   await page.fill('#phone', '0908123123');
 //   await page.fill('#password', 'P@ssw0rd');
 //   await page.fill('#address', '18B ABC Road');
 
@@ -149,12 +121,40 @@ test('registration with invalid Email', async ({ page }) => {
 //   expect(url).toContain('/registration?error');
 
 //   // Check for error message in toast
-//   const errorToast = page.locator('.mess-content:has-text("Invalid Phone Number: Must start with 0 and have 10 digits")');
+//   const errorToast = page.locator('.mess-content:has-text("Invalid Email")');
 //   await errorToast.waitFor({ state: 'visible' });
 //   await page.waitForTimeout(500);
 //   console.log('Registration failed with error message visible');
 //   await page.screenshot({ path: 'screenshots/errorRegister.png' });
 // });
+
+/********* Test Phone Format ***********/
+test('registration with invalid Phone', async ({ page }) => {
+  await page.goto('http://localhost:8081/registration');
+
+  // Fill form test data
+  await page.fill('#fullname', 'An Dao');
+  await page.fill('#email', 'iloveu@gmail.com');
+  await page.fill('#phone', '09081223');
+  await page.fill('#password', 'P@ssw0rd');
+  await page.fill('#address', '18B ABC Road');
+
+  await Promise.all([
+    page.waitForNavigation(),
+    page.click('.btn-register')
+  ]);
+
+  // Assert redirection to error page or message
+  const url = page.url();
+  expect(url).toContain('/registration?error');
+
+  // Check for error message in toast
+  const errorToast = page.locator('.mess-content:has-text("Invalid Phone Number: Must start with 0 and have 10 digits")');
+  await errorToast.waitFor({ state: 'visible' });
+  await page.waitForTimeout(500);
+  console.log('Registration failed with error message visible');
+  await page.screenshot({ path: 'screenshots/errorRegister.png' });
+});
 
 
 /********* Test Password Format ***********/
@@ -191,7 +191,7 @@ test('check login', async ({ page }) => {
 
   // //VALID email and password
   // await page.locator('input[name="username"]').type('customer1@example.com');
-  // await page.locator('input[name="password"]').type('Cust1#Secure                                                    ');
+  // await page.locator('input[name="password"]').type('Cust1#Secure');
 
   //INVALID email and password
   await page.locator('input[name="username"]').type('hoola@gmail.com');

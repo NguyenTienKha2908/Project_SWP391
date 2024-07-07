@@ -35,6 +35,12 @@ public class ProductionOrderService {
         employee_Name);
   }
 
+  public List<ProductionOrder> getProductionOrderByStatusAndDEId(String status,
+      String employee_Name) {
+    return productionOrderRepository.findProductionOrderByStatusAndDEId(status,
+        employee_Name);
+  }
+
   public void deleteProductionOrderById(String productionOrderId) {
     productionOrderRepository.deleteById(productionOrderId);
   }
@@ -53,8 +59,37 @@ public class ProductionOrderService {
     return results.isEmpty() ? null : results.get(0);
   }
 
-  // public Optional<ProductionOrder> getTopByOrderByProduction_Order_IdDesc() {
-  // return productionOrderRepository.findTopByOrderByProduction_Order_IdDesc();
-  // }
+  public ProductionOrder findLatestByCustomerIdAndStatusIn(String customerId, List<String> statuses) {
+    Pageable pageable = PageRequest.of(0, 1);
+    List<ProductionOrder> results = productionOrderRepository.findByCustomerIdAndStatusIn(customerId, statuses,
+        pageable);
+    return results.isEmpty() ? null : results.get(0);
+  }
 
+  public ProductionOrder getProductionOrderByProductId(int productId) {
+    return productionOrderRepository.findProductionOrderByProductId(productId);
+  }
+
+  public int getTotalOrders() {
+    return productionOrderRepository.countAll();
+  }
+
+  public int getTotalCanceledOrders() {
+    return productionOrderRepository.countByStatus("Canceled");
+  }
+
+  public double getTotalRevenueThisMonth() {
+    return productionOrderRepository.sumTotalAmountByMonth();
+  }
+
+  public double getRevenueChangePercentage() {
+    double lastMonthRevenue = productionOrderRepository.sumTotalAmountByLastMonth();
+    double thisMonthRevenue = getTotalRevenueThisMonth();
+
+    if (lastMonthRevenue == 0) {
+      return thisMonthRevenue == 0 ? 0 : 100;
+    }
+
+    return ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+  }
 }

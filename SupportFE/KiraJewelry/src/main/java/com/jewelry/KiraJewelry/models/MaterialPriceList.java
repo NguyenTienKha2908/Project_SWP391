@@ -28,51 +28,19 @@ import lombok.Setter;
 public class MaterialPriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "id")
     private int id;
 
     @Min(value = 0, message = "The price must be greater than or equal to 0")
-    @Column(name = "Price", nullable = false)
+    @Column(name = "price", nullable = false)
     private double price;
 
     @PastOrPresentDate
-    @Column(name = "Eff_Date", nullable = false)
+    @Column(name = "eff_date", nullable = false)
     private Date eff_Date;
 
-    @OneToOne
-    @JoinColumn(name = "Material_Id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "material_id", nullable = false)
     private Material material;
 
-    // Getters and setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public Date getEffDate() {
-        return eff_Date;
-    }
-
-    public void setEffDate(Date effDate) {
-        this.eff_Date = effDate;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
 }

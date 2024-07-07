@@ -36,9 +36,6 @@ public class Category {
     @Column(name = "Status", nullable = false)
     private boolean status;
 
-    @Column(name = "Img_Url", nullable = true)
-    private String img_Url;
-
     // Getters and setters
     public int getCategory_Id() {
         return category_Id;
@@ -62,13 +59,5 @@ public class Category {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public String getImg_Url() {
-        return img_Url;
-    }
-
-    public void setImg_Url(String img_Url) {
-        this.img_Url = img_Url;
     }
 }

@@ -18,7 +18,7 @@
                 <div class="sidebar-logo">
                     <a th:href="@{#}">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
-                        alt="logo">                        <span>KIRA JEWELRY</span>
+                            alt="logo"> <span>KIRA JEWELRY</span>
                     </a>
                 </div>
             </div>
@@ -48,11 +48,11 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
-                        class="sidebar-link">
+                    <a th:if="${session.employeeName != null}"
+                        th:onclick="|location.href='@{/viewOrdersforSalesStaff}'|" class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
                             alt="materialAndGem">
-                        <span>Material & Gem</span>
+                        <span>Orders</span>
                     </a>
                 </li>
             </ul>
@@ -75,10 +75,10 @@
                     </div>
                 </div>
             </div>
-            <a class="text-decoration-none ms-4 me-4 text-dark " th:href="@{/viewRequestsforSS}">Back to request
-                list</a>
+            <a class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-secondary" th:href="@{/viewRequestsforSS}">
+                Back to request list</a>
             <div class="content">
-                <h1 style="text-align: center;">All Customer Requests</h1>
+                <h1 class="my-0" style="text-align: center;">All Customer Requests</h1>
                 <hr>
 
                 <div th:each="productionOrder : ${listRequests}">
@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="information">
                                     <h2>Customer ID</h2>
-                                    <p th:text="${productionOrder.customer_Id}"></p>
+                                    <p th:text="${productionOrder.customer.customer_Id}"></p>
                                 </div>
                                 <div class="information">
                                     <h2>Date</h2>
@@ -100,7 +100,7 @@
                                 </div>
                                 <div class="information">
                                     <h2>Category ID</h2>
-                                    <p th:text="${productionOrder.category_Id}"></p>
+                                    <p th:text="${productionOrder.category.category_Id}"></p>
                                 </div>
                             </div>
                         </div>
@@ -122,80 +122,48 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row mx-auto">
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Material Name</h2>
-                                    <p th:text="${productionOrder.material_Name}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Material Color</h2>
-                                    <p th:text="${productionOrder.material_Color}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Material Weight</h2>
-                                    <p th:text="${productionOrder.material_Weight}"></p>
-                                </div>
-                            </div>
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Gemstone Name</h2>
-                                    <p th:text="${productionOrder.gem_Name}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Gemstone Color</h2>
-                                    <p th:text="${productionOrder.gem_Color}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Gemstone Weight</h2>
-                                    <p th:text="${productionOrder.gem_Weight}"></p>
-                                </div>
-                            </div>
-                        </div>
 
                         <hr>
                         <h1>Image</h1>
                         <div class="row mx-auto">
                             <div class="order-one col-md-6">
-                                <div class="information">
-                                    <img th:src="${productionOrder.image_url}" alt="Production Order Image"
-                                        style="max-width: 150%; height: auto;" />
+                                <div class="information mx-3">
+                                    <div class="information">
+                                        <div th:each="imageUrl : ${imagesByCustomerId}">
+                                            <img th:src="${imageUrl}" alt="Production Order Image"
+                                                style="max-width: 100%; height: auto;" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <hr>
-                        <h1>Staff Assignment</h1>
                         <div class="row mx-auto">
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Sales Staff Name</h2>
-                                    <p th:text="${productionOrder.sales_Staff_Name}"></p>
+                            <h1>Staff Assignment</h1>
+                            <div class="row mx-auto">
+                                <div class="order-one col-md-6">
+                                    <div class="information">
+                                        <h2>Sales Staff</h2>
+                                        <p th:text="${employee.full_Name}"></p>
+                                    </div>
+                                </div>
+                                <div class="order-one col-md-6">
+                                    <div class="information">
+                                        <h2>Status</h2>
+                                        <p th:text="${productionOrder.status}"></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <h1>Status</h1>
-                        <div class="row mx-auto">
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Status</h2>
-                                    <p th:text="${productionOrder.status}"></p>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <form th:action="@{/viewEditPage}" method="get">
+                        <form th:action="@{/viewIngredientsPage}" method="get">
                             <div class="b-group">
                                 <input type="hidden" name="productionOrderId"
                                     th:value="${productionOrder.production_Order_Id}" />
-                                <input class="bg-dark text-white p-2 ps-4 pe-4 me-5" type="submit" value="Edit">
+                                <input class="bg-dark text-white p-2 ps-4 pe-4 me-5" type="submit" value="Next">
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
 
 
 

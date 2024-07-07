@@ -20,7 +20,7 @@ public class LoginRequest {
     @NotNull
     private int role = 1; // Default role to 1
     private boolean status = true; // Default status to true
-    private String fullname;
+    @Pattern(regexp = "^[^\\d]*$", message = "Invalid Full Name: Full Name cannot contain numbers!")    private String fullname;
     private String address;
     
     @Pattern(regexp = "^0[0-9]{9}$", message = "Invalid Phone Number: Must start with 0 and have 10 digits")

@@ -22,9 +22,6 @@ public interface MaterialRepository extends JpaRepository<Material, Integer> {
     @Query("SELECT m FROM Material m WHERE m.material_Id IN (SELECT pds.material_Id FROM ProductDesignShell pds)")
     List<Material> findAllMaterialsInProductDesignShell();
 
-    @Query("SELECT m FROM Material m WHERE m.material_Id = :material_Id")
-    Material findMaterialById(@Param("material_Id") int material_Id);
-
     @Query("SELECT m FROM Material m WHERE m.material_Name LIKE %:name%")
     List<Material> findByNameContaining(@Param("name") String name);
 

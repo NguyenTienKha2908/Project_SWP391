@@ -13,8 +13,8 @@ body {
 .content {
     margin: 5% 0;
     left: 50%; 
-    position: relative; /* Changed from absolute to relative */
-    top: 5%; /* Adjust as necessary */
+    position: relative; 
+    top: 5%; 
     transform: translateY(0);
     transform: translate(-50%, 0%);
     background-color: #fff7f7;
@@ -68,12 +68,29 @@ body {
             color: #FFFFFF;
             border-radius: 5px;
             border: none;
+            transition: 0.25s ease-in-out;
+        }
+        a {
+            padding: 9px 20px;
+            margin: 5%;
+            background-color: #963535;
+            color: #FFFFFF;
+            border-radius: 5px;
+            border: none;
+            transition: 0.25s ease-in-out;
         }
 
-        input[type="submit"]:hover {
+        input[type="submit"]:hover{
             background-color: transparent;
             color: #358a96;
             border: 1px solid #358a96;
+
+        }
+
+        a:hover {
+            background-color: transparent;
+            color: #963535;
+            border: 1px solid #963535;
         }
     }
 }

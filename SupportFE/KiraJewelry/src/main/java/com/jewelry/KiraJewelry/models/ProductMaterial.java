@@ -25,35 +25,35 @@ public class ProductMaterial {
     private ProductMaterialId id;
 
     @JoinColumn(name="Material_Weight")
-    private Float material_Weight;
+    private double material_Weight;
 
     @Column(name = "Q_Price")
-    private float q_price;
+    private double q_price;
 
     @Column(name = "O_Price")
-    private float o_price;
+    private double o_price;
 
-    public Float getMaterial_Weight() {
+    public double getMaterial_Weight() {
         return material_Weight;
     }
 
-    public void setMaterial_Weight(Float material_Weight) {
+    public void setMaterial_Weight(double material_Weight) {
         this.material_Weight = material_Weight;
     }
 
-    public float getQ_Price() {
+    public double getQ_Price() {
         return q_price;
     }
 
-    public void setQ_Price(float q_price) {
+    public void setQ_Price(double q_price) {
         this.q_price = q_price;
     }
 
-    public float getO_Price() {
+    public double getO_Price() {
         return o_price;
     }
 
-    public void setO_Price(float o_price) {
+    public void setO_Price(double o_price) {
         this.o_price = o_price;
     }
 }

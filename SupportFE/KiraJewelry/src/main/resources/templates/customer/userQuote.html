@@ -10,6 +10,27 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
+    <style>
+        .wrapper-order {
+            padding: 3% 6%;
+            margin: 5% 10%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        }
+
+        label {
+            width: 180px;
+            font-weight: 600;
+        }
+
+        .group-link {
+            display: inline-flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -24,17 +45,18 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        Welcome, <span th:text="${session.customerName}"></span> |
+                        <a th:href="@{/userRequests}"> Welcome, <span
+                                th:text="${session.customerName}"></span></a>
+                        |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
                     <span th:if="${session.customerName == null}">
                         <a th:href="@{/login}">
                             Log in</a>
-
                     </span>
                 </div>
 
-                <a th:href="@{/currentOrder}" class="cart"><img
+                <a th:href="@{/userOrders}" class="cart"><img
                         src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
                 <a th:href="@{/}" class="search"><img
                         src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
@@ -49,25 +71,65 @@
                 <li>
                     <a th:href="@{/}">Collections</a>
                 </li>
-                <li class="active dropdown">
+                <li class="dropdown">
                     <a th:href="@{/currentOrder}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span>Jewelry</span>
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
                         <li class="dropdown-item">
-                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
-                                Jewelry Now</a>
-                            <a th:href="@{/login}" th:unless="${session.customerName != null}"
-                                class="sidebar-link">Order Jewelry Now</a>
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
                         </li>
                         <li class="dropdown-item">
-                            <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                            <a th:href="@{/customizeJewelry}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li><a href="#gemstones">Gemstones</a></li>
-                <li><a href="/html/price/Material.html">Materials</a></li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Diamonds</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/customerDiamondsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Diamonds
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerDiaPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Diamonds Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Materials</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Materials
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Materials Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li><a href="#education">Education</a></li>
             </ul>
         </nav>
@@ -85,28 +147,32 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="History.html" class="sidebar-link">
+                            <a th:href="@{/userHistoryOrders}"
+                                class="sidebar-link mainUp">
                                 <span>History Orders</span>
                             </a>
                         </li>
-                        <li class="active sidebar-item">
-                            <a href="CurrentOrder.html" class="sidebar-link collapsed has-dropdown"
-                                data-bs-toggle="collapse" data-bs-target="#auth1" aria-expanded="false"
-                                aria-controls="auth1">
+                        <li class="active-mainUp sidebar-item">
+                            <a class="sidebar-link mainUp collapsed has-dropdown" data-bs-toggle="collapse"
+                                data-bs-target="#auth1" aria-expanded="false" aria-controls="auth1">
                                 <span>Current Order</span>
                             </a>
                             <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userRequest(customerName=${session.customerName})}"
-                                        class="sidebar-link">Request</a>
+                                    <a th:href="@{/userRequests}"
+                                        class="sidebar-link mainUp">Requests</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userQuote(customerName=${session.customerName})}"
-                                        class="sidebar-link">Quote</a>
+                                    <a th:href="@{/userQuotes}"
+                                        class="active-mini-link sidebar-link mainUp">Quotes</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userOrder(customerName=${session.customerName})}"
-                                        class="sidebar-link">Order</a>
+                                    <a th:href="@{/userOrders}"
+                                        class="sidebar-link mainUp">Orders</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a th:href="@{/userCustomizedOrders}"
+                                        class="sidebar-link mainUp">Customized Jewelry</a>
                                 </li>
                             </ul>
                         </li>
@@ -116,198 +182,179 @@
             <div class="col-md-9">
                 <div class="quote container-fluid px-5">
                     <h1>Quote Section</h1>
-                    <div class="row mx-auto justify-content-md-center">
-                        <div class="order-one col-md-6">
-                            <div class="information">
-                                <h2>Customer Name</h2>
-                                <p th:text="${customer.full_Name}"></p>
-                            </div>
-                            <div class="information">
-                                <h2>Phone</h2>
-                                <p th:text="${customer.phoneNumber}"></p>
-                            </div>
-                            <!-- <div class="information">
-                            <h2>Email</h2>
-                            <p th:text="${customer.address}"></p>
-                          </div> -->
-                            <div class="information">
-                                <h2>Address</h2>
-                                <p th:text="${customer.address}"></p>
-                            </div>
+                    <div class="content">
+                        <div class="wrapper-order">
+                            <h3>General Information</h3>
+                            <table class="border-0">
+                                <tr>
+                                    <td><label for="">Customer ID</label></td>
+                                    <td><span th:text="${customer.customer_Id}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Full Name</label></td>
+                                    <td><span th:text="${customer.full_Name}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Phone Number</label></td>
+                                    <td><span th:text="${customer.phoneNumber}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Address</label></td>
+                                    <td><span th:text="${customer.address}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Email</label></td>
+                                    <td><span th:text="${customer.user.email}"></span></td>
+                                </tr>
+                            </table>
+
                         </div>
-                        <div class="order-one col-md-6">
-                            <div class="information">
-                                <h2>Date</h2>
-                                <p th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}">2024-06-01</p>
-                            </div>
-                            <div class="information">
-                                <h2>Sales Staff</h2>
-                                <p th:if="${productionOrder.sales_Staff_Name != null}"
-                                    th:text="${productionOrder.sales_Staff_Name}">
-                                </p>
-                                <p th:if="${productionOrder.sales_Staff_Name == null}" name="staff" id="staff">
-                                    Sales staff will contact you soon!
-                                </p>
+                        <div class="wrapper-order">
+                            <h3>Material Information</h3>
+                            <table class="border-0">
+                                <tr>
+                                    <td><label for="">Material Code</label></td>
+                                    <td><span th:text="${material.material_Code}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Material Name</label></td>
+                                    <td><span th:text="${material.material_Name}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Weight</label></td>
+                                    <td><span th:text="${productMaterial.material_Weight}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Price</label></td>
+                                    <td><span th:text="${productMaterial.q_Price}"></span> - (<span
+                                            th:text="${materialPriceList.price}"></span>/mace)</td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Eff Date</label></td>
+                                    <td><span th:text="${materialPriceList.eff_Date}"></span></td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                        <div class="wrapper-order">
+                            <h3>Diamond Information</h3>
+                            <table class="border-0">
+                                <tr>
+                                    <td><label for="">Diamond Code</label></td>
+                                    <td><span th:text="${diamond.dia_Code}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Diamond Name</label></td>
+                                    <td><span th:text="${diamond.dia_Name}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Origin</label></td>
+                                    <td><span th:text="${diamond.origin}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Carat Weight</label></td>
+                                    <td><span th:text="${diamond.carat_Weight}"></span> </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Color</label></td>
+                                    <td><span th:text="${diamond.color}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Clarity</label></td>
+                                    <td><span th:text="${diamond.clarity}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Cut</label></td>
+                                    <td><span th:text="${diamond.cut}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Proportions</label></td>
+                                    <td><span th:text="${diamond.proportions}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Polish</label></td>
+                                    <td><span th:text="${diamond.polish}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Symmetry</label></td>
+                                    <td><span th:text="${diamond.symmetry}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Fluorescence</label></td>
+                                    <td><span th:text="${diamond.fluorescence}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Price</label></td>
+                                    <td><span th:text="${diamond.q_Price}"></span>- (<span
+                                            th:text="${diamondPriceList.carat_Weight_From}"></span> - <span
+                                            th:text="${diamondPriceList.carat_Weight_To}"></span> => <span
+                                            th:text="${diamondPriceList.price}"></span>)</td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Eff Date</label></td>
+                                    <td><span th:text="${diamondPriceList.eff_Date}"></span></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="wrapper-order">
+                            <h3>Other Information</h3>
+                            <table class="border-0">
+                                <tr>
+                                    <td><label for="">Production Price</label></td>
+                                    <td><span th:text="${productionOrder.q_Production_Amount}"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="">Total price</label></td>
+                                    <td><span th:text="${productionOrder.q_Total_Amount}"></span></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div th:if="${productionOrder.status == 'Quoted(WC)'}" class="group-link my-4">
+                            <a class="btn btn-secondary fw-bold mx-3 w-25"
+                                th:href="@{/customerAcceptQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
+                                Approve
+                            </a>
+                            <a class="btn btn-danger fw-bold mx-3 w-25" data-bs-toggle="modal"
+                                data-bs-target="#Reject">Reject</a>
+                            <!-- <a class="mx-0 text-decoration-none text-danger"
+                                th:href="@{/customerRejectQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
+                                <button type="button">Reject</button>
+                            </a> -->
+                            <!-- <a class="mx-0 text-decoration-none text-success"
+                                th:href="@{/customerAcceptQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
+                                <button type="button">Accept</button>
+                            </a> -->
+                        </div>
+
+                        <div class="modal fade" id="Reject">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">This is just a confirm message</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <p>Are you sure?</p>
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <a
+                                            th:href="@{/customerRejectQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
+                                            <button class="btn btn-danger fw-bold" type="button">Yes</button>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <hr>
-                    <div class="row justify-content-md-center mx-auto">
-                        <div class="quote-one col-md-6">
-                            <h2>Material Information</h2>
-                            <div class="gemstone-info information">
-                                <h2>Material (Main)</h2>
-                                <p>
-                                    <span th:text="${productionOrder.material_Name}">
-                                    </span> -
-                                    <span th:text="${productionOrder.material_Color}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Weight</h2>
-                                <p><span th:text="${productionOrder.material_Weight}">
-                                    </span> <span>mace</span></p>
-                            </div>
-                            <div class="gemstone-info information price-view">
-                                <h2>Price per unit</h2>
-                                <p><a href="#">
-                                        <span>$</span>100.00
-                                    </a><span>(Click to view)</span></p>
-                            </div>
-                            <div class="gemstone-info information total-price">
-                                <h2>Material (Side)</h2>
-                                <p><span>$</span>
-                                    <span th:text="${productionOrder.side_Material_Cost}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Total Price</h2>
-                                <p><span>$</span>
-                                    <span th:text="${productionOrder.material_Amount}">
-                                    </span>
-                                </p>
-                            </div>
-                            <h2 class="mt-5">Other Information</h2>
-                            <div class="gemstone-info information total-price">
-                                <h2>Production</h2>
-                                <p><span>$</span>
-                                    <span th:text="${productionOrder.production_Amount}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Total Price</h2>
-                                <p><span>$</span>
-                                    <span th:text="${productionOrder.production_Amount}">
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="quote-one col-md-6">
-                            <h2>Gemstone Information</h2>
-                            <div class="gemstone-info information">
-                                <h2>Gemstone Code</h2>
-                                <p>DIA0009</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Gemstone ID</h2>
-                                <p>
-                                    <span th:text="${productionOrder.gem_Id}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Origin</h2>
-                                <p>Vietnam</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Cut</h2>
-                                <p>Very Good</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Color</h2>
-                                <p>
-                                    <span th:text="${productionOrder.gem_Color}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Carat</h2>
-                                <p>
-                                    <span th:text="${productionOrder.gem_Weight}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Clarity</h2>
-                                <p>VVS1</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Propositions</h2>
-                                <p>Excellent</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Polish</h2>
-                                <p>Excellent</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Symmetry</h2>
-                                <p>Excellent</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Fluorescence</h2>
-                                <p>Excellent</p>
-                            </div>
-                            <div class="gemstone-info information price-view">
-                                <h2>Diamond (Main)</h2>
-                                <p><a href="#">
-                                        <span>$</span>
-                                        <span th:text="${productionOrder.diamond_Amount}">
-                                        </span>
-                                    </a><span>(Click to view)</span></p>
-                            </div>
-                            <div class="gemstone-info information total-price">
-                                <h2>Diamond (Side)</h2>
-                                <p><span>$</span>
-                                    <span th:text="${productionOrder.side_Gem_Cost}">
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Total Price</h2>
-                                <p><span>$</span>
-                                    <span th:text="${productionOrder.diamond_Amount}">
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="total">
-                        <h2>Total Price</h2>
-                        <p><span>$</span>
-                            <span th:text="${productionOrder.total_Amount}">
-                            </span>
-                        </p>
-                    </div>
-
-                    <hr>
-                    <div class="btn-group">
-                        <form method="post" action="/userAcceptQuote">
-                            <input type="hidden" name="productionOrderId"
-                                th:value="${productionOrder.production_Order_Id}" />
-                            <button type="submit" class="btn btn-success">Accept</button>
-                        </form>
-                        <form method="post" action="/rejectQuote">
-                            <input type="hidden" name="productionOrderId"
-                                th:value="${productionOrder.production_Order_Id}" />
-                            <button type="submit" class="btn btn-danger">Reject</button>
-                        </form>
-                    </div>
-                    <hr>
                     <div class="bottom-note">
                         <div class="note">
                             <p>Note</p>
@@ -348,7 +395,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h2 class="footer_logo">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b" class="logo" /> Kira
+                                <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b"
+                                    class="logo" /> Kira
                                 Jewelry
                             </h2>
                         </div>
@@ -423,11 +471,16 @@
                 </div>
                 <div id="contact" class="copyright col-md-4">
                     <div class="contact_footer">
-                        <a class="twitter"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
-                        <a class="facebook"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
-                        <a class="linkedin"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
-                        <a class="youtube"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
-                        <a class="instagram"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
+                        <a class="twitter"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
+                        <a class="facebook"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
+                        <a class="linkedin"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
+                        <a class="youtube"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
+                        <a class="instagram"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
                     </div>
                 </div>
             </div>

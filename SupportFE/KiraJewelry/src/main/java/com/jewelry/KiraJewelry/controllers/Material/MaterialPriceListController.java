@@ -90,4 +90,13 @@ public class MaterialPriceListController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
+    @GetMapping("/viewCustomerMaterialPriceListPage")
+    public String viewCustomerMaterialPriceListPage(Model model) {
+        List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
+                .filter(mpl -> mpl.getMaterial().getStatus() == 1)
+                .collect(Collectors.toList());
+        model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
+        model.addAttribute("materialPriceList", new MaterialPriceList());
+        return "price/materialPriceList";
+    }
 }

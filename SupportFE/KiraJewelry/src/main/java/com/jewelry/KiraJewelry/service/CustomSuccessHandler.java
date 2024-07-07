@@ -134,20 +134,16 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                 session.setAttribute("employeeEmail", user.getEmail());
                 session.setAttribute("employeePassword", user.getPassword());
                 switch (user.getRole_Id()) {
-                    case 2:
+                    case 3:
                         session.setAttribute("role", "Manager");
                         response.sendRedirect("/homeManager");
                         return;
-                    case 3:
-                        session.setAttribute("role", "Sales Staff");
-                        response.sendRedirect("/homeManager");
-                        return;
                     case 4:
-                        session.setAttribute("role", "Design Staff");
+                        session.setAttribute("role", "Sales Staff");
                         response.sendRedirect("/homeSalesStaff");
                         return;
                     case 5:
-                        session.setAttribute("role", "Production Staff");
+                        session.setAttribute("role", "Design Staff");
                         response.sendRedirect("/homeDesignStaff");
                         return;
                     case 6:

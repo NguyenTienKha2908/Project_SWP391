@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jewelry.KiraJewelry.models.Customer;
+import com.jewelry.KiraJewelry.models.Product;
 import com.jewelry.KiraJewelry.models.ProductionOrder;
+import com.jewelry.KiraJewelry.repository.ProductRepository;
 import com.jewelry.KiraJewelry.repository.ProductionOrderRepository;
 import com.jewelry.KiraJewelry.service.CategoryService;
 import com.jewelry.KiraJewelry.service.CustomerService;
@@ -54,6 +56,10 @@ public class RequestController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+
     @PostMapping("/submitRequest")
     public String submitRequest(@RequestParam("category") int categoryId,
             @RequestParam("productSize") int productSize,
@@ -63,6 +69,7 @@ public class RequestController {
 
         // Get user info from session
         String customerId = (String) session.getAttribute("customerId");
+        Customer customer = customerService.getCustomerByCustomerId(customerId);
 
         // Generate production_Order_Id
         String productionOrderId = generateProductionOrderId();
@@ -75,8 +82,8 @@ public class RequestController {
 
         productionOrder.setProduction_Order_Id(productionOrderId);
         productionOrder.setDate(currentDate);
-        productionOrder.setCustomer_Id(customerId);
-        productionOrder.setCategory_Id(categoryId);
+        productionOrder.setCustomer(customer);
+        productionOrder.setCategory(categoryService.getCategoryById(categoryId));
         productionOrder.setProduct_Size(productSize);
         productionOrder.setDescription(description);
         productionOrder.setStatus("Created");
@@ -90,10 +97,22 @@ public class RequestController {
         productionOrder.setO_Material_Amount(0);
         productionOrder.setO_Production_Amount(0);
         productionOrder.setO_Total_Amount(0);
-        productionOrder.setSales_Staff_Id(null);
-        productionOrder.setDesign_Staff_Id(null);
-        productionOrder.setProduction_Staff_Id(null);
-        productionOrder.setProduct(null);
+        productionOrder.setSales_Staff(null);
+        productionOrder.setDesign_Staff(null);
+        productionOrder.setProduction_Staff(null);
+       
+
+        // Create and save Product entity
+        Product product = new Product();
+        product.setProduct_Name("Product for " + productionOrderId); // Set an appropriate product name
+        product.setProduct_Code(generateProductCode(productionOrderId));
+        product.setCategory(categoryService.getCategoryById(categoryId));
+        product.setDescription(description);
+        product.setSize(productSize);
+        product.setStatus(true); // Set status as needed
+        product.setCollection(null);
+        product.setGender("no gender");
+        product.setStatus(false);
 
         System.out.println(productionOrder.getProduction_Order_Id());
         // Save ProductionOrder to database
@@ -101,7 +120,9 @@ public class RequestController {
         try {
             String url = imageService.uploadForProductionOrder(file, "Customer_Production_Order", customerId,
                     productionOrder.getProduction_Order_Id());
-            productionOrder.setImg_Url(url);
+            productRepository.save(product);
+            productionOrder.setProduct(product);
+            // productionOrder.setImg_Url(url);
         } catch (Exception e) {
         }
 
@@ -113,8 +134,6 @@ public class RequestController {
             return "redirect:/request?error";
         }
 
-        Customer customer = customerService.getCustomerIdByCustomerName((String) session.getAttribute("customerName"));
-
         List<String> imagesByCustomerId = null;
 
         try {
@@ -125,10 +144,9 @@ public class RequestController {
         }
 
         model.addAttribute("imagesByCustomerId", imagesByCustomerId);
-        System.out.println(imagesByCustomerId);
         model.addAttribute("customer", customer);
         model.addAttribute("productionOrder", productionOrder);
-        String catergoryName = categoryService.getCateNameById(productionOrder.getCategory_Id());
+        String catergoryName = categoryService.getCateNameById(productionOrder.getCategory().getCategory_Id());
         model.addAttribute("categoryName", catergoryName);
 
         // Redirect to success page
@@ -155,4 +173,10 @@ public class RequestController {
         }
     }
 
+    private String generateProductCode(String productionOrderId) {
+        // Remove the first character and replace 'O' with ''
+        return "PO00" + productionOrderId.substring(3);
+    }
+
+    
 }

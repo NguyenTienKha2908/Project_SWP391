@@ -95,6 +95,9 @@ hr {
     }
 }
 
+
+
+
 .sidebar-nav {
     padding: 2rem 0;
     flex: 1 1 auto;
@@ -110,7 +113,7 @@ a.sidebar-link {
 }
 
 a.sidebar-link:hover,
-.active {
+.active-link {
     background-color: #EBFDFF;
     border-left: 3px solid #3b7ddd;
 
@@ -330,6 +333,11 @@ table {
     }
 }
 
+.info-special {
+
+    display: block;
+}
+
 /* REQUEST PAGE */
 
 .sort {
@@ -406,7 +414,7 @@ table {
     padding: 5% 0%;
     width: 80%;
     background-color: #FFFFFF;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 
     h1 {
         margin: 3%;
@@ -477,7 +485,8 @@ table {
     display: inline-flex;
     justify-content: end;
 
-    a, input {
+    a,
+    input {
         background-color: #00BDD6;
     }
 
@@ -974,4 +983,89 @@ tr td input {
     background-color: transparent;
     color: #1D2128;
     border: 1px solid #1D2128;
+}
+
+/* MESS */
+.mess-container {
+    .mess-content {
+        position: fixed;
+        top: 20px;
+        right: 35px;
+        z-index: 999;
+        background-color: #FFFFFF;
+        width: 30%;
+        padding: 5px 20px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 4px;
+        transition: transform 0.75s ease-in-out;
+    }
+}
+
+.close {
+    transform: translateX(120%);
+}
+
+.open {
+    transform: translateX(-20%);
+}
+
+.form-floating>.form-control-plaintext~label::after,
+.form-floating>.form-control:focus~label::after,
+.form-floating>.form-control:not(:placeholder-shown)~label::after,
+.form-floating>.form-select~label::after {
+    background-color: transparent;
+    border-radius: var(--bs-border-radius);
+}  
+
+
+/* UPLOAD FOR DESIGN */
+
+.file-uploader {
+    /* make it invisible */
+    opacity: 0;
+    /* make it take the full height and width of the parent container */
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    /* make it absolute positioned */
+    position: absolute;
+    top: 0%;
+    left: 0%;
+}
+
+.upload-icon {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* initial icon state */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #ccc;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #bbb;
+}
+
+.profile-picture {
+    opacity: 0.75;
+    height: 250px;
+    width: 250px;
+    position: relative;
+    left: 33%;
+    transform: translateX(25%);
+    overflow: hidden;
+
+    /* default image */
+    background: url('https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Desgin%2Fdesign_example.jpg?alt=media&token=2d8b7857-9e01-4d04-89dd-47fce7df887d');
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+/* toggle icon state */
+.profile-picture:hover .upload-icon {
+    opacity: 1;
 }

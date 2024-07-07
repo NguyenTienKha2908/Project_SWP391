@@ -16,43 +16,49 @@
             <div class="d-flex">
                 <div class="sidebar-logo">
                     <a th:href="@{#}">
-                        <img th:src="@{/img/icon-fig/logoWhite.svg}" alt="logo">
-                        <span>KIRA JEWELRY</span>
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
+                            alt="logo"> <span>KIRA JEWELRY</span>
                     </a>
                 </div>
             </div>
             <ul class="sidebar-nav">
-                <li class="sidebar-item">
-                    <a th:href="@{/homeSalesStaff}" class="sidebar-link">
-                        <img th:src="@{/img/icon-fig/profile.svg}" alt="profile">
+                <li class="active sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeSalesStaff}'|"
+                        class="active sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
+                            alt="profile">
                         <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
-                        class="active sidebar-link">
-                        <img th:src="@{/img/icon-fig/request.svg}" alt="request">
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
+                            alt="request">
                         <span>Requests</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
                         class="sidebar-link">
-                        <img th:src="@{/img/icon-fig/quote.svg}" alt="quote">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
+                            alt="quote">
                         <span>Quotes</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
-                        class="sidebar-link">
-                        <img th:src="@{/img/icon-fig/quote.svg}" alt="materialAndGem">
-                        <span>Material & Gem</span>
+                    <a th:if="${session.employeeName != null}"
+                        th:onclick="|location.href='@{/viewOrdersforSalesStaff}'|" class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
+                            alt="materialAndGem">
+                        <span>Orders</span>
                     </a>
                 </li>
             </ul>
             <div class="sidebar-footer">
                 <a th:href="@{/logout}" class="sidebar-link">
-                    <img th:src="@{/img/icon-fig/logout.svg}" alt="Logout">
+                    <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Flogout.svg?alt=media&token=a42d85ca-8e13-44a6-a054-a98137802c4e}"
+                        alt="Logout">
                     <span>Logout</span>
                 </a>
             </div>

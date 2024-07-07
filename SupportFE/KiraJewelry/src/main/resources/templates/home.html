@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
 
     <style>
-        .dropdown-item{
+        .dropdown-item {
             width: 50%;
             transition: 0.45s ease-in-out;
         }
@@ -34,7 +34,7 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        <a th:href="@{/userRequest(customerName=${session.customerName})}"> Welcome, <span
+                        <a th:href="@{/userRequests}"> Welcome, <span
                                 th:text="${session.customerName}"></span></a>
                         |
                         <a th:href="@{/logout}">Log out</a>
@@ -60,7 +60,7 @@
                 <li>
                     <a th:href="@{/}">Collections</a>
                 </li>
-                <li class="active dropdown">
+                <li class="dropdown">
                     <a th:href="@{/currentOrder}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span>Jewelry</span>
@@ -72,17 +72,53 @@
                             </a>
                         </li>
                         <li class="dropdown-item">
-                            <a th:href="@{/customize}" th:if="${session.customerName != null}" class="sidebar-link">
+                            <a th:href="@{/customizeJewelry}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
                                 Customize Your Jewelry
                             </a>
                         </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Diamonds</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
                         <li class="dropdown-item">
-                            <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                            <a th:href="@{/customerDiamondsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Diamonds
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerDiaPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Diamonds Price List
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#gemstones}">Gemstones</a></li>
-                <li><a th:href="@{/html/price/Material.html}">Materials</a></li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Materials</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Materials
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Materials Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li><a th:href="@{#education}">Education</a></li>
             </ul>
         </nav>
@@ -126,7 +162,7 @@
     <!--About Us-->
     <div id="about" class="row">
         <h1>
-            <span style="color: #59caff">KIRA Jewelry -</span> The
+            <span style="color: #f7b050">KIRA Jewelry -</span> The
             paradise of diamond jewelry
         </h1>
         <p>
@@ -206,7 +242,7 @@
     <!--Recent Blogs-->
     <div id="blogs" class="row">
         <div id="introduce">
-            <h1>Recent <span style="color: #59caff">Blogs</span></h1>
+            <h1>Recent <span style="color: #f7b050">Blogs</span></h1>
             <p style="color: rgb(144, 149, 160)">
                 Mutiple blogs about different types of jewelry. Easy for you to find
                 your favourite products.
@@ -609,26 +645,14 @@
     </footer>
     <script>
         window.onscroll = function () { myFunction() };
-
-
         var header = document.getElementById("myHeader");
-
-
         var sticky = header.offsetTop;
-
-
         function myFunction() {
-
             if (window.pageYOffset > sticky) {
-
                 header.classList.add("sticky");
-
             } else {
-
                 header.classList.remove("sticky");
-
             }
-
         }
     </script>
     <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"

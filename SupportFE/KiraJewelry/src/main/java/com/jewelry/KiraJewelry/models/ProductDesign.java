@@ -23,8 +23,8 @@ public class ProductDesign {
     @Column(name = "Product_Design_Name", nullable = true)
     private String product_Design_Name;
 
-    @Column(name = "Category_Id", nullable = false)
-    private int category_Id;
+    @Column(name = "Category_Id", nullable = true)
+    private Integer category_Id;
 
     @Column(name = "Collection_Id", nullable = true)
     private Integer collection_Id;
@@ -75,11 +75,11 @@ public class ProductDesign {
         this.product_Design_Name = product_Design_Name;
     }
 
-    public int getCategory_Id() {
+    public Integer getCategory_Id() {
         return category_Id;
     }
 
-    public void setCategory_Id(int category_Id) {
+    public void setCategory_Id(Integer category_Id) {
         this.category_Id = category_Id;
     }
 

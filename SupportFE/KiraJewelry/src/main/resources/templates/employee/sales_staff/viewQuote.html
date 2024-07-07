@@ -47,11 +47,11 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
-                        class="sidebar-link">
+                    <a th:if="${session.employeeName != null}"
+                        th:onclick="|location.href='@{/viewOrdersforSalesStaff}'|" class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
                             alt="materialAndGem">
-                        <span>Material & Gem</span>
+                        <span>Orders</span>
                     </a>
                 </li>
             </ul>
@@ -72,7 +72,6 @@
                             Welcome, <span th:text="${session.employeeName}"></span>
                         </span>
                     </div>
-                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
                 </div>
             </div>
             <div class="content">
@@ -93,13 +92,17 @@
                             <tr th:each="productionOrder : ${listRequests}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
-                                <td th:text="${productionOrder.customer_Id}"></td>
+                                <td th:text="${productionOrder.customer.customer_Id}"></td>
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
                                         <a class="mx-0"
-                                            th:href="@{/viewInformationQuoteForSS(productionOrderId=${productionOrder.production_Order_Id})}">
+                                            th:href="@{/viewInformationQuoteForSS(production_Order_Id=${productionOrder.production_Order_Id})}">
                                             <button type="button">View</button>
+                                        </a>
+                                        <a th:if="${productionOrder.status == 'Quoted(RJ)' or productionOrder.status == 'Quoted(CRJ)'}"
+                                            th:href="@{/viewIngredientsPage(productionOrderId=${productionOrder.production_Order_Id})}">
+                                            <button type="button">Re-write Quote</button>
                                         </a>
                                     </div>
 

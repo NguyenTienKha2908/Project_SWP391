@@ -10,7 +10,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.UUID;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,13 +61,49 @@ public class ImageService {
         return url;
     }
 
+    private String uploadFileForDesignStaff(File file, String fileName, String design_staff_id,
+            String ProductionOrderId) throws IOException {
+        String folderName = "Customer_Design";
+        String subFolderName = String.valueOf(design_staff_id);
+        String filePath = folderName + "/" + subFolderName + "/" + design_staff_id + "_" + ProductionOrderId + "_"
+                + fileName;
+        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        Credentials credentials = GoogleCredentials.fromStream(inputStream);
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+
+        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
+        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+        return url;
+    }
+
+    private String uploadFileForProductionStaff(File file, String fileName, String production_staff_id,
+            String ProductionOrderId) throws IOException {
+        String folderName = "Customer_Progress_Photo";
+        String subFolderName = String.valueOf(production_staff_id);
+        String filePath = folderName + "/" + subFolderName + "/" + production_staff_id + "_" + ProductionOrderId + "_"
+                + fileName;
+        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        Credentials credentials = GoogleCredentials.fromStream(inputStream);
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+
+        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
+        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+        return url;
+    }
+
     private Image getImageByCustomerId(String savedUrl) {
         String key = savedUrl.substring(0, 6);
         String imageUrl = savedUrl.substring(6);
         return new Image(key, imageUrl);
     }
 
-    private Image getImageByMaterialrDiamondId(String savedUrl) {
+    private Image getImageByMaterialOrDiamondId(String savedUrl) {
         String key = savedUrl.substring(0, 1);
         String imageUrl = savedUrl.substring(1);
         return new Image(key, imageUrl);
@@ -104,6 +142,24 @@ public class ImageService {
         return url;
     }
 
+    public String uploadFileForCategory(File file, String fileName, String categoryId) throws IOException {
+        String folderName = "Category";
+
+        String filePath = folderName + "/" + categoryId + "_" + fileName;
+
+        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
+        Credentials credentials = GoogleCredentials.fromStream(inputStream);
+        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+
+        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
+        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+        System.out.println(url);
+        return url;
+    }
+
     public List<String> listAllImages(String FOLDER_NAME) throws IOException {
         List<String> imageUrls = new ArrayList<>();
 
@@ -139,12 +195,97 @@ public class ImageService {
         return filteredImages;
     }
 
+    public List<String> getImgByStaffId(String staff_Id, String production_order_id) throws IOException {
+        List<String> listImg = listAllImages("Customer_Production_Order");
+
+        List<String> filteredImages = new ArrayList<>();
+        for (String imgUrl : listImg) {
+            if (imgUrl.contains("/Customer_Design%2F" + staff_Id + "%2F_" + production_order_id + "_")) {
+                filteredImages.add(imgUrl);
+            }
+        }
+
+        return filteredImages;
+    }
+
+    public List<String> getImgByStaffId(String staff_Id) throws IOException {
+        List<String> listImg = listAllImages("Customer_Design/" + staff_Id);
+        System.out.println(listImg);
+        List<String> filteredImages = new ArrayList<>();
+        for (String imgUrl : listImg) {
+            if (imgUrl.contains("/Customer_Design%2F" + staff_Id + "%2F" + staff_Id)) {
+                filteredImages.add(imgUrl);
+                System.out.println(imgUrl);
+            }
+        }
+
+        return filteredImages;
+    }
+
+    public Map<String, List<String>> getImgOrderedByStaffId(String staff_Id) throws IOException {
+        List<String> listImg = listAllImages("Customer_Design/" + staff_Id);
+        Map<String, List<String>> imagesByOrderId = new HashMap<>();
+
+        for (String imgUrl : listImg) {
+            String[] parts = imgUrl.split("_");
+            if (parts.length > 1) {
+                String orderId = parts[2];
+                imagesByOrderId.computeIfAbsent(orderId, k -> new ArrayList<>()).add(imgUrl);
+            }
+        }
+
+        return imagesByOrderId;
+    }
+
+    public Map<String, List<String>> getImgOrderedByPRStaffId(String staff_Id) throws IOException {
+        List<String> listImg = listAllImages("Customer_Progress_Photo/" + staff_Id);
+        Map<String, List<String>> imagesByOrderId = new HashMap<>();
+
+        for (String imgUrl : listImg) {
+            String[] parts = imgUrl.split("_");
+            if (parts.length > 1) {
+                String orderId = parts[3];
+                imagesByOrderId.computeIfAbsent(orderId, k -> new ArrayList<>()).add(imgUrl);
+            }
+        }
+
+        return imagesByOrderId;
+    }
+
     public String getImgByMaterialID(String materialId) throws IOException {
         List<String> listImg = listAllImages("Material");
 
         String filteredImages = null;
         for (String imgUrl : listImg) {
             if (imgUrl.contains("/Material%2F" + materialId + "_")) {
+                filteredImages = imgUrl;
+                break;
+            }
+        }
+
+        return filteredImages;
+    }
+
+    public String getImgByCateogryID(String categoryId) throws IOException {
+        List<String> listImg = listAllImages("Category");
+
+        String filteredImages = null;
+        for (String imgUrl : listImg) {
+            if (imgUrl.contains("/Category%2F" + categoryId + "_")) {
+                filteredImages = imgUrl;
+                break;
+            }
+        }
+
+        return filteredImages;
+    }
+
+    public String getImgByDiamondID(String diamondId) throws IOException {
+        List<String> listImg = listAllImages("Diamond");
+
+        String filteredImages = null;
+        for (String imgUrl : listImg) {
+            if (imgUrl.contains("/Diamond%2F" + diamondId + "_")) {
                 filteredImages = imgUrl;
                 break;
             }
@@ -177,6 +318,8 @@ public class ImageService {
                 URL = this.uploadFileForMaterial(file, fileName, key); // to get uploaded file link
             } else if (FOLDER_NAME.equals("Diamond")) {
                 URL = this.uploadFileForDiamond(file, fileName, key); // to get uploaded file link
+            } else if (FOLDER_NAME.equals("Category")) {
+                URL = this.uploadFileForCategory(file, fileName, key); // to get uploaded file link
             } else {
                 URL = this.uploadFile(file, fileName); // to get uploaded file link
             }
@@ -201,6 +344,14 @@ public class ImageService {
                 URL = this.uploadFileForCustomerProductionOrder(file, fileName, key, production_order_id); // to get
                                                                                                            // uploaded
                                                                                                            // file link
+            } else if (FOLDER_NAME.equals("Customer_Design")) {
+                URL = this.uploadFileForDesignStaff(file, fileName, key, production_order_id); // to get
+                                                                                               // uploaded
+                                                                                               // file link
+            } else if (FOLDER_NAME.equals("Customer_Progress_Photo")) {
+                URL = this.uploadFileForProductionStaff(file, fileName, key, production_order_id); // to get
+                                                                                               // uploaded
+                                                                                               // file link
             } else {
                 URL = this.uploadFile(file, fileName); // to get uploaded file link
             }

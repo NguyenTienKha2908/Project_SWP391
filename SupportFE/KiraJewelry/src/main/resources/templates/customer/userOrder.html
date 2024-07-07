@@ -5,14 +5,94 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kira Jewelry</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
+
+    <style>
+        .bottom-product-info {
+            display: inline-flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .wrapper-order {
+            padding: 3% 6%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="mess-container" th:if="${param.approved}">
+        <div class="mess-content open" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#155724">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b12a">
+                <p>Thank you! Your approval has been sent!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.reject}">
+        <div class="mess-content close" id="error-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Thank you! We will make sure to update a new design for your jewelry!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.await}">
+        <div class="mess-content open" id="await-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#01b10a">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b101">
+                <p>Thank you! We will check and confirm your payment!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.CODsuccess}">
+        <div class="mess-content open" id="CODsuccess-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#01b10a">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b101">
+                <p>Thank you! We will check and confirm your payment!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.update_delivered}">
+        <div class="mess-content open" id="update_delivered-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#01b10a">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b101">
+                <p>Thank you! We hope that you like the jewelry!</p>
+            </div>
+        </div>
+    </div>
+
+
     <!--Page header-->
     <header>
         <div class="top_header">
@@ -24,17 +104,18 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        Welcome, <span th:text="${session.customerName}"></span> |
+                        <a th:href="@{/userRequests}"> Welcome, <span
+                                th:text="${session.customerName}"></span></a>
+                        |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
                     <span th:if="${session.customerName == null}">
                         <a th:href="@{/login}">
                             Log in</a>
-
                     </span>
                 </div>
 
-                <a th:href="@{/currentOrder}" class="cart"><img
+                <a th:href="@{/userOrders}" class="cart"><img
                         src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
                 <a th:href="@{/}" class="search"><img
                         src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
@@ -42,32 +123,72 @@
         </div>
         <nav class="home_categories">
             <ul>
-                <li><a class="active-link" th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/}">Home</a></li>
                 <li>
                     <a th:href="@{/}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
                 </li>
-                <li class="active dropdown">
-                    <a th:href="@{/currentOrder}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                <li class="dropdown">
+                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <span>Jewelry</span>
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
                         <li class="dropdown-item">
-                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
-                                Jewelry Now</a>
-                            <a th:href="@{/login}" th:unless="${session.customerName != null}"
-                                class="sidebar-link">Order Jewelry Now</a>
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
                         </li>
                         <li class="dropdown-item">
-                            <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                            <a th:href="@{/customizeJewelry}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li><a href="#gemstones">Gemstones</a></li>
-                <li><a href="/html/price/Material.html">Materials</a></li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Diamonds</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/customerDiamondsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Diamonds
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerDiaPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Diamonds Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Materials</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialsPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                All Materials
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialPriceListPage}" th:if="${session.customerName != null}"
+                                class="sidebar-link">
+                                Materials Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li><a href="#education">Education</a></li>
             </ul>
         </nav>
@@ -80,30 +201,38 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a href="Profile.html" class="sidebar-link">
+                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}"
+                                class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="History.html" class="sidebar-link">
+                            <a th:href="@{/userHistoryOrders}"
+                                class="sidebar-link mainUp">
                                 <span>History Orders</span>
                             </a>
                         </li>
-                        <li class="active sidebar-item">
-                            <a href="CurrentOrder.html" class="sidebar-link collapsed has-dropdown"
-                                data-bs-toggle="collapse" data-bs-target="#auth1" aria-expanded="false"
-                                aria-controls="auth1">
+                        <li class="active-mainUp sidebar-item">
+                            <a class="sidebar-link mainUp collapsed has-dropdown" data-bs-toggle="collapse"
+                                data-bs-target="#auth1" aria-expanded="false" aria-controls="auth1">
                                 <span>Current Order</span>
                             </a>
                             <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                 <li class="sidebar-item">
-                                    <a href="Request.html" class="sidebar-link">Request</a>
+                                    <a th:href="@{/userRequests}"
+                                        class="sidebar-link mainUp">Requests</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="Quote.html" class="sidebar-link">Quote</a>
+                                    <a th:href="@{/userQuotes}"
+                                        class="sidebar-link mainUp">Quotes</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="Order.html" class="sidebar-link">Order</a>
+                                    <a th:href="@{/userOrders}"
+                                        class="active-mini-link sidebar-link mainUp">Orders</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a th:href="@{/userCustomizedOrders}"
+                                        class="sidebar-link mainUp">Customized Jewelry</a>
                                 </li>
                             </ul>
                         </li>
@@ -111,235 +240,319 @@
                 </aside>
             </div>
             <div class="col-md-9">
-                <div class="quote container-fluid px-5">
-                    <h1 class="my-4">Payment Section</h1>
-                    <p>After agreeing with the quote, we need you to deposit 50% of the product value.
-                        You can pay through bank transfer, our online payment, or cash.
-                        Please choose an option and proceed with the checkout.
-                    </p>
-                    <hr>
-                    <div class="row mx-auto justify-content-md-center">
-                        <h2>Order Information</h2>
-                        <div class="order-one col-md-6">
-                            <div class="gemstone-info information">
-                                <h2>Customer Name</h2>
-                                <p>Nguyen Thanh Vy</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Phone</h2>
-                                <p>0908123123</p>
-                            </div>
-                        </div>
-                        <div class="order-one col-md-6">
-                            <div class="gemstone-info information">
-                                <h2>Date Created</h2>
-                                <p>30/05/2024</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Sales Staff</h2>
-                                <p>Mia Guzman</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mx-auto justify-content-md-center my-5">
-                        <div class="order-one col-md-6">
-                            <h2>Material Information</h2>
-                            <div class="gemstone-info information">
-                                <h2>Material (Main)</h2>
-                                <p class="w-50 side-info">GO0009 - White Gold, 2 mace</p>
-                            </div>
-                            <div class="gemstone-info information price-view">
-                                <h2>Price per unit</h2>
-                                <p><span>$</span>350.99</p>
-                            </div>
-                            <div class="gemstone-info information total-price">
-                                <h2>Material (Side)</h2>
-                                <p><span>$</span>350.99</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Total Price</h2>
-                                <p><span>$</span>350.99</p>
-                            </div>
-                            <h2 class="mt-5">Other Information</h2>
-                            <div class="gemstone-info information total-price">
-                                <h2>Production</h2>
-                                <p><span>$</span>350.99</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Total Price</h2>
-                                <p><span>$</span>350.99</p>
-                            </div>
-                        </div>
-                        <div class="order-one col-md-6">
-                            <h2>Gemstone Information</h2>
-                            <div class="gemstone-info information">
-                                <h2>Gemstone (Main)</h2>
-                                <p class="w-50 side-info">
-                                    DIA0009 - 21, Vietnam,
-                                    F, 0.46 ct, VVS1, All Excellent
-                                </p>
-                            </div>
+                <div class="container-fluid">
 
-                            <div class="gemstone-info information price-view">
-                                <h2>Price</h2>
-                                <p><span>$</span> 250</p>
-                            </div>
-                            <div class="gemstone-info information total-price">
-                                <h2>Diamond (Side)</h2>
-                                <p><span>$</span> 250</p>
-                            </div>
-                            <div class="gemstone-info information">
-                                <h2>Total Price</h2>
-                                <p><span>$</span> 350.99</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="total">
-                            <h2>Total Price</h2>
-                            <p><span>$</span> 350.99</p>
-                        </div>
+                    <div th:if="${productionOrder == null or productionOrder.description == null}">
+                        <h2>You don't have any customized jewelry order at the moment,
+                            please order one and we will help you craft your dream.
+                            <br>Or you may want to check your Quote and Order Section.
+                            <br>Your order may be moved to these sections if the status is updated!
+                        </h2>
                     </div>
 
-                    <form action="#">
+                    <div th:if="${productionOrder != null}">
+                        <h1 class="my-5" style="width: 80%;">Your Order <span style="font-size: 1rem;">
+                                (Order placed at <span
+                                    th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></span>
+                            </span>)
+                            <span style="font-size: 1.05rem; font-style: italic; color: grey;"
+                                th:if="${productionOrder.status=='Deposit In Confirm'} or ${productionOrder.status == 'Canceled'} or ${productionOrder.status == 'Last Payment In Confirm'}">
+                                - Status: <span th:text="${productionOrder.status}"></span>
+                            </span>
+                        </h1>
+                        <div class="wrapper-order row justify-content-md-center mx-auto my-5">
+                            <div class="col-md-12">
+                                <h4 class="my-4" th:text="${product.product_Name}">
+                                </h4>
+                                <div class="product-content">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <img th:src="@{${cateUrl}}" alt="Category Image" style="width:100%" />
+                                            <p style="text-align: center; font-size:0.75rem;">This is only an
+                                                illustration of your order</p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <p>
+                                                <span th:text="${material.material_Name}"></span> -
+                                                <span th:text="${productMaterial.material_Weight}"></span> mace
+                                            </p>
+                                            <p class="my-2">
+                                                <span style="font-weight: 700;">Total Material Price: </span>
+                                                <span
+                                                    th:text="${#numbers.formatDecimal(productionOrder.o_Material_Amount, 1, 2)}"></span>
+                                                (<span style="color:#4e64c9; font-style: italic;"
+                                                    th:text="${#numbers.formatDecimal(productionOrder.q_Material_Amount, 1, 2)}"></span>)
+
+                                            </p>
+                                            <hr class="my-3">
+                                            <p>
+                                                <span th:text="${diamond.dia_Name}"></span>,
+                                                <span th:text="${diamond.carat_Weight}"></span> ct,
+                                                <span th:text=" ${diamond.origin}"></span>,
+                                                <span th:text=" ${diamond.color}"></span>,
+                                                <span th:text=" ${diamond.clarity}"></span>,
+                                                <span th:text=" ${diamond.cut}"></span>, cut,
+                                            </p>
+                                            <div class="other-diamond-info">
+                                                <p>Proportion: <span th:text=" ${diamond.proportions}"></span></p>
+                                                <p>Symmetry: <span th:text=" ${diamond.symmetry}"></span></p>
+                                                <p>Fluorescence: <span th:text=" ${diamond.fluorescence}"></span></p>
+                                                <p>Polish: <span th:text=" ${diamond.polish}"></span></p>
+                                            </div>
+                                            <p class="my-2">
+                                                <span style="font-weight: 700;">Total Diamond Price: </span>
+                                                <span
+                                                    th:text="${#numbers.formatDecimal(productionOrder.o_Diamond_Amount, 1, 2)}"></span>
+                                                (<span style="color:#4e64c9; font-style: italic;"
+                                                    th:text="${#numbers.formatDecimal(productionOrder.q_Diamond_Amount, 1, 2)}"></span>)
+                                            </p>
+                                            <hr class="my-3">
+                                            <p>
+                                                <span style="font-weight: 700;">Total Production Cost: </span>
+                                                <span th:text="${productionOrder.o_Production_Amount}"></span>
+                                                (<span style="color:#4e64c9; font-style: italic;"
+                                                    th:text="${productionOrder.q_Production_Amount}"></span>)
+                                            </p>
+                                            <div class="bottom-product-info my-3">
+                                                <p>
+                                                    <span style="font-weight: 700;">Product Size: </span>
+                                                    <span th:text="${productionOrder.product_Size}">9</span>
+                                                </p>
+                                                <p>
+                                                    <span style="font-weight: 700;">Total Price:</span>
+                                                    <span
+                                                        th:text="${#numbers.formatDecimal(productionOrder.o_Total_Amount, 1, 2)}"></span>
+                                                    (<span style="color:#4e64c9; font-style: italic;"
+                                                        th:text="${#numbers.formatDecimal(productionOrder.q_Total_Amount, 1, 2)}"></span>)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-md-center mx-auto my-5">
+                            <div class="wrapper-order col-md-12">
+                                <h2 class="my-3">Your Information</h2>
+                                <div class="information">
+                                    <h2>Customer Name</h2>
+                                    <p th:text="${productionOrder.customer.full_Name}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Phone</h2>
+                                    <p th:text="${productionOrder.customer.phoneNumber}"></p>
+                                </div>
+
+                                <div class="information">
+                                    <h2>Address</h2>
+                                    <p th:text="${productionOrder.customer.address}"></p>
+                                </div>
+                            </div>
+                            <div th:if="${productionOrder.status == 'Ordered(WP)'}">
+                                <div class="payment-option my-3">
+                                    <a
+                                        th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                        through Bank Transfer</a>
+                                    <a href="#">Pay through Paypal</a>
+                                </div>
+                                <hr>
+                                <div class="bottom-note">
+                                    <div class="note">
+                                        <p>Note</p>
+                                        <p>This is the information about your ordered jewelry!</p>
+                                        <p>We expect you to help us by deposit 50% of the total price. This
+                                            will ensure that you are serious with your product
+                                            and we will ake sure to deliver you the best product!
+                                        </p>
+                                        <p>Thank you for choosing our service!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mx-auto justify-content-md-center">
-                            <div class="col-md-6">
-                                <h2>Payment Option</h2>
-                                <div class="payment-option">
-                                    <a href="#">Pay COD</a>
-                                    <a href="#">Pay through Bank Transfer</a>
-                                    <a href="#">Pay through VNPay</a>
-                                </div>
-                            </div>
-                            <div class="col-md-6"></div>
+                            <div class="order-one col-md-6">
 
+                            </div>
                         </div>
 
-                    </form>
-                    <hr>
-                    <h1>Project Section</h1>
+                        <div th:if="${productionOrder.status != 'Ordered(WP)'}">
+                            <h1 class="my-5">Project Section</h1>
 
-                    <!-- An aside -->
-                    <!-- This is for holding the 3D object -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="img-ab">
-                                <div class="img">
-                                    <model-viewer src="/img/3d-design/Basic Ring.gltf" alt="VR Headset" auto-rotate
-                                        camera-controls ar ios-src="assets/HTC_Vive_Headset.gltf"></model-viewer>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Designs from Our Staff</h6>
+                                    <div
+                                        th:if="${productionOrder.status == 'Ordered' or productionOrder.status == 'Ordered(NP)'}">
+                                        <p>If you link the design, please hit the button "Approve"
+                                            and we will start making your jewelry! If you don't like it,
+                                            hit the button "Reject", and we will update your design!
+                                        </p>
+                                    </div>
+
+
+                                    <p th:if="${message != null}" th:text="${message}"
+                                        style="font-style: italic; color:rgb(158, 56, 56)"></p>
+                                    <div th:if="${imagesByStaffId != null}">
+                                        <div th:each="entry : ${imagesByStaffId}">
+                                            <div th:if="${entry.key == productionOrder.production_Order_Id}" id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                                data-bs-ride="carousel" data-bs-interval="2000">
+                                                <div class="carousel-inner">
+                                                    <div th:each="img, iterStat : ${entry.value}">
+                                                        <div
+                                                            th:classappend="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                                            <img th:src="@{${img}}" alt="Material Image"
+                                                                class="d-block w-100" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button"
+                                                    data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button"
+                                                    data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        th:if="${productionOrder.status == 'Ordered' or productionOrder.status == 'Ordered(NP)'}">
+                                        <div class="btnGroup">
+                                            <a
+                                                th:href="@{/handleUserApprove(productionOrderId=${productionOrder.production_Order_Id})}">Approve</a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#Reject">Reject</a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal fade" id="Reject">
+                                        <div class="modal-dialog modal-xl">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">This is just a confirm message</h4>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <p>Are you sure?</p>
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <form th:action="@{/handleUserReject}" method="post"
+                                                        enctype="multipart/form-data">
+                                                        <input type="hidden" name="productionOrderId"
+                                                            th:value="${productionOrder.production_Order_Id}" />
+                                                        <input type="submit" name="btnSubmit" class="btn btn-danger"
+                                                            value="Yes">
+                                                    </form>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="btnGroup">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#Approve">Approve</a>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#Reject">Reject</a>
-                            </div>
-                            <!-- The Modal Approve -->
-                            <div class="modal fade" id="Approve">
-                                <div class="modal-dialog modal-md">
-                                    <div class="modal-content">
-
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Confirmation</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                <div class="col-md-6">
+                                    <h6>Progress Photos for you Jewelry</h6>
+                                    <div th:if="${imagesByPRId != null}" class="my-3">
+                                        <div th:each="entry : ${imagesByPRId}">
+                                            <div th:if="${entry.key == productionOrder.production_Order_Id}" id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                                data-bs-ride="carousel" data-bs-interval="2000">
+                                                <div class="carousel-inner">
+                                                    <div th:each="img, iterStat : ${entry.value}">
+                                                        <div
+                                                            th:classappend="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                                            <img th:src="@{${img}}" alt="Material Image"
+                                                                class="d-block w-100" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button"
+                                                    data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button"
+                                                    data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
                                         </div>
+                                    </div>
+                                </div>
 
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <p>Are you sure?</p>
+                                <div th:if="${productionOrder.status == 'Completed'}"
+                                    class="wrapper-order col-md-12 my-5">
+                                    <h1>Payment Section</h1>
+                                    <div class="bottom-note">
+                                        <div class="note my-3">
+                                            <p>This is the information about last payment!</p>
+                                            <p>If you are pleased with the product, please process to check out the last
+                                                amount.
+                                                You can check out by choosing COD or bankstranfer
+                                            </p>
+                                            <p>Thank you for choosing our service!</p>
                                         </div>
+                                    </div>
+                                    <h2 class="my-3">Choose Payment Method</h2>
+                                    <div class="payment-option">
+                                        <a
+                                            th:href="@{/CODInfoForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">
+                                            Pay COD</a>
+                                        <a
+                                            th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                            through Bank Transfer</a>
+                                        <a href="#">Pay through Paypal</a>
+                                    </div>
+                                </div>
 
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><a
-                                                    href="managerRequest.html">Yes</a></button>
-                                            <button type="button" class="btn btn-primary"
-                                                data-bs-dismiss="modal">No</button>
+                                <div class="row mx-auto justify-content-md-center my-5">
+                                    <div class="order-one col-md-6">
+                                        <div th:if="${productionOrder.status=='Delivering'}">
+                                            <form th:action="@{/receiveProductByCustomer}" method="post">
+                                                <input type="hidden" name="productionOrderId"
+                                                    th:value="${productionOrder.production_Order_Id}" />
+                                                <button type="submit" class="w-100 btn btn-danger">
+                                                    I have received the product of
+                                                    <span
+                                                        th:text="${#numbers.formatDecimal(productionOrder.o_Total_Amount, 1, 2)}"></span>
+                                                </button>
+                                            </form>
                                         </div>
+                                    </div>
+                                </div>
 
+                                <hr>
+                                <div class="bottom-note">
+                                    <div class="note">
+                                        <p>Note</p>
+                                        <p>This is the information about your customized jewelry!</p>
+                                        <p>If you are pleased with the product, please process to check out.
+                                        </p>
+                                        <p>Thank you for choosing our service!</p>
                                     </div>
                                 </div>
                             </div>
-                            <!-- The Modal Reject -->
-                            <div class="modal fade" id="Reject">
-                                <div class="modal-dialog modal-md">
-                                    <div class="modal-content">
-
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Confirmation</h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <textarea class="w-100" name="reason" col="30" row="10">
-                                        Please leave us a reason
-                                    </textarea>
-                                        </div>
-
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                                                <a href="Quote.html">Submit</a>
-                                            </button>
-                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                                                Cancel
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <img src="/img/collection/summer/s1.jpg" alt="">
-                        </div>
+
                     </div>
-
-
-
-                    <hr>
-                    <div class="bottom-note">
-                        <div class="note">
-                            <p>Note</p>
-                            <p>
-                                As the main material price and diamond price is updated by time,
-                                today's quote will be different from tomorrow's quote</p>
-                            <p>
-                                You will find the link to the prior quotes to compare with the updated quote.
-                            </p>
-                            <p>The quote you choose will be the final one. You can <span>NOT</span>
-                                choose the prior quotes.
-                            </p>
-                            <p>The maximum number of quotes is <span>7 quotes</span>. After 7 days, your request
-                                will be
-                                automatically canceled
-                            </p>
-                            <p>
-                                Please choose the best deal as soon as possible.
-                                Or if you have some issue with the quote, please leave us the reason
-                                for us to support you as soon as possible
-                            </p>
-                            <p>Thank you for choosing our service!</p>
-                        </div>
-                    </div>
-
-
-                    <!--Imports a model-viewer JavaScript code -->
-                    <!--It helps to handle how the 3D Object would be displayed -->
-                    <script type="module"
-                        src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-                    <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
-
-                    <hr>
                 </div>
 
             </div>
         </div>
     </div>
-
-
 
 
     <!--Page footer-->
@@ -350,7 +563,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h2 class="footer_logo">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b" class="logo" /> Kira
+                                <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b"
+                                    class="logo" /> Kira
                                 Jewelry
                             </h2>
                         </div>
@@ -425,19 +639,97 @@
                 </div>
                 <div id="contact" class="copyright col-md-4">
                     <div class="contact_footer">
-                        <a class="twitter"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
-                        <a class="facebook"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
-                        <a class="linkedin"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
-                        <a class="youtube"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
-                        <a class="instagram"><img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
+                        <a class="twitter"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
+                        <a class="facebook"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
+                        <a class="linkedin"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
+                        <a class="youtube"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
+                        <a class="instagram"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    <script>
+        function upload() {
+
+            const fileUploadInput = document.querySelector('.file-uploader');
+
+            if (!fileUploadInput.value) {
+                return;
+            }
+            const image = fileUploadInput.files[0];
+            if (!image.type.includes('image')) {
+                return alert('Only images are allowed!');
+            }
+            if (image.size > 10_000_000) {
+                return alert('Maximum upload size is 10MB!');
+            }
+
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(image);
+
+            fileReader.onload = (fileReaderEvent) => {
+                const profilePicture = document.querySelector('.profile-picture');
+                profilePicture.style.backgroundImage = `url(${fileReaderEvent.target.result})`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const awaitMessage = document.getElementById('await-message');
+            const CODsuccessMessage = document.getElementById('CODsuccess-message');
+            const update_deliveredMessage = document.getElementById('update_delivered-message');
+
+            if (urlParams.has('approved')) {
+                successMessage.classList.remove('close');
+                successMessage.classList.add('open');
+                setTimeout(() => {
+                    successMessage.classList.remove('open');
+                    successMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('reject')) {
+                errorMessage.classList.remove('close');
+                errorMessage.classList.add('open');
+                setTimeout(() => {
+                    errorMessage.classList.remove('open');
+                    errorMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('await')) {
+                awaitMessage.classList.remove('close');
+                awaitMessage.classList.add('open');
+                setTimeout(() => {
+                    awaitMessage.classList.remove('open');
+                    awaitMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('CODsuccess')) {
+                CODsuccessMessage.classList.remove('close');
+                CODsuccessMessage.classList.add('open');
+                setTimeout(() => {
+                    CODsuccessMessage.classList.remove('open');
+                    CODsuccessMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('update_delivered')) {
+                update_deliveredMessage.classList.remove('close');
+                update_deliveredMessage.classList.add('open');
+                setTimeout(() => {
+                    update_deliveredMessage.classList.remove('open');
+                    update_deliveredMessage.classList.add('close');
+                }, 2000);
+            }
+        });
+
+    </script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
+
 </body>
 
 </html>

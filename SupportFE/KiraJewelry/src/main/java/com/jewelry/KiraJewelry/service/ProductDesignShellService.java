@@ -12,7 +12,7 @@ public class ProductDesignShellService {
     @Autowired
     private ProductDesignShellRepository productDesignShellRepository;
 
-    public ProductDesignShell findByMaterialIdAndWeight(int materialId, Float weight) {
+    public ProductDesignShell findByMaterialIdAndWeight(int materialId, int weight) {
         return productDesignShellRepository.findByMaterialIdAndWeight(materialId, weight);
     }
 }

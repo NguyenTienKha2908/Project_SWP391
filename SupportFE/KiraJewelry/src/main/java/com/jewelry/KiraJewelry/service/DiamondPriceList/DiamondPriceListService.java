@@ -42,7 +42,7 @@ public class DiamondPriceListService {
                 .collect(Collectors.toList());
     }
 
-    public List<Float> getCaratWeightsByOrigin(String origin) {
+    public List<Double> getCaratWeightsByOrigin(String origin) {
         return diaPriceListRepository.findByOrigin(origin)
                 .stream()
                 .map(DiamondPriceList::getCarat_Weight_From)
@@ -50,20 +50,24 @@ public class DiamondPriceListService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getColorsByOriginAndCaratWeight(String origin, float caratWeight) {
+    public List<String> getColorsByOriginAndCaratWeight(String origin, double caratWeight) {
         return diaPriceListRepository.findDistinctColorsByOriginAndCaratWeight(origin, caratWeight);
     }
 
-    public List<String> getClaritiesByOriginCaratWeightAndColor(String origin, float caratWeight, String color) {
+    public List<String> getClaritiesByOriginCaratWeightAndColor(String origin, double caratWeight, String color) {
         return diaPriceListRepository.findDistinctClaritiesByOriginCaratWeightAndColor(origin, caratWeight, color);
     }
 
-    public List<String> getCutsByOriginCaratWeightColorAndClarity(String origin, float caratWeight, String color, String clarity) {
-        return diaPriceListRepository.findDistinctCutsByOriginCaratWeightColorAndClarity(origin, caratWeight, color, clarity);
+    public List<String> getCutsByOriginCaratWeightColorAndClarity(String origin, double caratWeight, String color,
+            String clarity) {
+        return diaPriceListRepository.findDistinctCutsByOriginCaratWeightColorAndClarity(origin, caratWeight, color,
+                clarity);
     }
 
-    public DiamondPriceList getPriceByDetails(String origin, float caratWeight, String color, String clarity, String cut) {
-        DiamondPriceList priceList = diaPriceListRepository.findByOriginCaratWeightColorClarityAndCut(origin, caratWeight, color, clarity, cut);
+    public DiamondPriceList getPriceByDetails(String origin, double caratWeight, String color, String clarity,
+            String cut) {
+        DiamondPriceList priceList = diaPriceListRepository.findByOriginCaratWeightColorClarityAndCut(origin,
+                caratWeight, color, clarity, cut);
         if (priceList != null) {
             System.out.println("Fetched Price: " + priceList.getPrice()); // Log the fetched price
         } else {
@@ -72,17 +76,7 @@ public class DiamondPriceListService {
         return priceList;
     }
 
-
-    public DiamondPriceList getDiamondPrice(String color, String clarity, String cut, String origin,
-            float carat_Weight) {
-        return diaPriceListRepository.findByOriginCaratWeightColorClarityAndCut(origin, carat_Weight, color, clarity, cut);
-    }
-
-    public DiamondPriceList getDiamondPriceList(String color, String clarity, String cut, String origin) {
-        return diaPriceListRepository.findDiamondPriceList(color, clarity, cut, origin);
-    }
-
-    public List<DiamondPriceList> findPriceListByCriteria(float caratWeight, String color, String clarity,
+    public List<DiamondPriceList> findPriceListByCriteria(double caratWeight, String color, String clarity,
             String cut, String origin) {
         return diaPriceListRepository.findPriceListByCriteria(caratWeight, color, clarity, cut, origin);
     }

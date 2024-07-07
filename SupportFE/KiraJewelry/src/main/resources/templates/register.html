@@ -45,9 +45,6 @@
 
 <body>
 
-    <!-- <div class="message" th:if="${message != null}">
-        [[${message}]]
-    </div> -->
     <div class="mess-container" th:if="${param.success}">
         <div class="mess-content close" id="success-message">
             <div class="toast-header">
@@ -72,8 +69,8 @@
             </div>
             <div class="toast-body" style="color:#b10101">
                 <p th:each="error : ${error.values()}" th:text="${error}"></p>
-                <!-- <p th:if="${userexist}">Registered Failed: Email is Taken</p>
-                <p th:if="${fullNameError}">Invalid Full Name: [[${fullNameError}]]</p>
+                 <p th:if="${userexist}">Registered Failed: Email is Taken</p>
+                <!--<p th:if="${fullNameError}">Invalid Full Name: [[${fullNameError}]]</p>
                 <p th:if="${emailError}">[[${emailError}]]</p>
                 <p th:if="${passwordError}">Invalid Password: [[${passwordError}]]</p>
                 <p th:if="${phoneError}">Invalid Phone: [[${phoneError}]]</p> -->

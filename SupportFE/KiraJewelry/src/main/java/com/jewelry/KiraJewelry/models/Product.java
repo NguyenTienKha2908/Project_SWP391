@@ -33,20 +33,12 @@ public class Product {
     @Column(name = "product_Code", nullable = false)
     private String product_Code;
 
-    // @OneToOne
-    // @JoinColumn(name="Category_Id", nullable = false)
-    // private Category category;
-
-    // @OneToOne
-    // @JoinColumn(name="Collection_Id", nullable = true)
-    // private Collection collection;
-
     @OneToOne
-    @JoinColumn(name="Category_Id", nullable = true)
+    @JoinColumn(name = "Category_Id")
     private Category category;
 
     @OneToOne
-    @JoinColumn(name="Collection_Id", nullable = true)
+    @JoinColumn(name = "Collection_Id")
     private Collection collection;
 
     @Column(name = "Description", nullable = true)
@@ -61,7 +53,7 @@ public class Product {
     @Column(name = "Status", nullable = true)
     private boolean status;
 
-    @Column(name = "Img_Url", nullable = true)
-    private String img_Url;
+    // @Column(name = "Img_Url", nullable = true)
+    // private String img_Url;
 
 }

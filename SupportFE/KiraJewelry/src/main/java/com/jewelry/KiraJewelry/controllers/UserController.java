@@ -67,33 +67,16 @@ public class UserController {
             for (FieldError err : bindingResult.getFieldErrors()) {
                 errors.put(err.getField(), err.getDefaultMessage());
             }
+            if (redirectAttributes.getFlashAttributes().containsKey("userexist")) {
+                redirectAttributes.addFlashAttribute("userexist", redirectAttributes.getAttribute("userexist"));
+            }
             redirectAttributes.addFlashAttribute("error", errors);
             return "redirect:/registration?error"; // Add this return statement to handle the case when there are
                                                    // binding errors
         }
-
-        // Validate fullname field for containing numbers
-        if (containsNumbers(registerDto.getFullname())) {
-            redirectAttributes.addFlashAttribute("fullNameError", "Full Name cannot contain number!");
-            return "redirect:/registration?error";
-        }
         // Validate phone number length
         if (registerDto.getPhone().length() != 10) {
             redirectAttributes.addFlashAttribute("phoneError", "Phone number must be exactly 10 digits");
-            return "redirect:/registration?error";
-        }
-
-        // Validate email format
-        // if (!isValidEmail(registerDto.getEmail())) {
-        // // Add error message as flash attribute for redirection
-        // redirectAttributes.addFlashAttribute("emailError", "Invalid Email Format");
-        // return "redirect:/registration?error";
-        // }
-
-        // Validate password complexity
-        if (!isValidPassword(registerDto.getPassword())) {
-            redirectAttributes.addFlashAttribute("passwordError",
-                    "Password must have at least 1 special character, 1 uppercase letter, and 1 digit");
             return "redirect:/registration?error";
         }
 
@@ -109,23 +92,6 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message", "Registered Successfully!");
             return "redirect:/registration?success";
         }
-
-    }
-
-    // Validate fullName
-    private boolean containsNumbers(String str) {
-        return str != null && str.matches(".*\\d.*");
-    }
-
-    // Validate email
-    // private boolean isValidEmail(String email) {
-    // return email != null &&
-    // email.matches("[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|example\\.com|fpt\\.edu\\.vn)");
-    // }
-
-    // Validate password
-    private boolean isValidPassword(String password) {
-        return password != null && password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$");
     }
 
     @GetMapping("/users")

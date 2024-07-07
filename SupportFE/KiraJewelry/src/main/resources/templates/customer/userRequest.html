@@ -14,7 +14,7 @@
 
 <body>
   <!--Page header-->
-  <header>
+  <header id="myHeader">
     <div class="top_header">
       <h1 class="header_logo">
         <a th:href="@{/}"><img
@@ -24,22 +24,21 @@
       <div class="tools_header">
         <div>
           <span th:if="${session.customerName != null}">
-            <a th:href="@{/userRequest(customerName=${session.customerName})}"> Welcome, <span
+            <a th:href="@{/userRequests}"> Welcome, <span
                 th:text="${session.customerName}"></span></a>
             |
             <a th:href="@{/logout}">Log out</a>
           </span>
           <span th:if="${session.customerName == null}">
-            <a th:href="@{/login}"><img class="img-b"
-                th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_profile.svg?alt=media&token=f445f94a-a2f3-43b4-8195-d9ad3df02a12}" />
+            <a th:href="@{/login}">
               Log in</a>
           </span>
         </div>
 
-        <a th:href="@{/currentOrder}" class="cart"><img
-            th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7}" /></a>
+        <a th:href="@{/userOrders}" class="cart"><img
+            src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
         <a th:href="@{/}" class="search"><img
-            th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b}" /></a>
+            src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
       </div>
     </div>
     <nav class="home_categories">
@@ -58,54 +57,91 @@
           </a>
           <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
             <li class="dropdown-item">
-              <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
-                Jewelry Now</a>
-              <a th:href="@{/login}" th:unless="${session.customerName != null}" class="sidebar-link">Order Jewelry
-                Now</a>
+              <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">
+                Order Jewelry Now
+              </a>
             </li>
             <li class="dropdown-item">
-              <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+              <a th:href="@{/customizeJewelry}" th:if="${session.customerName != null}" class="sidebar-link">
+                Customize Your Jewelry
+              </a>
             </li>
           </ul>
         </li>
-        <li><a href="#gemstones">Gemstones</a></li>
-        <li><a href="/html/price/Material.html">Materials</a></li>
-        <li><a href="#education">Education</a></li>
+        <li class="dropdown">
+          <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <span>Diamonds</span>
+          </a>
+          <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+            <li class="dropdown-item">
+              <a th:href="@{/customerDiamondsPage}" th:if="${session.customerName != null}" class="sidebar-link">
+                All Diamonds
+              </a>
+            </li>
+            <li class="dropdown-item">
+              <a th:href="@{/viewCustomerDiaPriceListPage}" th:if="${session.customerName != null}"
+                class="sidebar-link">
+                Diamonds Price List
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <span>Materials</span>
+          </a>
+          <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+            <li class="dropdown-item">
+              <a th:href="@{/viewCustomerMaterialsPage}" th:if="${session.customerName != null}" class="sidebar-link">
+                All Materials
+              </a>
+            </li>
+            <li class="dropdown-item">
+              <a th:href="@{/viewCustomerMaterialPriceListPage}" th:if="${session.customerName != null}"
+                class="sidebar-link">
+                Materials Price List
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li><a th:href="@{#education}">Education</a></li>
       </ul>
     </nav>
   </header>
 
   <!--Page information-->
-  <!-- <div class="top-cover"></div> -->
   <div class="container-fluid px-5">
     <div class="row">
       <div class="col-md-3">
         <aside id="sidebar">
           <ul class="sidebar-nav">
             <li class="sidebar-item">
-              <a href="Profile.html" class="sidebar-link">
+              <a href="Profile.html" class="sidebar-link mainUp">
                 <span>Profile</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a href="History.html" class="sidebar-link">
+              <a th:href="@{/userHistoryOrders}" class="sidebar-link mainUp">
                 <span>History Orders</span>
               </a>
             </li>
-            <li class="active sidebar-item">
-              <a href="CurrentOrder.html" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                data-bs-target="#auth1" aria-expanded="false" aria-controls="auth1">
+            <li class="active-mainUp sidebar-item">
+              <a class="sidebar-link mainUp collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#auth1"
+                aria-expanded="false" aria-controls="auth1">
                 <span>Current Order</span>
               </a>
               <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item">
-                  <a th:href="@{/userRequest(customerName=${session.customerName})}" class="sidebar-link">Request</a>
+                  <a th:href="@{/userRequests}" class="active-mini-link sidebar-link mainUp">Requests</a>
                 </li>
                 <li class="sidebar-item">
-                  <a th:href="@{/userQuote(customerName=${session.customerName})}" class="sidebar-link">Quote</a>
+                  <a th:href="@{/userQuotes}" class="sidebar-link mainUp">Quotes</a>
                 </li>
                 <li class="sidebar-item">
-                  <a th:href="@{/userOrder(customerName=${session.customerName})}" class="sidebar-link">Order</a>
+                  <a th:href="@{/userOrders}" class="sidebar-link mainUp">Orders</a>
+                </li>
+                <li class="sidebar-item">
+                  <a th:href="@{/userCustomizedOrders}" class="sidebar-link mainUp">Customized Jewelry</a>
                 </li>
               </ul>
             </li>
@@ -153,9 +189,9 @@
                 </div>
                 <div class="information">
                   <h2>Sales Staff</h2>
-                  <p th:if="${productionOrder.sales_Staff_Id != null}" th:text="${sale_staff_name}">
+                  <p th:if="${productionOrder.sales_Staff != null}" th:text="${sale_staff_name}">
                   </p>
-                  <p th:if="${productionOrder.sales_Staff_Id == null}" name="staff" id="staff">
+                  <p th:if="${productionOrder.sales_Staff == null}" name="staff" id="staff">
                     Sales staff will contact you soon!
                   </p>
                 </div>
@@ -317,6 +353,18 @@
       </div>
     </div>
   </footer>
+  <script>
+    window.onscroll = function () { myFunction() };
+    var header = document.getElementById("myHeader");
+    var sticky = header.offsetTop;
+    function myFunction() {
+      if (window.pageYOffset > sticky) {
+        header.classList.add("sticky");
+      } else {
+        header.classList.remove("sticky");
+      }
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
     crossorigin="anonymous"></script>

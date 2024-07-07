@@ -1,8 +1,6 @@
 package com.jewelry.KiraJewelry.controllers.Material;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,34 +8,29 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jewelry.KiraJewelry.crawler.CrawlerData;
+import com.jewelry.KiraJewelry.crawler.CrawlerService;
 import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 
 import jakarta.validation.Valid;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class MaterialController {
 
-    private final Path rootLocation = Paths.get("upload-dir");
-
     @Autowired
     ImageService imageService;
 
     @Autowired
     private MaterialService materialService;
+
+    @Autowired
+    private CrawlerService crawlerService;
 
     @GetMapping("/materials")
     public String viewMaterialsPage(Model model) {
@@ -50,7 +43,7 @@ public class MaterialController {
         // Iterate through each material to get its image URL
         for (Material material : allMaterials) {
             try {
-                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterialId()));
+                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
                 imagesByMaterials.add(imageUrl);
                 System.out.println(imageUrl);
             } catch (IOException ex) {
@@ -94,7 +87,7 @@ public class MaterialController {
     public String showFormForUpdateMaterial(@PathVariable(value = "id") int id, Model model) throws IOException {
         if (!model.containsAttribute("material")) {
             Material material = materialService.getMaterialById(id);
-            String url = imageService.getImgByMaterialID(String.valueOf(material.getMaterialId()));
+            String url = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
 
             model.addAttribute("img_Url", url);
             model.addAttribute("material", material);
@@ -108,7 +101,7 @@ public class MaterialController {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.material", result);
             redirectAttributes.addFlashAttribute("material", material);
-            return "redirect:/showFormForUpdateMaterial/" + material.getMaterialId();
+            return "redirect:/showFormForUpdateMaterial/" + material.getMaterial_Id();
         }
 
         materialService.saveMaterial(material);
@@ -161,6 +154,7 @@ public class MaterialController {
                 redirectAttributes.addFlashAttribute("message", "Material not found.");
             } else {
                 materialService.deleteMaterialById(id);
+                imageService.deleteImage(imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id())));
                 redirectAttributes.addFlashAttribute("message", "Material deleted successfully.");
             }
         } catch (Exception e) {
@@ -172,14 +166,10 @@ public class MaterialController {
     private boolean handleImageUpload(Material material, MultipartFile imgFile, RedirectAttributes redirectAttributes) {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
-                if (!Files.exists(rootLocation)) {
-                    Files.createDirectories(rootLocation);
-                }
 
-                String url = imageService.upload(imgFile, "Material", String.valueOf(material.getMaterialId()));
+                String url = imageService.upload(imgFile, "Material", String.valueOf(material.getMaterial_Id()));
                 return true;
-                // material.setImgUrl(url);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
             }
         }
@@ -189,12 +179,8 @@ public class MaterialController {
     private boolean handleImageUpdate(Material material, MultipartFile imgFile, RedirectAttributes redirectAttributes) {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
-                if (!Files.exists(rootLocation)) {
-                    Files.createDirectories(rootLocation);
-                }
-
                 // Get the old image URL
-                String oldUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterialId()));
+                String oldUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
 
                 // Delete the old image if it exists
                 if (oldUrl != null && !oldUrl.isEmpty()) {
@@ -216,4 +202,30 @@ public class MaterialController {
         return false;
     }
 
+    @GetMapping("/viewCustomerMaterialsPage")
+    public String viewCustomerMaterialsPage(Model model) {
+        // Get all materials
+        //crawlerService.crawlAndSaveData();
+        List<Material> allMaterials = materialService.getAllMaterials();
+
+        // Initialize list to hold image URLs for each material
+        List<String> imagesByMaterials = new ArrayList<>();
+
+        // Iterate through each material to get its image URL
+        for (Material material : allMaterials) {
+            try {
+                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
+                imagesByMaterials.add(imageUrl);
+                System.out.println(imageUrl);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
+        // Add lists to the model
+        model.addAttribute("imagesByMaterials", imagesByMaterials);
+        model.addAttribute("listMaterials", allMaterials);
+        return "price/customerMaterialsPage";
+    }
 }

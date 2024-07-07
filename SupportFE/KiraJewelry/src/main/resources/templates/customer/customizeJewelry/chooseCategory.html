@@ -12,17 +12,20 @@
 
     <div class="wrap">
         <div class="content">
-            <h1>Pick Category </h1>
+            <h1>Pick Category</h1>
             <p>Seeking the perfect ring, or another type of jewelry?</p>
 
-            <form th:action="@{/saveCustomerCategory}" method="post">
+            <form th:action="@{/saveCustomerCategory}" method="post" onsubmit="return validateCategoryForm()">
+                <input type="hidden" name="productOrderId" value="${productOrderId}">
+                <input type="hidden" name="productId" th:value="${productId}" />
                 <div class="img-container">
-                    <div th:each="category : ${categories}" class="category">
+                    <div th:each="category, index : ${categories}" class="category">
                         <div class="img-content">
                             <input type="radio" th:id="'category-' + ${category.category_Id}" name="categoryId"
                                 th:value="${category.category_Id}" th:data-name="${category.category_Name}" />
                             <label th:for="'category-' + ${category.category_Id}">
-                                <img th:src="@{${category.img_Url}}" alt="Category Image" />
+                                <img th:src="@{${imagesByCategory[index.index]}}" alt="Category Image"
+                                    class="w-100" />
                                 <div th:text="${category.category_Name}" class="my-3"></div>
                             </label>
                         </div>
@@ -30,38 +33,61 @@
                 </div>
 
                 <div class="slidecontainer">
-                    <input type="range" min="1" max="100" value="50" class="slider" id="sizeSlider" name="size">
-                    <p>Size: <span id="sliderValue">50</span></p>
+                    <input type="range" min="1" max="100" value="" class="slider" id="sizeSlider" name="size" disabled>
+                    <p>Size: <span id="sliderValue">--</span></p>
                 </div>
 
                 <div class="button-group">
+                    <a th:href="@{/}">Back To Home</a>
                     <input type="submit" value="Next" />
                 </div>
             </form>
         </div>
-
-
-
     </div>
 
     <script>
+        var sizeSlider = document.getElementById("sizeSlider");
+        var output = document.getElementById("sliderValue");
+        var sizeSelected = false;
 
-        function toggleClass(event) {
-            event.preventDefault(); // Prevent the default action if any
+        function validateCategoryForm() {
+            var categoryInputs = document.getElementsByName("categoryId");
+            var categorySelected = false;
 
-            // Remove 'selected' class from any currently selected image
-            const currentlySelected = document.querySelector('.img-container .selected');
-            if (currentlySelected) {
-                currentlySelected.classList.remove('selected');
+            categoryInputs.forEach(function (input) {
+                if (input.checked) {
+                    categorySelected = true;
+                }
+            });
+
+            if (!categorySelected) {
+                alert("Please select a category.");
+                return false;
             }
 
-            // Add 'selected' class to the clicked image
-            var img = event.currentTarget;
-            img.classList.add('selected');
+            if (!sizeSelected || sizeSlider.value == "") {
+                alert("Please select a size.");
+                return false;
+            }
+
+            return true;
         }
 
-        var slider = document.getElementById("sizeSlider");
-        var output = document.getElementById("sliderValue");
+        function enableSizeSlider(min, max) {
+            var midValue = Math.round((parseInt(min) + parseInt(max)) / 2);
+            sizeSlider.min = min;
+            sizeSlider.max = max;
+            sizeSlider.value = midValue;
+            sizeSlider.disabled = false;
+            sizeSelected = false;
+            output.innerHTML = "--";
+        }
+
+        sizeSlider.oninput = function () {
+            sizeSelected = true;
+            output.innerHTML = this.value;
+        }
+
         var categoryInputs = document.getElementsByName("categoryId");
 
         var sizeRanges = {
@@ -76,25 +102,9 @@
             input.addEventListener('change', function () {
                 var categoryName = input.dataset.name.toLowerCase();
                 var range = sizeRanges[categoryName];
-                updateSlider(range.min, range.max);
+                enableSizeSlider(range.min, range.max);
             });
         });
-
-        slider.oninput = function () {
-            updateOutput(slider.value);
-        }
-
-        function updateSlider(min, max) {
-            slider.min = min;
-            slider.max = max;
-            slider.value = min;
-            updateOutput(slider.value);
-        }
-
-        function updateOutput(value) {
-            output.innerHTML = value;
-        }
-
     </script>
 </body>
 

@@ -8,6 +8,53 @@
     <title>Sales Staff Page</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
+    <style>
+        label {
+            font-weight: bold;
+            margin-block: 0.8em;
+            width: 150px;
+        }
+
+        th {
+            background-color: black;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: rgb(240, 240, 240);
+        }
+
+        .wrapper-order {
+            padding: 3% 6%;
+            margin: 3% 8%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        }
+
+        .mess-container {
+            .mess-content {
+                position: fixed;
+                top: 20px;
+                right: 35px;
+                z-index: 999;
+                background-color: #FFFFFF;
+                width: 30%;
+                padding: 5px 20px;
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+                border-radius: 4px;
+                transition: transform 0.75s ease-in-out;
+            }
+        }
+
+        .close {
+            transform: translateX(120%);
+        }
+
+        .open {
+            transform: translateX(-20%);
+        }
+    </style>
 </head>
 
 <body>
@@ -18,7 +65,7 @@
                 <div class="sidebar-logo">
                     <a th:href="@{#}">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
-                        alt="logo">                        <span>KIRA JEWELRY</span>
+                            alt="logo"> <span>KIRA JEWELRY</span>
                     </a>
                 </div>
             </div>
@@ -48,11 +95,11 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
-                        class="sidebar-link">
+                    <a th:if="${session.employeeName != null}"
+                        th:onclick="|location.href='@{/viewOrdersforSalesStaff}'|" class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
                             alt="materialAndGem">
-                        <span>Material & Gem</span>
+                        <span>Orders</span>
                     </a>
                 </li>
             </ul>
@@ -75,165 +122,174 @@
                     </div>
                 </div>
             </div>
-            <a class="text-decoration-none ms-4 me-4 text-dark " th:href="@{/viewRequestsforSS}">Back to Quote
+            <a class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-secondary"
+                th:href="@{/viewQuotesforSS}">Back to Quote
                 list</a>
             <div class="content">
-                <h1 style="text-align: center;">Information Customer Quotes</h1>
-                <hr>
-
-                <div th:each="productionOrder : ${listQuotes}">
-                    <div class="quote container-fluid">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="container-box col-md-12">
-                                        <h1>General Informarion</h1>
-                                        <div class="information">
-                                            <h2>Customer Id</h2>
-                                            <p th:text="${productionOrder.customer_Id}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Customer Name</h2>
-                                            <p th:text="${customer.full_Name}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Phone</h2>
-                                            <p th:text="${customer.phoneNumber}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Email</h2>
-                                            <p th:text="${user.email}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Address</h2>
-                                            <p th:text="${customer.address}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Date created</h2>
-                                            <p th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Category</h2>
-                                            <p th:text="${productionOrder.category_Id}"></p>
-                                        </div>
-                                    </div>
-                                    <div class="container-box col-md-12">
-                                        <h1>Material Informarion</h1>
-                                        <div class="information">
-                                            <h2>Material (Main)</h2>
-                                            <p th:text="${productionOrder.material_Name}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Weight</h2>
-                                            <p>
-                                            <p th:text="${productionOrder.material_Weight}"></p> <span
-                                                style="color: grey; font-size: 0.7rem;">(mace)</span></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Color</h2>
-                                            <p th:text="${productionOrder.material_Color}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Price per unit</h2>
-                                            <p>$ 100.99</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Material (Side)</h2>
-                                            <p th:text="${productionOrder.side_Material_Cost}"></p>
-                                        </div>
-                                        <h3>Total Price: <span>$ 350.99</span></h3>
-                                    </div>
-                                    <div class="container-box col-md-12">
-                                        <h1>Other Informarion</h1>
-                                        <div class="information">
-                                            <h2>Production</h2>
-                                            <p th:text="${productionOrder.production_Amount}"></p>
-                                        </div>
-                                        <h3>Total Price: <span>$ 350.99</span></h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="right-container-box col-md-12">
-                                        <h1>Diamond Informarion</h1>
-                                        <div class="information">
-                                            <h2>Gemstone Code</h2>
-                                            <p th:text="${productionOrder.gem_Id}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Gemstone ID</h2>
-                                            <p th:text="${productionOrder.gem_Id}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Gemstone Weight</h2>
-                                            <p th:text="${productionOrder.gem_Weight}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Gemstone Color</h2>
-                                            <p th:text="${productionOrder.gem_Color}"></p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Origin</h2>
-                                            <p>Vietnam</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Cut</h2>
-                                            <p>Very Good</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Color</h2>
-                                            <p>F</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Carat</h2>
-                                            <p>0.46 ct</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Clarity</h2>
-                                            <p>VVS1</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Propositions</h2>
-                                            <p>Excellent</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Polish</h2>
-                                            <p>Excellent</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Symmetry</h2>
-                                            <p>Excellent</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Fluorescence</h2>
-                                            <p>Excellent</p>
-                                        </div>
-                                        <div class="information">
-                                            <h2>Diamond (Side)</h2>
-                                            <p th:text="${productionOrder.side_Gem_Cost}"></p>
-                                        </div>
-                                        <h3>Total Price: <span>$ 350.99</span></h3>
-                                    </div>
-                                    <div class="right-container-box col-md-12">
-
-                                        <h1>Total Price: <span>$ 350.99</span></h1>
-
-
-                                        <div class="btn-group">
-                                            <a href="edit-one-quote.html">Edit</a>
-                                            <a href="quotes.html">Back</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h1 class="text-center">View Quotes</h1>
+                <div class="wrapper-order">
+                    <h3>General Information</h3>
+                    <table class="border-0">
+                        <tr>
+                            <td><label for="">Customer ID</label></td>
+                            <td><span th:text="${customer.customer_Id}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Full Name</label></td>
+                            <td><span th:text="${customer.full_Name}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Phone Number</label></td>
+                            <td><span th:text="${customer.phoneNumber}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Address</label></td>
+                            <td><span th:text="${customer.address}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Email</label></td>
+                            <td><span th:text="${customer.user.email}"></span></td>
+                        </tr>
+                    </table>
 
                 </div>
-            </div>
+                <div class="wrapper-order">
+                    <h3>Material Information</h3>
+                    <table class="border-0">
+                        <tr>
+                            <td><label for="">Material Code</label></td>
+                            <td><span th:text="${material.material_Code}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Material Name</label></td>
+                            <td><span th:text="${material.material_Name}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Weight</label></td>
+                            <td><span th:text="${productMaterial.material_Weight}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Price</label></td>
+                            <td><span th:text="${productMaterial.q_Price}"></span> - (<span
+                                    th:text="${materialPriceList.price}"></span>/mace)</td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Eff Date</label></td>
+                            <td><span th:text="${materialPriceList.eff_Date}"></span></td>
+                        </tr>
 
+                    </table>
+                </div>
+
+                <div class="wrapper-order">
+                    <h3>Diamond Information</h3>
+                    <table class="border-0">
+                        <tr>
+                            <td><label for="">Diamond Code</label></td>
+                            <td><span th:text="${diamond.dia_Code}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Diamond Name</label></td>
+                            <td><span th:text="${diamond.dia_Name}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Origin</label></td>
+                            <td><span th:text="${diamond.origin}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Carat Weight</label></td>
+                            <td><span th:text="${diamond.carat_Weight}"></span> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Color</label></td>
+                            <td><span th:text="${diamond.color}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Clarity</label></td>
+                            <td><span th:text="${diamond.clarity}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Cut</label></td>
+                            <td><span th:text="${diamond.cut}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Proportions</label></td>
+                            <td><span th:text="${diamond.proportions}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Polish</label></td>
+                            <td><span th:text="${diamond.polish}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Symmetry</label></td>
+                            <td><span th:text="${diamond.symmetry}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Fluorescence</label></td>
+                            <td><span th:text="${diamond.fluorescence}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Price</label></td>
+                            <td><span th:text="${diamond.q_Price}"></span>- (<span
+                                    th:text="${diamondPriceList.carat_Weight_From}"></span> - <span
+                                    th:text="${diamondPriceList.carat_Weight_To}"></span> => <span
+                                    th:text="${diamondPriceList.price}"></span> )</td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Eff Date</label></td>
+                            <td><span th:text="${diamondPriceList.eff_Date}"></span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="wrapper-order">
+                    <h3>Other Information</h3>
+                    <table class="border-0">
+                        <tr>
+                            <td><label for="">Production Price</label></td>
+                            <td><span th:text="${productionOrder.q_Production_Amount}"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="">Total price</label></td>
+                            <td><span th:text="${productionOrder.q_Total_Amount}"></span></td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const successMessage = document.getElementById('success-message');
+                    const errorMessage = document.getElementById('error-message');
+                    const logoutMessage = document.getElementById('logout-message');
+
+                    if (urlParams.has('success')) {
+                        successMessage.classList.remove('close');
+                        successMessage.classList.add('open');
+                        setTimeout(() => {
+                            successMessage.classList.remove('open');
+                            successMessage.classList.add('close');
+                        }, 2000);
+                    } else if (urlParams.has('error')) {
+                        errorMessage.classList.remove('close');
+                        errorMessage.classList.add('open');
+                        setTimeout(() => {
+                            errorMessage.classList.remove('open');
+                            errorMessage.classList.add('close');
+                        }, 2000);
+                    } else if (urlParams.has('logout')) {
+                        logoutMessage.classList.remove('close');
+                        logoutMessage.classList.add('open');
+                        setTimeout(() => {
+                            logoutMessage.classList.remove('open');
+                            logoutMessage.classList.add('close');
+                        }, 2000);
+                    }
+                });
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
