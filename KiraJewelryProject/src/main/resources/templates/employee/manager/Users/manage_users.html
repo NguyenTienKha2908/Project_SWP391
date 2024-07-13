@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Section</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d4d8 3px solid;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .content {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 5px #999;
+            margin: 20px 10px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .btn:hover {
+            background-color: #3e8e41;
+            box-shadow: 0 3px #666;
+        }
+        .btn:active {
+            background-color: #3e8e41;
+            box-shadow: 0 3px #666;
+            transform: translateY(4px);
+        }
+        .btn-secondary {
+            background-color: #555;
+        }
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        .btn-secondary:active {
+            background-color: #444;
+        }
+        .message {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Welcome to Manage Users</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+        <div class="content">
+            <h2>Manage Users</h2>
+            <div class="button-group">
+                <a th:href="@{/customers}" class="btn btn-secondary">Manage Customers</a>
+                <a th:href="@{/staff}" class="btn btn-secondary">Manage Staff</a>
+                <a th:href="@{/}" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

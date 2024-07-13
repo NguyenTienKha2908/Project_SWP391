@@ -1,0 +1,71 @@
+body {
+    margin: 5%;
+    background-color: #000000;
+}
+
+.link {
+    margin: 5% 8% 0% 8%;
+}
+
+
+.bottom-product-info {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.wrapper-order {
+    margin: 2% 0 10% 0%;
+    left: 50%;
+    position: relative;
+    top: 5%;
+    transform: translateY(0);
+    transform: translate(-50%, 0%);
+    background-color: #fcfaf9;
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    /* padding: 3% 7%; */
+    width: 85%;
+
+    .d-flex {
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f7b050;
+        color: #ffffff;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 7% 10%;
+
+        h1 {
+            font-weight: 400;
+        }
+
+    }
+
+    .middle-content {
+        padding: 0 10%;
+
+        .other-diamond-info {
+            color: #949494;
+            font-style: italic;
+            font-size: 1rem;
+        }
+    }
+
+    .bottom-content {
+        padding: 7% 10%;
+
+    }
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+    }
+}
+
+@page {
+    size: a4;
+    margin: 0;
+}
