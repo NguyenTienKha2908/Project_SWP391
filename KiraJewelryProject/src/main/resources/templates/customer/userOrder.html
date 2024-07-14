@@ -76,6 +76,32 @@
         </div>
     </div>
 
+    <div class="mess-container" th:if="${param.successPaypal}">
+        <div class="mess-content open" id="successPaypal-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#01b10a">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b101">
+                <p>Thank you! Your order has been deposited successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.cancelPaypal}">
+        <div class="mess-content open" id="cancelPaypal-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Thank you! Your order has been deposited successfully!</p>
+            </div>
+        </div>
+    </div>
+
 
     <!--Page header-->
     <header>
@@ -108,7 +134,7 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -171,7 +197,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#education">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -183,7 +209,7 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}"
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}" 
                                 class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
@@ -363,7 +389,8 @@
                                     <a
                                         th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
                                         through Bank Transfer</a>
-                                    <a href="#">Pay through Paypal</a>
+                                    <a th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                        through Paypal</a>
                                 </div>
                                 <hr>
                                 <div class="bottom-note">
@@ -522,9 +549,11 @@
                                             th:href="@{/CODInfoForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">
                                             Pay COD</a>
                                         <a
-                                            th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                            th:href="@{/bankTransferHandleForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">Pay
                                             through Bank Transfer</a>
-                                        <a href="#">Pay through Paypal</a>
+                                        <a
+                                            th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                            through Paypal</a>
                                     </div>
                                 </div>
 
@@ -697,6 +726,7 @@
             const awaitMessage = document.getElementById('await-message');
             const CODsuccessMessage = document.getElementById('CODsuccess-message');
             const update_deliveredMessage = document.getElementById('update_delivered-message');
+            const cancelPaypalMessage = document.getElementById('cancelPaypal-message');
 
             if (urlParams.has('approved')) {
                 successMessage.classList.remove('close');
@@ -732,6 +762,13 @@
                 setTimeout(() => {
                     update_deliveredMessage.classList.remove('open');
                     update_deliveredMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('cancelPaypal')) {
+                cancelPaypalMessage.classList.remove('close');
+                cancelPaypalMessage.classList.add('open');
+                setTimeout(() => {
+                    cancelPaypalMessage.classList.remove('open');
+                    cancelPaypalMessage.classList.add('close');
                 }, 2000);
             }
         });

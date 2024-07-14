@@ -44,7 +44,7 @@
             <ul>
                 <li><a class="active-link" th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -108,7 +108,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#education">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -120,7 +120,7 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a href="Profile.html" class="sidebar-link">
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}"  class="sidebar-link">
                                 <span>Profile</span>
                             </a>
                         </li>

@@ -41,7 +41,7 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -104,7 +104,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#education}">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -116,7 +116,7 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}"
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}"
                                 class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
@@ -173,7 +173,7 @@
                                 <div class="product-content">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <img th:src="@{${imagesByCategory[index.index]}}" alt="Category Image"
+                                            <img th:src="@{${productionOrder.category.img_Url}}" alt="Category Image"
                                                 style="width:100%" />
                                             <p style="text-align: center; font-size:0.75rem;">This is only an
                                                 illustration of your order</p>
@@ -193,7 +193,7 @@
 
                                             </p>
                                             <hr class="my-3">
-                                            <p>
+                                            <p th:if="${diamonds != null}">
                                                 <span th:text="${diamonds[index.index].dia_Name}"></span>,
                                                 <span th:text="${diamonds[index.index].carat_Weight}"></span> ct,
                                                 <span th:text="${diamonds[index.index].origin}"></span>,
@@ -201,7 +201,7 @@
                                                 <span th:text="${diamonds[index.index].clarity}"></span>,
                                                 <span th:text="${diamonds[index.index].cut}"></span> cut,
                                             </p>
-                                            <div class="other-diamond-info">
+                                            <div  class="other-diamond-info">
                                                 <p>Proportion: <span
                                                         th:text="${diamonds[index.index].proportions}"></span></p>
                                                 <p>Symmetry: <span th:text="${diamonds[index.index].symmetry}"></span>

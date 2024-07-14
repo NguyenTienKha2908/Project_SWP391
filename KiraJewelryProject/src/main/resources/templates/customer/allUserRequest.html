@@ -21,8 +21,7 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        <a th:href="@{/userRequests}"> Welcome, <span
-                                th:text="${session.customerName}"></span></a>
+                        <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
                         |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
@@ -42,14 +41,13 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
                 </li>
                 <li class="dropdown">
-                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span>Jewelry</span>
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
@@ -106,7 +104,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#education}">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -118,8 +116,7 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}"
-                                class="sidebar-link mainUp">
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}" class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
                         </li>
@@ -139,16 +136,14 @@
                                         class="active-mini-link sidebar-link mainUp">Requests</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userQuotes}"
-                                        class="sidebar-link mainUp">Quotes</a>
+                                    <a th:href="@{/userQuotes}" class="sidebar-link mainUp">Quotes</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userOrders}"
-                                        class="sidebar-link mainUp">Orders</a>
+                                    <a th:href="@{/userOrders}" class="sidebar-link mainUp">Orders</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userCustomizedOrders}"
-                                        class="sidebar-link mainUp">Customized Jewelry</a>
+                                    <a th:href="@{/userCustomizedOrders}" class="sidebar-link mainUp">Customized
+                                        Jewelry</a>
                                 </li>
                             </ul>
                         </li>
@@ -167,6 +162,7 @@
                             <tr>
                                 <th>Request ID</th>
                                 <th>Date</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -174,6 +170,7 @@
                             <tr th:each="order, index : ${customerOrders}">
                                 <td th:text="${order.production_Order_Id}"></td>
                                 <td th:text="${order.date}"></td>
+                                <td th:text="${order.status}"></td>
                                 <td>
                                     <a th:href="@{/userRequest(orderId=${order.production_Order_Id})}"
                                         class="btn btn-secondary">View</a>

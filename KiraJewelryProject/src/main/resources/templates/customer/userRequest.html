@@ -24,7 +24,8 @@
       <div class="tools_header">
         <div>
           <span th:if="${session.customerName != null}">
-            <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
+            <a th:href="@{/userRequests}"> Welcome, <span
+                th:text="${session.customerName}"></span></a>
             |
             <a th:href="@{/logout}">Log out</a>
           </span>
@@ -44,7 +45,7 @@
       <ul>
         <li><a th:href="@{/}">Home</a></li>
         <li>
-          <a th:href="@{/}">Blogs</a>
+          <a th:href="@{/BlogList}">Blogs</a>
         </li>
         <li>
           <a th:href="@{/}">Collections</a>
@@ -103,7 +104,7 @@
             </li>
           </ul>
         </li>
-        <li><a th:href="@{#education}">Education</a></li>
+        <li><a th:href="@{/education}">Education</a></li>
       </ul>
     </nav>
   </header>
@@ -115,6 +116,7 @@
         <aside id="sidebar">
           <ul class="sidebar-nav">
             <li class="sidebar-item">
+              <a th:href="@{/profile(CustomerId=${session.customerId})}" class="sidebar-link mainUp">
               <a href="Profile.html" class="sidebar-link mainUp">
                 <span>Profile</span>
               </a>

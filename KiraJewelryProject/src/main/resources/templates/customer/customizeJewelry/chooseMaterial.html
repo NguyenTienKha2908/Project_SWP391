@@ -20,13 +20,13 @@
                     <input type="hidden" id="selectedMaterialWeight" name="selectedMaterialWeight" value="" />
                     <input type="hidden" id="selectedMaterialId" name="selectedMaterialId" value="" />
 
-                    <div th:each="material, index : ${materials}" class="material">
+                    <div th:each="material : ${materials}" class="material">
                         <div class="container-material">
                             <input type="radio" th:id="'material-' + ${material.material_Id}" name="materialId"
                                 th:value="${material.material_Id}" style="display: none;" />
                             <label th:for="'material-' + ${material.material_Id}">
                                 <div class="img-container">
-                                    <img th:src="@{${imagesByMaterials[index.index]}}" alt="Material Image"
+                                    <img th:src="@{${material.img_Url}}" alt="Material Image"
                                         class="w-100" th:attr="onclick=|toggleClass(event, ${material.material_Id})|" />
                                 </div>
                                 <div th:text="${material.material_Name}" class="my-2"></div>

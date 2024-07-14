@@ -9,9 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +26,12 @@ import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.models.Product;
 import com.jewelry.KiraJewelry.models.ProductMaterial;
 import com.jewelry.KiraJewelry.models.ProductMaterialId;
-// import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.models.ProductionOrder;
 import com.jewelry.KiraJewelry.models.User;
 import com.jewelry.KiraJewelry.service.CustomerService;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialPriceListService;
-// import com.jewelry.KiraJewelry.service.MaterialPriceListService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 import com.jewelry.KiraJewelry.service.ProductMaterialService;
 import com.jewelry.KiraJewelry.service.ProductService;
@@ -214,8 +209,6 @@ public class ProductionOrderController {
         model.addAttribute("product", productionOrder.getProduct());
 
         return "employee/sales_staff/findIngredientsPage";
-
-        // return "redirect:/viewIngredientsPage";
 
     }
 
@@ -498,7 +491,6 @@ public class ProductionOrderController {
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
         model.addAttribute("messageDiamond", messageDiamond);
-        // return "employee/sales_staff/findIngredientsPage";
         return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
@@ -541,7 +533,6 @@ public class ProductionOrderController {
         model.addAttribute("colors", colors);
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
-        // return "employee/sales_staff/findIngredientsPage";
         return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
@@ -697,9 +688,7 @@ public class ProductionOrderController {
         allOrders.addAll(deliveringOrders);
         allOrders.addAll(deliveredgOrders);
         allOrders.addAll(deliveredgOrders2);
-        allOrders.addAll(depositOrders);
         allOrders.addAll(lastdepositOrders);
-
         List<ProductionOrder> customerOrders = allOrders.stream()
                 .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
                 .collect(Collectors.toList());
@@ -765,6 +754,21 @@ public class ProductionOrderController {
         String employeeID = (String) session.getAttribute("employeeId");
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         productionOrder.setStatus("Ordered");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+        String message = "Update Status Successfully";
+        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+    }
+
+
+    @PostMapping("/confirmCustomizedDepositBySS")
+    public String confirmCustomizedDepositBySS(
+            @RequestParam("productionOrderId") String productionOrderId,
+            Model model,
+            HttpSession session) {
+        String employeeID = (String) session.getAttribute("employeeId");
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Confirmed");
 
         productionOrderService.saveProductionOrder(productionOrder);
         String message = "Update Status Successfully";

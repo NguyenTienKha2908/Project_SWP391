@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -44,7 +43,7 @@ public class ImageService {
             .load();
 
     // Add to when run deploy
-    //private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    // private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
     // Add to when run local
     String firebaseServiceKey = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
     String firebaseURL = Paths.get("src", "main", "resources", firebaseServiceKey).toString();

@@ -33,7 +33,7 @@
                 </li>
                 <li class="sidebar-item">
                     <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforManager}'|"
-                        class="active-link sidebar-link">
+                        class="active sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
                             alt="request">
                         <span>Requests</span>
@@ -186,7 +186,7 @@
                                             th:text="${productionOrder.sales_Staff}"></span>
                                         <select class="form-control-sm" th:if="${productionOrder.sales_Staff == null}"
                                             name="staff" id="staff">
-                                            <option value="">Select Sales Staff</option>
+                                            <option class="text-center" disabled selected>Select Sales Staff</option>
                                             <option th:each="staff : ${employees}" th:value="${staff.employee_Id}"
                                                 th:text="${staff.full_Name}"></option>
                                         </select>

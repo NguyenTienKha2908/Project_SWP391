@@ -34,7 +34,8 @@
 
                     </div>
                     <div class="button-group">
-                        <a th:href="@{/chooseMaterial(productId=${productId}, productOrderId=${productOrderId})}">Back</a>
+                        <a
+                            th:href="@{/chooseMaterial(productId=${productId}, productOrderId=${productOrderId})}">Back</a>
                         <input type="submit" value="Submit" />
                     </div>
                 </form>
@@ -47,21 +48,6 @@
         </div>
 
     </div>
-
-    <!-- <div class="container">
-        <h1>Choose Diamond</h1>
-        <form method="post" action="/saveDiamondRange">
-            <input type="hidden" name="productId" th:value="${productId}" />
-            <label for="minWeight">Min Weight:</label>
-            <input type="number" id="minWeight" name="minWeight" step="0.01" min="0" th:value="${minWeight}" required
-                oninput="validateMinMaxWeight()" />
-            <label for="maxWeight">Max Weight:</label>
-            <input type="number" id="maxWeight" name="maxWeight" step="0.01" min="0" th:value="${maxWeight}" required
-                oninput="validateMinMaxWeight()" />
-            <input type="submit" value="Submit" />
-        </form>
-        
-    </div> -->
 
     <script type="text/javascript">
         function validateMinMaxWeight() {
@@ -88,17 +74,14 @@
                     const diamondList = document.getElementById("diamondList");
                     diamondList.innerHTML = "";
 
-                    data.forEach(item => {
-                        const diamond = item.diamond;
-                        const imageUrl = item.imageUrl;
-
+                    data.forEach(diamond => {
                         fetch(`/getProductDesign?productId=${formData.get('productId')}`)
                             .then(response => response.json())
                             .then(productDesign => {
                                 const diamondDiv = document.createElement("div");
                                 diamondDiv.className = "diamond-item";
                                 diamondDiv.innerHTML = `
-                        <img src="${imageUrl}" alt="Diamond Image" />
+                        <img src="${diamond.img_Url}" alt="Diamond Image" />
                         <div class="content-element">
                             <p>
                                 ${diamond.carat_Weight.toFixed(2)} ct, 
@@ -111,6 +94,8 @@
                             <p>Polish: ${diamond.polish}</p>
                             <p>Symmetry: ${diamond.symmetry}</p>
                             <p>Fluorescence: ${diamond.fluorescence}</p>
+                        </div>
+
                             <div class="select-button">
                                 <form method="post" action="/selectDiamond">
                                     <input type="hidden" name="diamondId" value="${diamond.dia_Id}" />
@@ -123,14 +108,12 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
                     `;
                                 diamondList.appendChild(diamondDiv);
                             });
                     });
                 });
         });
-
 
         function selectDiamond(diamondId, productId) {
             fetch(`/getProductDesign?productId=${productId}`)

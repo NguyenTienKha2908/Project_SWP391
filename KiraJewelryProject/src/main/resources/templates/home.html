@@ -34,8 +34,7 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        <a th:href="@{/userRequests}"> Welcome, <span
-                                th:text="${session.customerName}"></span></a>
+                        <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
                         |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
@@ -55,7 +54,7 @@
             <ul>
                 <li><a class="active-link" th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -119,7 +118,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#education}">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>

@@ -9,14 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.jewelry.KiraJewelry.dto.DiamondResponse;
 import com.jewelry.KiraJewelry.models.Category;
 import com.jewelry.KiraJewelry.models.Customer;
 import com.jewelry.KiraJewelry.models.Diamond;
-import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.models.Product;
@@ -28,7 +25,6 @@ import com.jewelry.KiraJewelry.models.ProductionOrder;
 import com.jewelry.KiraJewelry.repository.MaterialRepository;
 import com.jewelry.KiraJewelry.service.CategoryService;
 import com.jewelry.KiraJewelry.service.CustomerService;
-import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialPriceListService;
 import com.jewelry.KiraJewelry.service.MaterialService;
@@ -44,11 +40,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class CustomerViewController {
@@ -86,8 +80,8 @@ public class CustomerViewController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private EmployeeService employeeService;
+    // @Autowired
+    // private EmployeeService employeeService;
 
     @Autowired
     ImageService imageService;
@@ -182,18 +176,6 @@ public class CustomerViewController {
     public String chooseCategory(@RequestParam("productId") Integer productId,
             @RequestParam("productOrderId") String productOrderId, Model model) {
         List<Category> categories = categoryService.getAllCategories();
-        List<String> imagesByCategory = new ArrayList<>();
-
-        for (Category category : categories) {
-            try {
-                String imageUrl = imageService.getImgByCateogryID(String.valueOf(category.getCategory_Id()));
-                imagesByCategory.add(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        model.addAttribute("imagesByCategory", imagesByCategory);
         model.addAttribute("categories", categories);
         model.addAttribute("productId", productId);
         model.addAttribute("productOrderId", productOrderId);
@@ -277,19 +259,6 @@ public class CustomerViewController {
     public String chooseMaterial(@RequestParam("productId") int productId,
             @RequestParam("productOrderId") String productOrderId, Model model) {
         List<Material> materials = materialRepository.findAllMaterialsInProductDesignShell();
-        List<String> imagesByMaterials = new ArrayList<>();
-
-        for (Material material : materials) {
-            try {
-                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
-                imagesByMaterials.add(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                imagesByMaterials.add(null); // Add null image URL if there's an error
-            }
-        }
-
-        model.addAttribute("imagesByMaterials", imagesByMaterials);
         model.addAttribute("materials", materials);
         model.addAttribute("productId", productId);
         model.addAttribute("productOrderId", productOrderId);
@@ -396,7 +365,7 @@ public class CustomerViewController {
     // Step 7: Save diamond
     @PostMapping("/saveDiamondRange")
     @ResponseBody
-    public ResponseEntity<List<DiamondResponse>> saveDiamondRange(
+    public ResponseEntity<List<Diamond>> saveDiamondRange(
             @RequestParam("productId") int productId,
             @RequestParam("minWeight") float minWeight,
             @RequestParam("maxWeight") float maxWeight) {
@@ -417,18 +386,7 @@ public class CustomerViewController {
 
         List<Diamond> diamonds = diamondService.findAvailableDiamondsByWeightRange(minWeight, maxWeight);
 
-        List<DiamondResponse> diamondResponses = new ArrayList<>();
-        for (Diamond diamond : diamonds) {
-            try {
-                String imageUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
-                diamondResponses.add(new DiamondResponse(diamond, imageUrl));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                diamondResponses.add(new DiamondResponse(diamond, null)); // Add null image URL if there's an error
-            }
-        }
-
-        return ResponseEntity.ok(diamondResponses);
+        return ResponseEntity.ok(diamonds);
     }
 
     @PostMapping("/selectDiamond")
@@ -551,21 +509,11 @@ public class CustomerViewController {
         // Set the status to "Customized"
         productionOrder.setStatus("Customized");
         productionOrderService.saveProductionOrder(productionOrder);
-
-        ProductMaterial productMaterial = productMaterialService.getProductMaterialByProduct_id(productId);
         Diamond diamond = diamondService.getDiamondByProductId(productId);
-        String cateUrl = imageService
-                .getImgByCateogryID(String.valueOf(product.getCategory().getCategory_Id()));
-        String materialUrl = imageService
-                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
-        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
         redirectAttributes.addAttribute("productId", productId);
         redirectAttributes.addAttribute("orderId", orderId);
         redirectAttributes.addAttribute("diamondId", diamond.getDia_Id());
-        redirectAttributes.addAttribute("cateUrl", cateUrl);
-        redirectAttributes.addAttribute("materialUrl", materialUrl);
-        redirectAttributes.addAttribute("diamondUrl", diamondUrl);
 
         return "redirect:/orderSummary";
     }
@@ -575,9 +523,6 @@ public class CustomerViewController {
             @RequestParam("productId") int productId,
             @RequestParam("orderId") String orderId,
             @RequestParam("diamondId") int diamondId,
-            @RequestParam("cateUrl") String cateUrl,
-            @RequestParam("materialUrl") String materialUrl,
-            @RequestParam("diamondUrl") String diamondUrl,
             Model model, RedirectAttributes redirectAttributes) {
 
         Product product = productService.getProductById(productId);
@@ -587,9 +532,6 @@ public class CustomerViewController {
 
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
-        model.addAttribute("cateUrl", cateUrl);
-        model.addAttribute("materialUrl", materialUrl);
-        model.addAttribute("diamondUrl", diamondUrl);
         model.addAttribute("diamond", diamond);
         model.addAttribute("material", material);
         model.addAttribute("productMaterial", productMaterial);
