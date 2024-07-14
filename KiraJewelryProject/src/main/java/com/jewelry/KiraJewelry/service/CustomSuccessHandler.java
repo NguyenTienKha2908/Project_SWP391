@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.jewelry.KiraJewelry.models.Customer;
 import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.models.User;
@@ -17,7 +15,6 @@ import com.jewelry.KiraJewelry.models.User;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Service
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {

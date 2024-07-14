@@ -150,161 +150,7 @@
                 <h1>View Information Orders</h1>
                 <hr>
                 <div class="container">
-                    <!-- <div th:each="productionOrder : ${listOrders}">
-                        <div class="quote container-fluid">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="container-box col-md-12">
-                                            <h1>General Informarion</h1>
-                                            <div class="information">
-                                                <h2>Customer Id</h2>
-                                                <p th:text="${productionOrder.customer_Id}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Customer Name</h2>
-                                                <p th:text="${customer.full_Name}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Phone</h2>
-                                                <p th:text="${customer.phoneNumber}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Email</h2>
-                                                <p th:text="${user.email}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Address</h2>
-                                                <p th:text="${customer.address}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Date created</h2>
-                                                <p th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Category</h2>
-                                                <p th:text="${productionOrder.category_Id}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="container-box col-md-12">
-                                            <h1>Material Informarion</h1>
-                                            <div class="information">
-                                                <h2>Material (Main)</h2>
-                                                <p th:text="${productionOrder.material_Name}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Weight</h2>
-                                                <p>
-                                                <p th:text="${productionOrder.material_Weight}"></p> <span
-                                                    style="color: grey; font-size: 0.7rem;">(mace)</span></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Color</h2>
-                                                <p th:text="${productionOrder.material_Color}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Price per unit</h2>
-                                                <p>$ 100.99</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Material (Side)</h2>
-                                                <p th:text="${productionOrder.side_Material_Cost}"></p>
-                                            </div>
-                                            <h3>Total Price: <span>$ 350.99</span></h3>
-                                        </div>
-                                        <div class="container-box col-md-12">
-                                            <h1>Other Informarion</h1>
-                                            <div class="information">
-                                                <h2>Production</h2>
-                                                <p th:text="${productionOrder.production_Amount}"></p>
-                                            </div>
-                                            <h3>Total Price: <span>$ 350.99</span></h3>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="right-container-box col-md-12">
-                                            <h1>Diamond Informarion</h1>
-                                            <div class="information">
-                                                <h2>Gemstone Code</h2>
-                                                <p th:text="${productionOrder.gem_Id}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Gemstone ID</h2>
-                                                <p th:text="${productionOrder.gem_Id}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Gemstone Weight</h2>
-                                                <p th:text="${productionOrder.gem_Weight}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Gemstone Color</h2>
-                                                <p th:text="${productionOrder.gem_Color}"></p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Origin</h2>
-                                                <p>Vietnam</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Cut</h2>
-                                                <p>Very Good</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Color</h2>
-                                                <p>F</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Carat</h2>
-                                                <p>0.46 ct</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Clarity</h2>
-                                                <p>VVS1</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Propositions</h2>
-                                                <p>Excellent</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Polish</h2>
-                                                <p>Excellent</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Symmetry</h2>
-                                                <p>Excellent</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Fluorescence</h2>
-                                                <p>Excellent</p>
-                                            </div>
-                                            <div class="information">
-                                                <h2>Diamond (Side)</h2>
-                                                <p th:text="${productionOrder.side_Gem_Cost}"></p>
-                                            </div>
-                                            <h3>Total Price: <span>$ 350.99</span></h3>
-                                        </div>
-                                        <div class="right-container-box col-md-12">
 
-                                            <h1>Total Price: <span>$ 350.99</span></h1>
-
-
-                                            <div class="btn-group">
-                                                <a class="btn btn-danger m-1">Reject</a>
-                                                <form method="post" action="/acceptQuote">
-                                                    <input type="hidden" name="productionOrderId"
-                                                        th:value="${production_Order_Id}" />
-                                                    <button type="submit">Accept Quote</button>
-                                                </form>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div> -->
 
                     <div th:if="${productionOrder != null}">
                         <div class="wrapper-order row justify-content-md-center mx-auto my-5">
@@ -436,7 +282,7 @@
 
                                         <select class="form-control" th:if="${productionOrder.design_Staff == null}"
                                             name="dstaff" id="dstaff">
-                                            <option value="">Select Design Staff</option>
+                                            <option value="" disabled selected>Select Design Staff</option>
                                             <option th:each="staff : ${designStaff}" th:value="${staff.employee_Id}"
                                                 th:text="${staff.full_Name}"></option>
                                         </select>
@@ -450,7 +296,7 @@
                                             th:text="${productionOrder.production_Staff}"></span>
                                         <select class="form-control" th:if="${productionOrder.production_Staff == null}"
                                             name="pstaff" id="pstaff">
-                                            <option value="">Production Sales Staff</option>
+                                            <option value="" disabled selected>Production Sales Staff</option>
                                             <option th:each="staff : ${productionStaff}" th:value="${staff.employee_Id}"
                                                 th:text="${staff.full_Name}"></option>
                                         </select>

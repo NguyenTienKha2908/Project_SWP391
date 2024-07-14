@@ -39,7 +39,7 @@
                         <span>Orders</span>
                     </a>
                 </li>
-                
+
                 <li class="sidebar-item">
                     <a th:href="@{/viewAllDesign}" class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fdashboard.svg?alt=media&token=63cd9703-6839-4fa4-81e9-ae34f1806023}"
@@ -96,9 +96,9 @@
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
-                                        <a class="mx-0"
+                                        <a class="border-0 mx-0"
                                             th:href="@{/viewInformationRequestForDE(productionOrderId=${productionOrder.production_Order_Id})}">
-                                            <button type="button">View</button>
+                                            <button class="text-decoration-none" type="button">View</button>
                                         </a>
                                         <a
                                             th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
