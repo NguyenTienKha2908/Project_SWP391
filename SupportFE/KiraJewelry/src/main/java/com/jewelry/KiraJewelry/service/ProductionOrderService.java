@@ -29,10 +29,10 @@ public class ProductionOrderService {
     productionOrderRepository.save(productionOrder);
   }
 
-  public List<ProductionOrder> getProductionOrderByStatusAndName(String status,
-      String employee_Name) {
-    return productionOrderRepository.findProductionOrderByStatusAndName(status,
-        employee_Name);
+  public List<ProductionOrder> getProductionOrderByStatusAndId(String status,
+      String employee_id) {
+    return productionOrderRepository.findProductionOrderByStatusAndId(status,
+        employee_id);
   }
 
   public List<ProductionOrder> getProductionOrderByStatusAndDEId(String status,

@@ -105,7 +105,7 @@ public class CustomerViewController {
         ProductionOrder latestProductionOrder = productionOrderService
                 .findLatestByCustomerIdAndStatusIn(customer.getCustomer_Id(), exactStatuses);
 
-        if (latestProductionOrder != null) {
+        if (latestProductionOrder != null && latestProductionOrder.getProduct() != null) {
             String status = latestProductionOrder.getStatus();
             String productionOrderId = latestProductionOrder.getProduction_Order_Id();
             int productId = latestProductionOrder.getProduct().getProduct_Id();
@@ -182,18 +182,6 @@ public class CustomerViewController {
     public String chooseCategory(@RequestParam("productId") Integer productId,
             @RequestParam("productOrderId") String productOrderId, Model model) {
         List<Category> categories = categoryService.getAllCategories();
-        List<String> imagesByCategory = new ArrayList<>();
-
-        for (Category category : categories) {
-            try {
-                String imageUrl = imageService.getImgByCateogryID(String.valueOf(category.getCategory_Id()));
-                imagesByCategory.add(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        model.addAttribute("imagesByCategory", imagesByCategory);
         model.addAttribute("categories", categories);
         model.addAttribute("productId", productId);
         model.addAttribute("productOrderId", productOrderId);
@@ -277,19 +265,6 @@ public class CustomerViewController {
     public String chooseMaterial(@RequestParam("productId") int productId,
             @RequestParam("productOrderId") String productOrderId, Model model) {
         List<Material> materials = materialRepository.findAllMaterialsInProductDesignShell();
-        List<String> imagesByMaterials = new ArrayList<>();
-
-        for (Material material : materials) {
-            try {
-                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
-                imagesByMaterials.add(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                imagesByMaterials.add(null); // Add null image URL if there's an error
-            }
-        }
-
-        model.addAttribute("imagesByMaterials", imagesByMaterials);
         model.addAttribute("materials", materials);
         model.addAttribute("productId", productId);
         model.addAttribute("productOrderId", productOrderId);
@@ -396,7 +371,7 @@ public class CustomerViewController {
     // Step 7: Save diamond
     @PostMapping("/saveDiamondRange")
     @ResponseBody
-    public ResponseEntity<List<DiamondResponse>> saveDiamondRange(
+    public ResponseEntity<List<Diamond>> saveDiamondRange(
             @RequestParam("productId") int productId,
             @RequestParam("minWeight") float minWeight,
             @RequestParam("maxWeight") float maxWeight) {
@@ -417,18 +392,7 @@ public class CustomerViewController {
 
         List<Diamond> diamonds = diamondService.findAvailableDiamondsByWeightRange(minWeight, maxWeight);
 
-        List<DiamondResponse> diamondResponses = new ArrayList<>();
-        for (Diamond diamond : diamonds) {
-            try {
-                String imageUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
-                diamondResponses.add(new DiamondResponse(diamond, imageUrl));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                diamondResponses.add(new DiamondResponse(diamond, null)); // Add null image URL if there's an error
-            }
-        }
-
-        return ResponseEntity.ok(diamondResponses);
+        return ResponseEntity.ok(diamonds);
     }
 
     @PostMapping("/selectDiamond")
@@ -551,21 +515,11 @@ public class CustomerViewController {
         // Set the status to "Customized"
         productionOrder.setStatus("Customized");
         productionOrderService.saveProductionOrder(productionOrder);
-
-        ProductMaterial productMaterial = productMaterialService.getProductMaterialByProduct_id(productId);
         Diamond diamond = diamondService.getDiamondByProductId(productId);
-        String cateUrl = imageService
-                .getImgByCateogryID(String.valueOf(product.getCategory().getCategory_Id()));
-        String materialUrl = imageService
-                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
-        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
         redirectAttributes.addAttribute("productId", productId);
         redirectAttributes.addAttribute("orderId", orderId);
         redirectAttributes.addAttribute("diamondId", diamond.getDia_Id());
-        redirectAttributes.addAttribute("cateUrl", cateUrl);
-        redirectAttributes.addAttribute("materialUrl", materialUrl);
-        redirectAttributes.addAttribute("diamondUrl", diamondUrl);
 
         return "redirect:/orderSummary";
     }
@@ -575,9 +529,6 @@ public class CustomerViewController {
             @RequestParam("productId") int productId,
             @RequestParam("orderId") String orderId,
             @RequestParam("diamondId") int diamondId,
-            @RequestParam("cateUrl") String cateUrl,
-            @RequestParam("materialUrl") String materialUrl,
-            @RequestParam("diamondUrl") String diamondUrl,
             Model model, RedirectAttributes redirectAttributes) {
 
         Product product = productService.getProductById(productId);
@@ -587,9 +538,6 @@ public class CustomerViewController {
 
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
-        model.addAttribute("cateUrl", cateUrl);
-        model.addAttribute("materialUrl", materialUrl);
-        model.addAttribute("diamondUrl", diamondUrl);
         model.addAttribute("diamond", diamond);
         model.addAttribute("material", material);
         model.addAttribute("productMaterial", productMaterial);

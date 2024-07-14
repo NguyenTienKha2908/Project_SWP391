@@ -14,10 +14,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductMaterialId implements Serializable {
-    @Column(name = "Product_Id")
+    @Column(name = "product_id")
     private int product_Id;
 
-    @Column(name = "Material_Id")
+    @Column(name = "material_id")
     private int material_Id;
 
     @Override

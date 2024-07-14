@@ -42,7 +42,7 @@
       <ul>
         <li><a th:href="@{/}">Home</a></li>
         <li>
-          <a th:href="@{/}">Blogs</a>
+          <a th:href="@{/BlogList}">Blogs</a>
         </li>
         <li>
           <a th:href="@{/}">Collections</a>
@@ -102,7 +102,7 @@
             </li>
           </ul>
         </li>
-        <li><a th:href="@{#education}">Education</a></li>
+        <li><a th:href="@{/education}">Education</a></li>
       </ul>
     </nav>
   </header>
@@ -168,53 +168,13 @@
     <!-- Another Form to Display -->
     <div class="row">
       <h1>All Diamonds</h1>
-      <!-- <div
-          class="col-md-3 mb-5"
-          th:each="diamond, index : ${diamondPage.getContent()}"
-        >
-          <div class="card">
-            <img
-              class="card-img-top"
-              th:src="@{${imagesByDiamond[index.index]}}"
-              alt="Diamond Image"
-              style="width: 100%; object-fit: cover"
-            />
-            <div class="card-body">
-              <h5
-                class="card-title"
-                th:text="${diamond.dia_Code} + '/ ' + ${diamond.origin} + '/ ' + ${diamond.carat_Weight} + '/ ' + ${diamond.color} + '/ ' + ${diamond.clarity} + '/ ' + ${diamond.cut}"
-              ></h5>
-              <p class="card-text">
-                <em
-                  >Proportions:
-                  <span th:text="${diamond.proportions}"></span></em
-                ><br />
-                <em>Polish: <span th:text="${diamond.polish}"></span></em><br />
-                <em>Symmetry: <span th:text="${diamond.symmetry}"></span></em
-                ><br />
-                <em
-                  >Fluorescence:
-                  <span th:text="${diamond.fluorescence}"></span></em
-                ><br />
-                <em
-                  >Status:
-                  <span
-                    th:text="${diamond.status == 1 ? 'Active' : 'Inactive'}"
-                  ></span
-                ></em>
-              </p>
-              <p class="card-price">
-                <strong>Q_Price:</strong>
-                <span th:text="${diamond.q_Price}"></span>
-              </p>
-            </div>
-          </div>
-        </div> -->
       <div class="col-md-6 mb-5" th:each="diamond, index : ${diamondPage.getContent()}">
         <div class="card">
           <div class="row">
             <div class="col-md-4">
-              <img class="card-img" th:src="@{${imagesByDiamond[index.index]}}" alt="Diamond Image"
+              <!-- <img class="card-img" th:src="@{${imagesByDiamond[index.index]}}" alt="Diamond Image"
+                style="width: 100%; height: 100%; object-fit: cover" /> -->
+                <img class="card-img" th:src="@{${diamond.img_Url}}" alt="Diamond Image"
                 style="width: 100%; height: 100%; object-fit: cover" />
             </div>
             <div class="card-body col-md-8">
@@ -229,7 +189,7 @@
                 <em>Fluorescence:
                   <span th:text="${diamond.fluorescence}"></span></em><br />
                 <em>Status:
-                  <span th:text="${diamond.status == 1 ? 'Active' : 'Inactive'}"></span></em>
+                  <span th:text="${diamond.status == true ? 'Active' : 'Inactive'}"></span></em>
               </p>
               <p class="card-price">
                 <strong>Q_Price:</strong>

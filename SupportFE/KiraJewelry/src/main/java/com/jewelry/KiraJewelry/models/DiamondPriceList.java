@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Diamond_Price_List")
+@Table(name = "diamond_price_list")
 public class DiamondPriceList {
 
     @Id
@@ -50,7 +50,7 @@ public class DiamondPriceList {
     @Column(name = "price")
     private double price;
 
-    @PastOrPresent
+    // @PastOrPresent
     @Column(name = "eff_date")
     private Date eff_Date;
 

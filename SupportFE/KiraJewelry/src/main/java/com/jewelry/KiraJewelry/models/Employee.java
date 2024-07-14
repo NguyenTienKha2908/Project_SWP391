@@ -16,16 +16,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Employee")
+@Table(name = "employee")
 public class Employee {
     @Id
-    @Column(name = "Employee_Id")
+    @Column(name = "employee_id")
     private String employee_Id;
     
-    @Column(name = "Full_Name")
+    @Column(name = "full_name")
     private String full_Name;
 
     @OneToOne
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id")
     private User user;
 }

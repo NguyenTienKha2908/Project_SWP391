@@ -24,6 +24,7 @@
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
                             alt="logo">
                         <span>KIRA JEWELRY</span>
+
                     </a>
                 </div>
             </div>
@@ -176,11 +177,11 @@
                                     method="post">
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="materialId">Material:</label>
-                                            <select class="form-control" th:field="*{material.materialId}">
+                                            <label for="material_Id">Material:</label>
+                                            <select class="form-control" th:field="*{material.material_Id}">
                                                 <option th:each="material : ${materials}"
-                                                    th:value="${material.materialId}"
-                                                    th:text="${material.materialName}"></option>
+                                                    th:value="${material.material_Id}"
+                                                    th:text="${material.material_Name}"></option>
                                             </select>
                                         </div>
                                         <div class="form-group col-md-12 my-3">
@@ -192,9 +193,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-md-12 my-3">
-                                            <label for="effDate">Effective Date:</label>
-                                            <input class="form-control" type="date" th:field="*{effDate}" required />
-                                            <div th:if="${#fields.hasErrors('effDate')}" th:errors="*{effDate}"
+                                            <label for="eff_Date">Effective Date:</label>
+                                            <input class="form-control" type="date" th:field="*{eff_Date}" required />
+                                            <div th:if="${#fields.hasErrors('eff_Date')}" th:errors="*{eff_Date}"
                                                 class="error"></div>
 
                                         </div>

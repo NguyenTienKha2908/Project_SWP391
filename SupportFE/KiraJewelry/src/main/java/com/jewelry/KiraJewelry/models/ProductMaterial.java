@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "ProductMaterial")
+@Table(name = "Product_Material")
 public class ProductMaterial {
 
    @EmbeddedId

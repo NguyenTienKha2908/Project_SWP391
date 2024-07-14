@@ -15,10 +15,6 @@ import com.jewelry.KiraJewelry.crawler.CrawlerService;
 @SpringBootApplication
 public class KiraJewelryApplication {
 
-	@Autowired
-    private CrawlerService crawlerService; // This will be injected by Spring Boot
-
-
 	public static void main(String[] args) {
 
 		

@@ -13,21 +13,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Diamond;
 import com.jewelry.KiraJewelry.models.DiamondPriceList;
-import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.Diamond.DiamondService;
 import com.jewelry.KiraJewelry.service.DiamondPriceList.DiamondPriceListService;
 
 import jakarta.validation.Valid;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class DiamondController {
@@ -42,39 +36,6 @@ public class DiamondController {
     ImageService imageService;
 
     @GetMapping("/diamonds")
-    // public String viewDiamondsPage(Model model,
-    // @RequestParam(defaultValue = "0") int page,
-    // @RequestParam(defaultValue = "20") int size,
-    // @RequestParam(value = "message", required = false) String message) {
-    // Pageable pageable = PageRequest.of(page, size);
-    // Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
-
-    // // Initialize list to hold image URLs for each material
-    // List<String> imagesByDiamond = new ArrayList<>();
-
-    // for (Diamond diamond : diamondPage) {
-    // try {
-    // String imageUrl =
-    // imageService.getImgByMaterialID(String.valueOf(diamond.getDia_Id()));
-    // imagesByDiamond.add(imageUrl);
-    // System.out.println(imageUrl);
-    // } catch (IOException ex) {
-    // ex.printStackTrace();
-    // }
-
-    // }
-
-    // if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
-    // return "redirect:/diamonds?page=" + (diamondPage.getTotalPages() - 1) +
-    // "&size=" + size;
-    // }
-
-    // model.addAttribute("diamondPage", diamondPage);
-    // model.addAttribute("message", message);
-    // return "employee/manager/Diamond/diamonds";
-    // }
-
-    // @GetMapping("/diamonds")
     public String viewDiamondsPage(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -82,30 +43,15 @@ public class DiamondController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
 
-        // Initialize a list to hold image URLs
-        List<String> imagesByDiamond = new ArrayList<>();
-
-        for (Diamond diamond : diamondPage) {
-            try {
-                String imageUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
-                imagesByDiamond.add(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                imagesByDiamond.add(null); // Add null if there is an error fetching the image
-            }
-        }
-
         if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
             return "redirect:/diamonds?page=" + (diamondPage.getTotalPages() - 1) + "&size=" + size;
         }
 
         model.addAttribute("diamondPage", diamondPage);
-        model.addAttribute("imagesByDiamond", imagesByDiamond);
         model.addAttribute("message", message);
         return "employee/manager/Diamond/diamonds";
     }
 
-    // Method to generate diamond code
     private String generateDiamondCode() {
         long count = diamondService.getAllDiamonds(PageRequest.of(0, 1)).getTotalElements();
         return String.format("DIA%03d", count + 1);
@@ -127,8 +73,8 @@ public class DiamondController {
     @PostMapping("/addDiamond")
     public String saveDiamond(@ModelAttribute("diamond") @Valid Diamond diamond,
             BindingResult result,
-            @RequestParam("imgFile") MultipartFile imgFile,
             Model model,
+            @RequestParam("img_Url") MultipartFile file,
             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             List<String> origins = diamondPriceListService.getAllOrigins();
@@ -136,10 +82,10 @@ public class DiamondController {
             return "employee/manager/Diamond/new_diamond";
         }
 
-        if (imgFile != null && !imgFile.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             try {
-                // String url = imageService.upload(imgFile);
-                // diamond.setImgUrl(url);
+                String url = imageService.upload(file, "Diamond", String.valueOf(diamond.getDia_Id()));
+                diamond.setImg_Url(url);
             } catch (Exception e) {
                 model.addAttribute("errorMessage", "Could not save image file: " + e.getMessage());
                 return "employee/manager/Diamond/new_diamond";
@@ -231,14 +177,6 @@ public class DiamondController {
                 "Diamond " + diamond.getDia_Code() + " has been updated successfully.");
         return "employee/manager/Diamond/update_diamond";
     }
-
-    // private void handleImageFile(Diamond diamond, MultipartFile imgFile) throws
-    // IOException {
-    // if (imgFile != null && !imgFile.isEmpty()) {
-    // String url = imageService.upload(imgFile);
-    // diamond.setImgUrl(url);
-    // }
-    // }
 
     private void prepareModelForUpdateForm(Model model, Diamond diamond) {
         List<String> origins = diamondPriceListService.getAllOrigins();
@@ -332,25 +270,11 @@ public class DiamondController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
 
-        // Initialize a list to hold image URLs
-        List<String> imagesByDiamond = new ArrayList<>();
-
-        for (Diamond diamond : diamondPage) {
-            try {
-                String imageUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
-                imagesByDiamond.add(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                imagesByDiamond.add(null); // Add null if there is an error fetching the image
-            }
-        }
-
         if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
             return "redirect:/customerDiamondsPage?page=" + (diamondPage.getTotalPages() - 1) + "&size=" + size;
         }
 
         model.addAttribute("diamondPage", diamondPage);
-        model.addAttribute("imagesByDiamond", imagesByDiamond);
         model.addAttribute("message", message);
         return "price/customerDiamondsPage";
     }

@@ -6,22 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
-
-    <style>
-        .dropdown-item {
-            width: 50%;
-            transition: 0.45s ease-in-out;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f2f7fd;
-            width: 100%;
-        }
-
-        .container-fluid {
-            margin-bottom: 300px;
-        }
-    </style>
 </head>
 
 <body>
@@ -56,7 +40,7 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -123,7 +107,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#education}">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -135,7 +119,7 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}" class="sidebar-link mainUp">
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}" class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
                         </li>

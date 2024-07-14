@@ -20,22 +20,22 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Collections")
+@Table(name = "collections")
 public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Collection_Id")
+    @Column(name = "collection_id")
     private int collection_Id;
 
     @NotBlank(message = "Collection name is mandatory")
-    @Column(name = "Collection_Name", nullable = false)
+    @Column(name = "collection_name", nullable = false)
     private String collection_Name;
 
     @NotNull(message = "Status is mandatory")
-    @Column(name = "Status", nullable = false)
+    @Column(name = "status", nullable = false)
     private boolean status;
 
-    @Column(name = "Img_Url", nullable = true)
+    @Column(name = "img_url", nullable = true)
     private String img_Url;
 
     // Getters and setters

@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kira Jewelry - Profile</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-      crossorigin="anonymous"
-    />
+    <title>Blog</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="/css/blog/BlogItems.css" />
     <link rel="stylesheet" th:href="@{/css/home.css}" />
-    <link rel="stylesheet" th:href="@{/css/mainUP.css}" />
   </head>
-
   <body>
     <!--Page header-->
-    <header>
+    <header id="myHeader">
       <div class="top_header">
         <h1 class="header_logo">
           <a th:href="@{/}"
@@ -29,7 +23,10 @@
         <div class="tools_header">
           <div>
             <span th:if="${session.customerName != null}">
-              Welcome, <span th:text="${session.customerName}"></span> |
+              <a th:href="@{/userRequests}">
+                Welcome, <span th:text="${session.customerName}"></span
+              ></a>
+              |
               <a th:href="@{/logout}">Log out</a>
             </span>
             <span th:if="${session.customerName == null}">
@@ -49,14 +46,14 @@
       </div>
       <nav class="home_categories">
         <ul>
-          <li><a class="active-link" th:href="@{/}">Home</a></li>
+          <li><a th:href="@{/}">Home</a></li>
           <li>
-            <a th:href="@{/}">Blogs</a>
+            <a class="active-link" th:href="@{/BlogList}">Blogs</a>
           </li>
           <li>
             <a th:href="@{/}">Collections</a>
           </li>
-          <li class="active dropdown">
+          <li class="dropdown">
             <a
               th:href="@{/currentOrder}"
               class="navbar-link collapsed has-dropdown"
@@ -71,127 +68,96 @@
                   th:href="@{/request}"
                   th:if="${session.customerName != null}"
                   class="sidebar-link"
-                  >Order Jewelry Now</a
                 >
-                <a
-                  th:href="@{/login}"
-                  th:unless="${session.customerName != null}"
-                  class="sidebar-link"
-                  >Order Jewelry Now</a
-                >
+                  Order Jewelry Now
+                </a>
               </li>
               <li class="dropdown-item">
-                <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                <a
+                  th:href="@{/customizeJewelry}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Customize Your Jewelry
+                </a>
               </li>
             </ul>
           </li>
-          <li><a href="#gemstones">Gemstones</a></li>
-          <li><a href="/html/price/Material.html">Materials</a></li>
-          <li><a href="#education">Education</a></li>
+          <li class="dropdown">
+            <a
+              th:href="@{/}"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Diamonds</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/customerDiamondsPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  All Diamonds
+                </a>
+              </li>
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/viewCustomerDiaPriceListPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Diamonds Price List
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a
+              th:href="@{/}"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Materials</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/viewCustomerMaterialsPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  All Materials
+                </a>
+              </li>
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/viewCustomerMaterialPriceListPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Materials Price List
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li><a th:href="@{/education}">Education</a></li>
         </ul>
       </nav>
     </header>
 
-    <!--Page information-->
-    <!-- <div class="top-cover"></div> -->
-    <div class="container-fluid px-5">
-      <div class="row">
-        <div class="col-md-3">
-          <aside id="sidebar">
-            <ul class="sidebar-nav">
-              <li class="active sidebar-item">
-                <a th:href="@{/Profile}" class="sidebar-link">
-                  <span>Profile</span>
-                </a>
-              </li>
-              <li class="sidebar-item">
-                <a href="History.html" class="sidebar-link">
-                  <span>History Orders</span>
-                </a>
-              </li>
-              <li class="sidebar-item">
-                <a
-                  href="CurrentOrder.html"
-                  class="sidebar-link collapsed has-dropdown"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#auth1"
-                  aria-expanded="false"
-                  aria-controls="auth1"
-                >
-                  <span>Current Order</span>
-                </a>
-                <ul
-                  id="auth1"
-                  class="dropdown list-unstyled collapse"
-                  data-bs-parent="#sidebar"
-                >
-                  <li class="sidebar-item">
-                    <a
-                      th:href="@{/userRequest(customerName=${session.customerName})}"
-                      class="sidebar-link"
-                      >Request</a
-                    >
-                  </li>
-                  <li class="sidebar-item">
-                    <a
-                      th:href="@{/userQuote(customerName=${session.customerName})}"
-                      class="sidebar-link"
-                      >Quote</a
-                    >
-                  </li>
-                  <li class="sidebar-item">
-                    <a
-                      th:href="@{/userOrder(customerName=${session.customerName})}"
-                      class="sidebar-link"
-                      >Order</a
-                    >
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </aside>
-        </div>
-        <div class="col-md-9">
-          <div class="profile container-fluid px-5">
-            <h1>Your Profile</h1>
-            <div class="row mx-auto justify-content-md-center">
-              <div class="information row mx-auto justify-content-between">
-                <div class="col-md-6">
-                  <p>
-                    View and manage your personal details and contact
-                    information
-                  </p>
-                </div>
-                <div class="col-md-3">
-                  <a class="edit" th:href="@{/EditProfile}"> Edit Profile </a>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="information">
-                  <h2>Customer Name</h2>
-                  <p>Victor Hale</p>
-                </div>
-                <div class="information">
-                  <h2>Phone</h2>
-                  <p>5551110002</p>
-                </div>
-                <div class="information">
-                  <h2>Mail</h2>
-                  <p>customer1@example.com</p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="information">
-                  <h2>Customer ID</h2>
-                  <p>CUS002</p>
-                </div>
-                <div class="information">
-                  <h2>Address</h2>
-                  <p>456 Oak St</p>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!--Main Page-->
+    <div id="main">
+      <h1 th:text="${blog.title}"></h1>
+      <div class="row w-50">
+        <img th:src="${blog.img_Url}" alt="Blog Image" class="w-100 py-4" />
+        <div id="contents" class="">
+          <h3 th:text="${blog.title}"></h3>
+          <p>Date: <span th:text="${blog.date}"></span></p>
+          <p th:text="${blog.content}"></p>
+          <h5>Author: <span th:text="${employee.full_Name}"></span></h5>
         </div>
       </div>
     </div>
@@ -205,7 +171,7 @@
               <div class="col-md-12">
                 <h2 class="footer_logo">
                   <img
-                    src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b"
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b}"
                     class="logo"
                   />
                   Kira Jewelry
@@ -284,23 +250,23 @@
             <div class="contact_footer">
               <a class="twitter"
                 ><img
-                  src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d"
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d}"
               /></a>
               <a class="facebook"
                 ><img
-                  src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd"
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd}"
               /></a>
               <a class="linkedin"
                 ><img
-                  src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84"
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84}"
               /></a>
               <a class="youtube"
                 ><img
-                  src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c"
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c}"
               /></a>
               <a class="instagram"
                 ><img
-                  src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e"
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e}"
               /></a>
             </div>
           </div>

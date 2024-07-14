@@ -5,49 +5,49 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "Product_Design")
+@Table(name = "product_design")
 public class ProductDesign {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Product_Design_Id")
+    @Column(name = "product_design_id")
     private int product_Design_Id;
 
     @NotBlank(message = "Product design code is mandatory")
-    @Column(name = "Product_Design_Code", nullable = false)
+    @Column(name = "product_design_code", nullable = false)
     private String product_Design_Code;
 
-    @Column(name = "Product_Id", nullable = false)
+    @Column(name = "product_id", nullable = false)
     private int product_Id;
 
-    @Column(name = "Product_Design_Name", nullable = true)
+    @Column(name = "product_design_name", nullable = true)
     private String product_Design_Name;
 
-    @Column(name = "Category_Id", nullable = true)
+    @Column(name = "category_id", nullable = true)
     private Integer category_Id;
 
-    @Column(name = "Collection_Id", nullable = true)
+    @Column(name = "collection_id", nullable = true)
     private Integer collection_Id;
 
-    @Column(name = "Description", nullable = true)
+    @Column(name = "description", nullable = true)
     private String description;
 
-    @Column(name = "Gender", nullable = true)
+    @Column(name = "gender", nullable = true)
     private String gender;
 
-    @Column(name = "Product_Size", nullable = true)
+    @Column(name = "product_size", nullable = true)
     private Integer product_Size;
 
-    @Column(name = "Product_Design_Shell_Id", nullable = true)
+    @Column(name = "product_design_shell_id", nullable = true)
     private Integer product_Design_Shell_Id;
 
-    @Column(name = "Gem_Min_Size", nullable = true)
+    @Column(name = "gem_min_size", nullable = true)
     private Float gem_Min_Size;
 
-    @Column(name = "Gem_Max_Size", nullable = true)
+    @Column(name = "gem_max_size", nullable = true)
     private Float gem_Max_Size;
 
-    @Column(name = "Status", nullable = true)
+    @Column(name = "status", nullable = true)
     private Boolean status;
 
     // Getters and setters

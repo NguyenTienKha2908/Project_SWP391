@@ -3,18 +3,18 @@ package com.jewelry.KiraJewelry.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Product_Design_Shell")
+@Table(name = "product_design_shell")
 public class ProductDesignShell {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Product_Design_Shell_Id", nullable = false)
+    @Column(name = "product_design_shell_id", nullable = false)
     private int product_Design_Shell_Id;
 
-    @Column(name = "Material_Id", nullable = false)
+    @Column(name = "material_id", nullable = false)
     private int material_Id;
 
-    @Column(name = "Weight", nullable = false)
+    @Column(name = "weight", nullable = false)
     private int weight;
 
     // Getters and setters

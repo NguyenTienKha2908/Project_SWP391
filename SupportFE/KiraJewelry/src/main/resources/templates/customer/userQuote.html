@@ -10,27 +10,6 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
-    <style>
-        .wrapper-order {
-            padding: 3% 6%;
-            margin: 5% 10%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        }
-
-        label {
-            width: 180px;
-            font-weight: 600;
-        }
-
-        .group-link {
-            display: inline-flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body>
@@ -45,8 +24,7 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        <a th:href="@{/userRequests}"> Welcome, <span
-                                th:text="${session.customerName}"></span></a>
+                        <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
                         |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
@@ -66,7 +44,7 @@
             <ul>
                 <li><a class="active-link" th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -130,7 +108,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#education">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -142,13 +120,12 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a href="Profile.html" class="sidebar-link">
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}"  class="sidebar-link">
                                 <span>Profile</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders}"
-                                class="sidebar-link mainUp">
+                            <a th:href="@{/userHistoryOrders}" class="sidebar-link mainUp">
                                 <span>History Orders</span>
                             </a>
                         </li>
@@ -159,20 +136,17 @@
                             </a>
                             <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userRequests}"
-                                        class="sidebar-link mainUp">Requests</a>
+                                    <a th:href="@{/userRequests}" class="sidebar-link mainUp">Requests</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userQuotes}"
-                                        class="active-mini-link sidebar-link mainUp">Quotes</a>
+                                    <a th:href="@{/userQuotes}" class="active-mini-link sidebar-link mainUp">Quotes</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userOrders}"
-                                        class="sidebar-link mainUp">Orders</a>
+                                    <a th:href="@{/userOrders}" class="sidebar-link mainUp">Orders</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userCustomizedOrders}"
-                                        class="sidebar-link mainUp">Customized Jewelry</a>
+                                    <a th:href="@{/userCustomizedOrders}" class="sidebar-link mainUp">Customized
+                                        Jewelry</a>
                                 </li>
                             </ul>
                         </li>
@@ -181,7 +155,7 @@
             </div>
             <div class="col-md-9">
                 <div class="quote container-fluid px-5">
-                    <h1>Quote Section</h1>
+                    <h1 class="my-5">Quote Section</h1>
                     <div class="content">
                         <div class="wrapper-order">
                             <h3>General Information</h3>
@@ -209,7 +183,7 @@
                             </table>
 
                         </div>
-                        <div class="wrapper-order">
+                        <div class="wrapper-order my-5">
                             <h3>Material Information</h3>
                             <table class="border-0">
                                 <tr>
@@ -298,7 +272,7 @@
                             </table>
                         </div>
 
-                        <div class="wrapper-order">
+                        <div class="wrapper-order my-5">
                             <h3>Other Information</h3>
                             <table class="border-0">
                                 <tr>

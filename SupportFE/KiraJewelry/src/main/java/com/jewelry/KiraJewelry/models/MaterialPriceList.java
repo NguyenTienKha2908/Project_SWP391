@@ -24,7 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "MaterialPriceList")
+@Table(name = "material_price_list")
 public class MaterialPriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class MaterialPriceList {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @PastOrPresentDate
+    // @PastOrPresentDate
     @Column(name = "eff_date", nullable = false)
     private Date eff_Date;
 

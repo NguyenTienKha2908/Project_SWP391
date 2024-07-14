@@ -84,12 +84,12 @@ public class ProductionOrderController {
     @GetMapping("/viewRequestsforSS")
     public String getAllRequests(Model model, HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndName("Requested",
+        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Requested",
                 employeeID);
 
-        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndName("Quoted(RJ)",
+        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(RJ)",
                 employeeID);
-        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndName(
+        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId(
                 "Quoted(CRJ)",
                 employeeID);
         List<ProductionOrder> listRequests = new ArrayList<>();
@@ -134,7 +134,7 @@ public class ProductionOrderController {
         if (oldProductMaterial != null) {
             Material oldMaterial = materialService.getMaterialById(oldProductMaterial.getId().getMaterial_Id());
             session.setAttribute("material", oldMaterial);
-            
+
         }
         Diamond oldDiamond = diamondService.getDiamondByProductId(product.getProduct_Id());
         List<Diamond> listDiamonds = diamondService.getAllDiamonds();
@@ -170,7 +170,7 @@ public class ProductionOrderController {
         List<Material> material = materialService.findByName(materialName);
         List<MaterialPriceList> listPrice = new ArrayList<>();
         for (Material m : material) {
-            MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(m.getMaterial_Id());
+            MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(m.getMaterial_Id());
             listPrice.add(mpl);
         }
         String message = "Search for material name : " + materialName;
@@ -262,22 +262,28 @@ public class ProductionOrderController {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         int productId = productionOrder.getProduct().getProduct_Id();
         ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(productId);
-        if (materialWeight == null) {
-            message = "Material weight save error !";
+        if (productMaterial == null) {
+            message = "You have to choose material first !";
         } else {
-            productMaterial.setMaterial_Weight(materialWeight);
 
-            int materialId = productMaterial.getId().getMaterial_Id();
-            MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(materialId);
-            double materialPrice = mpl.getPrice();
-            double productionOrderMaterialPrice = materialPrice * materialWeight;
-            productionOrder.setQ_Material_Amount(productionOrderMaterialPrice);
-            productionOrderService.saveProductionOrder(productionOrder);
+            if (materialWeight == null) {
+                message = "Material weight save error !";
+            } else {
+                productMaterial.setMaterial_Weight(materialWeight);
 
-            productMaterial.setQ_Price(productionOrderMaterialPrice);
-            productMaterialService.saveProductMaterial(productMaterial);
-            message = "Save material weight successfully !";
+                int materialId = productMaterial.getId().getMaterial_Id();
+                MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(materialId);
+                double materialPrice = mpl.getPrice();
+                double productionOrderMaterialPrice = materialPrice * materialWeight;
+                productionOrder.setQ_Material_Amount(productionOrderMaterialPrice);
+                productionOrderService.saveProductionOrder(productionOrder);
+
+                productMaterial.setQ_Price(productionOrderMaterialPrice);
+                productMaterialService.saveProductMaterial(productMaterial);
+                message = "Save material weight successfully !";
+            }
         }
+
         List<Diamond> listDiamonds = diamondService.getAllActiveDiamonds();
 
         // Extract unique values for dropdowns
@@ -321,25 +327,7 @@ public class ProductionOrderController {
             if (diamond == null || diamond.isEmpty()) {
                 model.addAttribute("messageDiamond", "Please select valid values to find diamond !");
             } else {
-                List<Diamond> listDiamonds = diamondService.getAllDiamonds();
 
-                // Extract unique values for dropdowns
-                Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
-                Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
-                Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
-                Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
-
-                model.addAttribute("listDiamonds", listDiamonds);
-                model.addAttribute("origins", origins);
-                model.addAttribute("colors", colors);
-                model.addAttribute("clarities", clarities);
-                model.addAttribute("cuts", cuts);
-                model.addAttribute("diamondName", diamondName);
-                model.addAttribute("caratWeight", caratWeight);
-                model.addAttribute("color", color);
-                model.addAttribute("clarity", clarity);
-                model.addAttribute("cut", cut);
-                model.addAttribute("origin", origin);
                 model.addAttribute("diamonds", diamond);
 
                 List<DiamondPriceList> diamondPriceList = new ArrayList<>();
@@ -360,24 +348,29 @@ public class ProductionOrderController {
 
             }
         }
+        List<Diamond> listDiamonds = diamondService.getAllDiamonds();
+
+        // Extract unique values for dropdowns
+        Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
+        Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
+        Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
+        Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
+
+        model.addAttribute("listDiamonds", listDiamonds);
+        model.addAttribute("origins", origins);
+        model.addAttribute("colors", colors);
+        model.addAttribute("clarities", clarities);
+        model.addAttribute("cuts", cuts);
+        model.addAttribute("diamondName", diamondName);
+        model.addAttribute("caratWeight", caratWeight);
+        model.addAttribute("color", color);
+        model.addAttribute("clarity", clarity);
+        model.addAttribute("cut", cut);
+        model.addAttribute("origin", origin);
         model.addAttribute("productionOrder", productionOrder);
         model.addAttribute("product", productionOrder.getProduct());
         return "employee/sales_staff/findIngredientsPage";
     }
-
-    // @GetMapping("/viewInformationQuoteForSS")
-    // public String getQuotesForSS(@RequestParam("productionOrderId") String
-    // productionOrderId, Model model) {
-    // ProductionOrder productionOrder =
-    // productionOrderService.getProductionOrderById(productionOrderId);
-    // Customer customer =
-    // customerService.getCustomerByCustomerId(productionOrder.getCustomer().getCustomer_Id());
-    // User user = userService.getUsersByUserId(customer.getUser().getUser_Id());
-    // model.addAttribute("customer", customer);
-    // model.addAttribute("user", user);
-    // model.addAttribute("listQuotes", productionOrder);
-    // return "employee/sales_staff/viewInforQuote";
-    // }
 
     @GetMapping("/saveDiamond")
     public String saveDiamond(
@@ -560,11 +553,11 @@ public class ProductionOrderController {
     public String getAllQuotes(Model model, HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         System.out.println("employeeId : " + employeeID);
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndName("Quoted",
+        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Quoted",
                 employeeID);
-        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndName("Quoted(NA)",
+        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(NA)",
                 employeeID);
-        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndName("Quoted(WC)",
+        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId("Quoted(WC)",
                 employeeID);
         List<ProductionOrder> productionOrders4 = productionOrderService
                 .getProductionOrderByStatus("Quoted(RJ)");
@@ -706,6 +699,20 @@ public class ProductionOrderController {
         return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
     }
 
+    @PostMapping("/confirmCustomizedDepositBySS")
+    public String confirmCustomizedDepositBySS(
+            @RequestParam("productionOrderId") String productionOrderId,
+            Model model,
+            HttpSession session) {
+        String employeeID = (String) session.getAttribute("employeeId");
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Confirmed");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+        String message = "Update Status Successfully";
+        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+    }
+
     @GetMapping("/viewRequestsforManager")
     public String getAllRequestsForManager(Model model, HttpSession session) {
         List<ProductionOrder> requestProductionOrders = productionOrderService.getProductionOrderByStatus("Requested");
@@ -721,11 +728,30 @@ public class ProductionOrderController {
     @PostMapping("/deleteProductionOrder")
     public String deleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        String status = productionOrder.getStatus();
         Product product = productService.getProductById(productionOrder.getProduct().getProduct_Id());
         int productId = product.getProduct_Id();
+
+        // Xóa tất cả các đối tượng liên quan trước khi xóa Product
+        if (productionOrder.getStatus() != "Created" && productionOrder.getStatus() != "Requested") {
+            Diamond diamond = diamondService.getDiamondByProductId(productId);
+            if (diamond != null) {
+                diamond.setProduct(null);
+            }
+            ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(productId);
+            if (productMaterial != null) {
+                productMaterialService.deleteProductMaterial(productMaterial);
+            }
+        }
+
+        // Xóa ProductionOrder
         productionOrderService.deleteProductionOrderById(productionOrderId);
+
+        // Xóa Product
         productService.deleteProductById(productId);
-        List<String> imageLists = new ArrayList();
+
+        // Xóa các hình ảnh liên quan
+        List<String> imageLists = new ArrayList<>();
         try {
             imageLists = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
                     productionOrderId);
@@ -739,8 +765,14 @@ public class ProductionOrderController {
                 e.printStackTrace();
             }
         }
+        if ("Created".equals(status) || "Requested".equals(status)) {
+            return "redirect:/viewRequestsforManager";
+        } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
+                || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
 
-        return "redirect:/viewRequestsforManager&deleteSuccess";
+            return "redirect:/viewQuotesforManager";
+        }
+        return "redirect:/viewOrdersforManager";
     }
 
     @GetMapping("/viewQuotesforManager")

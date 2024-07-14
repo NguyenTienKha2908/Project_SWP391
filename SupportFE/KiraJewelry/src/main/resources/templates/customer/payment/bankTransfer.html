@@ -9,48 +9,6 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .bottom-product-info {
-            display: inline-flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .wrapper-order {
-            text-align: center;
-            padding: 3% 5%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-
-            .top-title,
-            .info-box {
-                text-align: left;
-            }
-        }
-
-        .info-box {
-            P {
-                &:nth-of-type(1) {
-                    width: 50%;
-                }
-            }
-        }
-
-        .middle-content {
-            width: 95%;
-            background-color: #F5F6FA;
-            border-radius: 10px;
-            box-shadow: inset;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-
-        }
-
-        i {
-            color: #721c24;
-        }
-    </style>
 </head>
 
 <body>
@@ -125,7 +83,7 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -187,7 +145,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#education">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -209,7 +167,7 @@
         <div class="row">
 
             <div class="container-fluid w-50">
-                <div class="wrapper-order row justify-content-md-center mx-auto my-5">
+                <div class="wrapper-order-bank row justify-content-md-center mx-auto my-5">
 
                     <div class="top-title">
                         <h3>Bank Transfer</h3>
@@ -236,11 +194,11 @@
                             <span>Only confirm if you have made transfer</span>
                         </i>
 
-                        <form th:if="${productionOrder.status == 'Customized'}" th:action="@{/bankTransferHandle}" method="post">
+                        <form th:if="${productionOrder.status == 'Customized'}" th:action="@{/bankTransferHandleForCustomizeDeposit}" method="post">
                             <input type="hidden" name="productionOrderId"
                                 th:value="${productionOrder.production_Order_Id}" />
                             <button type="submit" class="w-100 btn btn-danger">Confirm payment
-                                <span th:text="${#numbers.formatDecimal(productionOrder.o_Total_Amount, 1, 2)}"></span>
+                                <span th:text="${#numbers.formatDecimal(depositAmount, 1, 2)}"></span>
                             </button>
                         </form>
                         <form th:if="${productionOrder.status == 'Ordered(WP)'}" th:action="@{/bankTransferHandleForDeposit}" method="post">

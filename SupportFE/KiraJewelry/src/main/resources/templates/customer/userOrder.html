@@ -8,22 +8,6 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
-
-    <style>
-        .bottom-product-info {
-            display: inline-flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .wrapper-order {
-            padding: 3% 6%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        }
-    </style>
 </head>
 
 <body>
@@ -92,6 +76,32 @@
         </div>
     </div>
 
+    <div class="mess-container" th:if="${param.successPaypal}">
+        <div class="mess-content open" id="successPaypal-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#01b10a">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b101">
+                <p>Thank you! Your order has been deposited successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.cancelPaypal}">
+        <div class="mess-content open" id="cancelPaypal-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Thank you! Your order has been deposited successfully!</p>
+            </div>
+        </div>
+    </div>
+
 
     <!--Page header-->
     <header>
@@ -104,8 +114,7 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        <a th:href="@{/userRequests}"> Welcome, <span
-                                th:text="${session.customerName}"></span></a>
+                        <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
                         |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
@@ -125,14 +134,13 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
                 </li>
                 <li class="dropdown">
-                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span>Jewelry</span>
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
@@ -189,7 +197,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#education">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -201,14 +209,13 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}"
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}" 
                                 class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders}"
-                                class="sidebar-link mainUp">
+                            <a th:href="@{/userHistoryOrders}" class="sidebar-link mainUp">
                                 <span>History Orders</span>
                             </a>
                         </li>
@@ -219,20 +226,17 @@
                             </a>
                             <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userRequests}"
-                                        class="sidebar-link mainUp">Requests</a>
+                                    <a th:href="@{/userRequests}" class="sidebar-link mainUp">Requests</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userQuotes}"
-                                        class="sidebar-link mainUp">Quotes</a>
+                                    <a th:href="@{/userQuotes}" class="sidebar-link mainUp">Quotes</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userOrders}"
-                                        class="active-mini-link sidebar-link mainUp">Orders</a>
+                                    <a th:href="@{/userOrders}" class="active-mini-link sidebar-link mainUp">Orders</a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a th:href="@{/userCustomizedOrders}"
-                                        class="sidebar-link mainUp">Customized Jewelry</a>
+                                    <a th:href="@{/userCustomizedOrders}" class="sidebar-link mainUp">Customized
+                                        Jewelry</a>
                                 </li>
                             </ul>
                         </li>
@@ -255,8 +259,7 @@
                                 (Order placed at <span
                                     th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></span>
                             </span>)
-                            <span style="font-size: 1.05rem; font-style: italic; color: grey;"
-                                th:if="${productionOrder.status=='Deposit In Confirm'} or ${productionOrder.status == 'Canceled'} or ${productionOrder.status == 'Last Payment In Confirm'}">
+                            <span style="font-size: 1.05rem; font-style: italic; color: grey;">
                                 - Status: <span th:text="${productionOrder.status}"></span>
                             </span>
                         </h1>
@@ -354,7 +357,8 @@
                                     <a
                                         th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
                                         through Bank Transfer</a>
-                                    <a href="#">Pay through Paypal</a>
+                                    <a th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                        through Paypal</a>
                                 </div>
                                 <hr>
                                 <div class="bottom-note">
@@ -395,7 +399,8 @@
                                         style="font-style: italic; color:rgb(158, 56, 56)"></p>
                                     <div th:if="${imagesByStaffId != null}">
                                         <div th:each="entry : ${imagesByStaffId}">
-                                            <div th:if="${entry.key == productionOrder.production_Order_Id}" id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                            <div th:if="${entry.key == productionOrder.production_Order_Id}"
+                                                id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
                                                 data-bs-ride="carousel" data-bs-interval="2000">
                                                 <div class="carousel-inner">
                                                     <div th:each="img, iterStat : ${entry.value}">
@@ -466,7 +471,8 @@
                                     <h6>Progress Photos for you Jewelry</h6>
                                     <div th:if="${imagesByPRId != null}" class="my-3">
                                         <div th:each="entry : ${imagesByPRId}">
-                                            <div th:if="${entry.key == productionOrder.production_Order_Id}" id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                            <div th:if="${entry.key == productionOrder.production_Order_Id}"
+                                                id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
                                                 data-bs-ride="carousel" data-bs-interval="2000">
                                                 <div class="carousel-inner">
                                                     <div th:each="img, iterStat : ${entry.value}">
@@ -511,9 +517,11 @@
                                             th:href="@{/CODInfoForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">
                                             Pay COD</a>
                                         <a
-                                            th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                            th:href="@{/bankTransferHandleForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">Pay
                                             through Bank Transfer</a>
-                                        <a href="#">Pay through Paypal</a>
+                                        <a
+                                            th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                            through Paypal</a>
                                     </div>
                                 </div>
 
@@ -686,6 +694,7 @@
             const awaitMessage = document.getElementById('await-message');
             const CODsuccessMessage = document.getElementById('CODsuccess-message');
             const update_deliveredMessage = document.getElementById('update_delivered-message');
+            const cancelPaypalMessage = document.getElementById('cancelPaypal-message');
 
             if (urlParams.has('approved')) {
                 successMessage.classList.remove('close');
@@ -721,6 +730,13 @@
                 setTimeout(() => {
                     update_deliveredMessage.classList.remove('open');
                     update_deliveredMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('cancelPaypal')) {
+                cancelPaypalMessage.classList.remove('close');
+                cancelPaypalMessage.classList.add('open');
+                setTimeout(() => {
+                    cancelPaypalMessage.classList.remove('open');
+                    cancelPaypalMessage.classList.add('close');
                 }, 2000);
             }
         });

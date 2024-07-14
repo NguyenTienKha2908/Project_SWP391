@@ -19,38 +19,38 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Product")
+@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_Id")
+    @Column(name = "product_id")
     private int product_Id;
 
-    @Column(name = "product_Name", nullable = true)
+    @Column(name = "product_name", nullable = true)
     private String product_Name;
 
     @NotBlank(message = "Product code is mandatory")
-    @Column(name = "product_Code", nullable = false)
+    @Column(name = "product_code", nullable = false)
     private String product_Code;
 
     @OneToOne
-    @JoinColumn(name = "Category_Id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToOne
-    @JoinColumn(name = "Collection_Id")
+    @JoinColumn(name = "collection_id")
     private Collection collection;
 
-    @Column(name = "Description", nullable = true)
+    @Column(name = "description", nullable = true)
     private String description;
 
-    @Column(name = "Gender", nullable = true)
+    @Column(name = "gender", nullable = true)
     private String gender;
 
-    @Column(name = "Size", nullable = true)
+    @Column(name = "size", nullable = true)
     private Integer size;
 
-    @Column(name = "Status", nullable = true)
+    @Column(name = "status", nullable = true)
     private boolean status;
 
     // @Column(name = "Img_Url", nullable = true)

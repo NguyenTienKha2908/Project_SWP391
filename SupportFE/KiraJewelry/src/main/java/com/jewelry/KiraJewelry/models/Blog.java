@@ -8,40 +8,40 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Blogs")
+@Table(name = "blogs")
 public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Blog_Id")
+    @Column(name = "blog_id")
     private int blog_Id;
 
     @NotBlank(message = "Blog title is mandatory")
-    @Column(name = "Title", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @NotBlank(message = "Blog content is mandatory")
-    @Column(name = "Content", nullable = false)
+    @NotBlank(message = "blog content is mandatory")
+    @Column(name = "content", nullable = false)
     private String content;
 
     @NotNull(message = "Date is mandatory")
     @PastOrPresentDate(message = "Date must be in the past or present")
-    @Column(name = "Date", nullable = false)
+    @Column(name = "date", nullable = false)
     private java.sql.Date date;
 
     @NotBlank(message = "Employee ID is mandatory")
-    @Column(name = "Employee_Id", nullable = false)
+    @Column(name = "employee_Id", nullable = false)
     private String employee_Id;
 
     @NotNull(message = "Status is mandatory")
-    @Column(name = "Status", nullable = false)
+    @Column(name = "status", nullable = false)
     private boolean status;
 
-    @Column(name = "Img_Url", nullable = true)
+    @Column(name = "img_url", nullable = true)
     private String img_Url;
 
     @Lob
-    @Column(name = "Image_Data", nullable = true)
+    @Column(name = "image_data", nullable = true)
     private byte[] imageData;
 
     // Getters and setters

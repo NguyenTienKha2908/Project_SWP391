@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.service.MaterialPriceListService;
 import com.jewelry.KiraJewelry.service.MaterialService;
@@ -41,10 +40,18 @@ public class MaterialPriceListController {
 
     @GetMapping("/showNewMaterialPriceListForm")
     public String showNewMaterialPriceListForm(Model model) {
-        MaterialPriceList materialPriceList = new MaterialPriceList();
-        model.addAttribute("materialPriceList", materialPriceList);
-        model.addAttribute("materials", materialService.getAllActiveMaterials());
-        return "employee/manager/MaterialPriceList/new_material_price_list";
+        try {
+            MaterialPriceList materialPriceList = new MaterialPriceList();
+            model.addAttribute("materialPriceList", materialPriceList);
+            model.addAttribute("materials", materialService.getAllActiveMaterials());
+            System.out.println("Received material: " + materialService.getAllActiveMaterials());
+            System.out.println("Received materialpricelist: " + materialPriceList);
+            return "employee/manager/MaterialPriceList/new_material_price_list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "An error occurred while loading the material price list form.");
+            return "error";
+        }
     }
 
     @PostMapping("/saveMaterialPriceList")
@@ -68,12 +75,17 @@ public class MaterialPriceListController {
 
     @PostMapping("/updateMaterialPriceList")
     public String updateMaterialPriceList(
-            @ModelAttribute("materialPriceList") @Valid MaterialPriceList materialPriceList,
-            BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("materials", materialService.getAllActiveMaterials());
-            return "MaterialPriceList/update_material_price_list";
-        }
+            @RequestParam("price") double price,
+            @RequestParam("id") int id,
+            Model model) {
+        // if (result.hasErrors()) {
+        // model.addAttribute("materials", materialService.getAllActiveMaterials());
+        // return "MaterialPriceList/update_material_price_list";
+        // }
+
+        MaterialPriceList materialPriceList = materialPriceListService.getMaterialPriceListById(id);
+        materialPriceList.setPrice(price);
+        System.out.println(materialPriceList.getMaterial().getMaterial_Name() + materialPriceList.getPrice());
         materialPriceListService.saveMaterialPriceList(materialPriceList);
         return "redirect:/materialPriceLists";
     }

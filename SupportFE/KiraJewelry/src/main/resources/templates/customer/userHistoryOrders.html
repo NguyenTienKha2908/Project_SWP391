@@ -6,36 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/mainUP.css}">
-
-    <style>
-        .dropdown-item {
-            width: 50%;
-            transition: 0.45s ease-in-out;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f2f7fd;
-            width: 100%;
-        }
-
-        .container-fluid {
-            margin-bottom: 300px;
-        }
-
-        .wrapper-order {
-            padding: 3% 6%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        }
-
-        .bottom-product-info {
-            display: inline-flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body>
@@ -51,8 +21,7 @@
             <div class="tools_header">
                 <div>
                     <span th:if="${session.customerName != null}">
-                        <a th:href="@{/userRequests}"> Welcome, <span
-                                th:text="${session.customerName}"></span></a>
+                        <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
                         |
                         <a th:href="@{/logout}">Log out</a>
                     </span>
@@ -72,14 +41,13 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
                 </li>
                 <li class="dropdown">
-                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    <a class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <span>Jewelry</span>
                     </a>
                     <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
@@ -136,7 +104,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#education}">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -148,14 +116,13 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerName=${session.customerName})}"
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}"
                                 class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
                         </li>
                         <li class="active-mainUp sidebar-item">
-                            <a th:href="@{/userHistoryOrders}"
-                                class="sidebar-link mainUp">
+                            <a th:href="@{/userHistoryOrders}" class="sidebar-link mainUp">
                                 <span>History Orders</span>
                             </a>
                         </li>
@@ -206,7 +173,7 @@
                                 <div class="product-content">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <img th:src="@{${imagesByCategory[index.index]}}" alt="Category Image"
+                                            <img th:src="@{${productionOrder.category.img_Url}}" alt="Category Image"
                                                 style="width:100%" />
                                             <p style="text-align: center; font-size:0.75rem;">This is only an
                                                 illustration of your order</p>
@@ -216,7 +183,6 @@
                                                 <span th:text="${materials[index.index].material_Name}"></span> -
                                                 <span th:text="${productMaterials[index.index].material_Weight}"></span>
                                                 mace
-
                                             </p>
                                             <p class="my-2">
                                                 <span style="font-weight: 700;">Total Material Price: </span>
@@ -227,7 +193,7 @@
 
                                             </p>
                                             <hr class="my-3">
-                                            <p>
+                                            <p th:if="${diamonds != null}">
                                                 <span th:text="${diamonds[index.index].dia_Name}"></span>,
                                                 <span th:text="${diamonds[index.index].carat_Weight}"></span> ct,
                                                 <span th:text="${diamonds[index.index].origin}"></span>,
@@ -235,7 +201,7 @@
                                                 <span th:text="${diamonds[index.index].clarity}"></span>,
                                                 <span th:text="${diamonds[index.index].cut}"></span> cut,
                                             </p>
-                                            <div class="other-diamond-info">
+                                            <div  class="other-diamond-info">
                                                 <p>Proportion: <span
                                                         th:text="${diamonds[index.index].proportions}"></span></p>
                                                 <p>Symmetry: <span th:text="${diamonds[index.index].symmetry}"></span>
@@ -283,15 +249,18 @@
                                     <form th:action="@{/receiveProductByCustomer}" method="post">
                                         <input type="hidden" name="productionOrderId"
                                             th:value="${productionOrder.production_Order_Id}" />
-                                        <button type="submit" class="w-100 btn btn-danger">I have received the
-                                            product
-                                            of
+                                        <button type="submit" class="w-100 btn btn-danger">
+                                            I have received the product of
                                             <span
                                                 th:text="${#numbers.formatDecimal(productionOrder.o_Total_Amount, 1, 2)}"></span>
                                         </button>
                                     </form>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mx-auto justify-content-md-center">
+                            <a th:href="@{/viewWarrantyPDF(orderId=${productionOrder.production_Order_Id})}"
+                                class="btn btn-secondary">View Warranty PDF</a>
                         </div>
                     </div>
                 </div>

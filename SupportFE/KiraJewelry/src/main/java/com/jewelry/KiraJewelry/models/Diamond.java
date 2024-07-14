@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Diamond")
+@Table(name = "diamond")
 public class Diamond {
 
     @Id
@@ -87,6 +87,9 @@ public class Diamond {
     @NotNull(message = "O Price is mandatory")
     @Column(name = "o_price", nullable = false)
     private double o_Price;
+
+    @Column(name = "img_url", nullable = true)
+    private String img_Url;
 
     @OneToOne
     @JoinColumn(name = "product_Id", nullable = true)

@@ -56,9 +56,6 @@ header {
   h1 {
     font-weight: 200;
     font-size: 2em;
-  }
-
-  h1 {
     flex: 1;
     margin-left: 5%;
   }
@@ -74,7 +71,7 @@ header {
   }
 
   .home_categories {
-    text-align: center;
+    /* text-align: center; */
 
     ul {
       display: flex;
@@ -435,15 +432,22 @@ footer {
 
 
 /* */
+.dropdown-menu {
+  width: auto;
+}
+
 .dropdown-item {
-  width: 50%;
-  transition: 0.45s ease-in-out;
+  text-decoration: none;
+  display: block;
+  text-align: start;
+  width: 220px;
 }
 
 .dropdown-item:hover {
-  background-color: #f2f7fd;
-  width: 100%;
+  background-color: transparent;
+  transition: none;
 }
+
 
 
 /* */

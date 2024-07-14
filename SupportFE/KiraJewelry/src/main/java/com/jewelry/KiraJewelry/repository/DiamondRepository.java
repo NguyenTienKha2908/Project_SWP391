@@ -27,7 +27,7 @@ public interface DiamondRepository extends JpaRepository<Diamond, Integer> {
         List<Diamond> findAvailableDiamondsByWeightRange(@Param("minWeight") double minWeight,
                         @Param("maxWeight") double maxWeight);
 
-        @Query("SELECT d FROM Diamond d WHERE d.dia_Name LIKE %:name% AND d.carat_Weight = :caratWeight AND d.color = :color AND d.clarity = :clarity AND d.cut = :cut AND d.origin = :origin")
+        @Query("SELECT d FROM Diamond d WHERE d.dia_Name LIKE %:name% AND d.carat_Weight = :caratWeight AND (:color IS NULL OR d.color = :color) AND (:clarity IS NULL OR d.clarity = :clarity) AND (:cut IS NULL OR d.cut = :cut) AND (:origin IS NULL OR d.origin = :origin)")
         List<Diamond> findByListDiamonds(@Param("name") String name, @Param("caratWeight") Double caratWeight,
                         @Param("color") String color,
                         @Param("clarity") String clarity,

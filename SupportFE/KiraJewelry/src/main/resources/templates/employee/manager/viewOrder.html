@@ -164,9 +164,39 @@
                                     <input type="hidden" name="productionOrderId"
                                         th:value="${productionOrder.production_Order_Id}" />
                                 </td>
-                                <td><a class="text-decoration-none btn btn-danger"
-                                        th:href="@{/confirmDeleteProductionOrder(productionOrderId=${productionOrder.production_Order_Id})}">Delete</a>
+                                <td>
+                                    <a href="#" class="btn btn-danger my-5" data-bs-toggle="modal"
+                                        data-bs-target="#Reject">Delete</a>
                                 </td>
+                                <div class="modal fade" id="Reject">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">This is just a confirm message</h4>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <p>Are you sure?</p>
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <form th:action="@{/deleteProductionOrder}" method="post">
+                                                    <input type="hidden" name="productionOrderId"
+                                                        th:value="${productionOrder.production_Order_Id}" />
+                                                    <button class="btn btn-danger" type="submit">Yes</button>
+                                                    <a class="btn btn-secondary"
+                                                        th:href="@{/viewOrdersforManager}">Cancel</a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                         </tbody>
                     </table>

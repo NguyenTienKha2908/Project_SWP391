@@ -59,7 +59,8 @@
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                         data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fuser_account.svg?alt=media&token=79b117df-aacb-4931-859f-15f8bf3c3dcf}" alt="Accounts"> 
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fuser_account.svg?alt=media&token=79b117df-aacb-4931-859f-15f8bf3c3dcf}"
+                            alt="Accounts">
                         <span>Accounts</span>
                     </a>
                     <ul id="auth" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
@@ -183,7 +184,8 @@
                                     <td>
                                         <span th:if="${productionOrder.sales_Staff != null}"
                                             th:text="${productionOrder.sales_Staff}"></span>
-                                        <select class="form-control-sm" th:if="${productionOrder.sales_Staff == null}" name="staff" id="staff">
+                                        <select class="form-control-sm" th:if="${productionOrder.sales_Staff == null}"
+                                            name="staff" id="staff">
                                             <option value="">Select Sales Staff</option>
                                             <option th:each="staff : ${employees}" th:value="${staff.employee_Id}"
                                                 th:text="${staff.full_Name}"></option>
@@ -230,7 +232,7 @@
                                                     th:value="${productionOrder.production_Order_Id}" />
                                                 <button class="btn btn-danger" type="submit">Yes</button>
                                                 <a class="btn btn-secondary"
-                                                    th:href="@{/viewRequestsforManagerviewRequestsforManager}">Cancel</a>
+                                                    th:href="@{/viewRequestsforManager}">Cancel</a>
                                             </form>
                                         </div>
                                     </div>

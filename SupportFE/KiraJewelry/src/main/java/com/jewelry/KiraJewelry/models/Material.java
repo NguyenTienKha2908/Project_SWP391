@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "Material")
+@Table(name = "material")
 public class Material {
 
     @Id
@@ -38,6 +38,9 @@ public class Material {
     @Size(max = 100, message = "Material name must be less than 100 characters")
     @Column(name = "material_name", nullable = false)
     private String material_Name;
+
+    @Column(name = "img_url", nullable = true)
+    private String img_Url;
 
     @Column(name = "status", nullable = false)
     private int status; // 1 for active, 0 for inactive

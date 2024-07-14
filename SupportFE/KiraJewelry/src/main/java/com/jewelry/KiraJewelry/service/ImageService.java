@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +9,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.List;
 import java.util.Map;
@@ -17,15 +19,16 @@ import java.util.HashMap;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import com.jewelry.KiraJewelry.dto.Image;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import com.jewelry.KiraJewelry.dto.Image;
 
 @Service
 public class ImageService {
@@ -33,68 +36,152 @@ public class ImageService {
     private static final String BUCKET_NAME = "kirajewelry-a2n2k.appspot.com";
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
 
-    private String uploadFile(File file, String fileName) throws IOException {
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", fileName); // Replace with your bucker name
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+    Dotenv dotenv = Dotenv.configure()
+            .directory("src/main/resources")
+            .filename("key.env") // explicitly specify the filename
+            .ignoreIfMalformed()
+            .ignoreIfMissing()
+            .load();
 
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
+    // Add to when run deploy
+    // private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    // Add to when run local
+    String firebaseServiceKey = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    String firebaseURL = Paths.get("src", "main", "resources", firebaseServiceKey).toString();
+    // Add to when run local
+
+
+    private String uploadFile(File file, String fileName) throws IOException {
+        BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
         return String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8));
     }
 
     private String uploadFileForCustomerProductionOrder(File file, String fileName, String customerId,
-            String ProductionOrderId) throws IOException {
+            String productionOrderId) throws IOException {
         String folderName = "Customer_Production_Order";
-        String filePath = folderName + "/" + customerId + "_" + ProductionOrderId + "_" + fileName;
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
+        String filePath = folderName + "/" + customerId + "_" + productionOrderId + "_" + fileName;
+        BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
 
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
-        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
-        return url;
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
+        return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
 
-    private String uploadFileForDesignStaff(File file, String fileName, String design_staff_id,
-            String ProductionOrderId) throws IOException {
+    private String uploadFileForDesignStaff(File file, String fileName, String designStaffId, String productionOrderId)
+            throws IOException {
         String folderName = "Customer_Design";
-        String subFolderName = String.valueOf(design_staff_id);
-        String filePath = folderName + "/" + subFolderName + "/" + design_staff_id + "_" + ProductionOrderId + "_"
+        String subFolderName = designStaffId;
+        String filePath = folderName + "/" + subFolderName + "/" + designStaffId + "_" + productionOrderId + "_"
                 + fileName;
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
+        BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
 
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
-        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
-        return url;
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
+        return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
 
-    private String uploadFileForProductionStaff(File file, String fileName, String production_staff_id,
-            String ProductionOrderId) throws IOException {
+    private String uploadFileForProductionStaff(File file, String fileName, String productionStaffId,
+            String productionOrderId) throws IOException {
         String folderName = "Customer_Progress_Photo";
-        String subFolderName = String.valueOf(production_staff_id);
-        String filePath = folderName + "/" + subFolderName + "/" + production_staff_id + "_" + ProductionOrderId + "_"
+        String subFolderName = productionStaffId;
+        String filePath = folderName + "/" + subFolderName + "/" + productionStaffId + "_" + productionOrderId + "_"
                 + fileName;
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
+        BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
 
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
-        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
-        return url;
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
+        return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+    }
+
+    public String uploadFileForMaterial(File file, String fileName, String materialId) throws IOException {
+        String folderName = "Material";
+        String filePath = folderName + "/" + materialId + "_" + fileName;
+        BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
+        return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+    }
+
+    private String uploadFileForDiamond(File file, String fileName, String diamondId) throws IOException {
+        String folderName = "Diamond";
+        String filePath = folderName + "/" + diamondId + "_" + fileName;
+        BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
+        return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+    }
+
+    public String uploadFileForCategory(File file, String fileName, String categoryId) throws IOException {
+        String folderName = "Category";
+        String filePath = folderName + "/" + categoryId + "_" + fileName;
+        BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
+
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            storage.create(blobInfo, Files.readAllBytes(file.toPath()));
+        }
+
+        return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
+    }
+
+    public List<String> listAllImages(String folderName) throws IOException {
+        List<String> imageUrls = new ArrayList<>();
+        System.out.println("Firebase URL: " + firebaseURL);
+
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            Bucket bucket = storage.get(BUCKET_NAME);
+
+            Iterable<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(folderName + "/")).iterateAll();
+            for (Blob blob : blobs) {
+                if (!blob.isDirectory()) {
+                    String fileName = blob.getName();
+                    String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
+                    String imageUrl = String.format(DOWNLOAD_URL, encodedFileName);
+                    imageUrls.add(imageUrl);
+                }
+            }
+        }
+
+        return imageUrls;
     }
 
     private Image getImageByCustomerId(String savedUrl) {
@@ -109,85 +196,12 @@ public class ImageService {
         return new Image(key, imageUrl);
     }
 
-    public String uploadFileForMaterial(File file, String fileName, String materialId) throws IOException {
-        String folderName = "Material";
-
-        String filePath = folderName + "/" + materialId + "_" + fileName;
-
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
-        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
-        System.out.println(url);
-        return url;
-    }
-
-    private String uploadFileForDiamond(File file, String fileName, String diamondId) throws IOException {
-        String folderName = "Diamond";
-        String filePath = folderName + "/" + diamondId + "_" + fileName;
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
-        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
-        return url;
-    }
-
-    public String uploadFileForCategory(File file, String fileName, String categoryId) throws IOException {
-        String folderName = "Category";
-
-        String filePath = folderName + "/" + categoryId + "_" + fileName;
-
-        BlobId blobId = BlobId.of("kirajewelry-a2n2k.appspot.com", filePath); // Replace with your bucket name
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-
-        String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
-        String url = String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
-        System.out.println(url);
-        return url;
-    }
-
-    public List<String> listAllImages(String FOLDER_NAME) throws IOException {
-        List<String> imageUrls = new ArrayList<>();
-
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        Bucket bucket = storage.get(BUCKET_NAME);
-
-        // List all blobs in the specified folder
-        Iterable<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(FOLDER_NAME + "/")).iterateAll();
-        for (Blob blob : blobs) {
-            if (!blob.isDirectory()) {
-                String fileName = blob.getName();
-                String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString());
-                String imageUrl = String.format(DOWNLOAD_URL, encodedFileName);
-                imageUrls.add(imageUrl);
-            }
-        }
-
-        return imageUrls;
-    }
-
-    public List<String> getImgByCustomerID(String customerId, String production_order_id) throws IOException {
+    public List<String> getImgByCustomerID(String customerId, String productionOrderId) throws IOException {
         List<String> listImg = listAllImages("Customer_Production_Order");
 
         List<String> filteredImages = new ArrayList<>();
         for (String imgUrl : listImg) {
-            if (imgUrl.contains("/Customer_Production_Order%2F" + customerId + "_" + production_order_id + "_")) {
+            if (imgUrl.contains("/Customer_Production_Order%2F" + customerId + "_" + productionOrderId + "_")) {
                 filteredImages.add(imgUrl);
             }
         }
@@ -195,12 +209,12 @@ public class ImageService {
         return filteredImages;
     }
 
-    public List<String> getImgByStaffId(String staff_Id, String production_order_id) throws IOException {
+    public List<String> getImgByStaffId(String staffId, String productionOrderId) throws IOException {
         List<String> listImg = listAllImages("Customer_Production_Order");
 
         List<String> filteredImages = new ArrayList<>();
         for (String imgUrl : listImg) {
-            if (imgUrl.contains("/Customer_Design%2F" + staff_Id + "%2F_" + production_order_id + "_")) {
+            if (imgUrl.contains("/Customer_Design%2F" + staffId + "%2F_" + productionOrderId + "_")) {
                 filteredImages.add(imgUrl);
             }
         }
@@ -208,12 +222,12 @@ public class ImageService {
         return filteredImages;
     }
 
-    public List<String> getImgByStaffId(String staff_Id) throws IOException {
-        List<String> listImg = listAllImages("Customer_Design/" + staff_Id);
+    public List<String> getImgByStaffId(String staffId) throws IOException {
+        List<String> listImg = listAllImages("Customer_Design/" + staffId);
         System.out.println(listImg);
         List<String> filteredImages = new ArrayList<>();
         for (String imgUrl : listImg) {
-            if (imgUrl.contains("/Customer_Design%2F" + staff_Id + "%2F" + staff_Id)) {
+            if (imgUrl.contains("/Customer_Design%2F" + staffId + "%2F" + staffId)) {
                 filteredImages.add(imgUrl);
                 System.out.println(imgUrl);
             }
@@ -222,8 +236,8 @@ public class ImageService {
         return filteredImages;
     }
 
-    public Map<String, List<String>> getImgOrderedByStaffId(String staff_Id) throws IOException {
-        List<String> listImg = listAllImages("Customer_Design/" + staff_Id);
+    public Map<String, List<String>> getImgOrderedByStaffId(String staffId) throws IOException {
+        List<String> listImg = listAllImages("Customer_Design/" + staffId);
         Map<String, List<String>> imagesByOrderId = new HashMap<>();
 
         for (String imgUrl : listImg) {
@@ -237,8 +251,8 @@ public class ImageService {
         return imagesByOrderId;
     }
 
-    public Map<String, List<String>> getImgOrderedByPRStaffId(String staff_Id) throws IOException {
-        List<String> listImg = listAllImages("Customer_Progress_Photo/" + staff_Id);
+    public Map<String, List<String>> getImgOrderedByPRStaffId(String staffId) throws IOException {
+        List<String> listImg = listAllImages("Customer_Progress_Photo/" + staffId);
         Map<String, List<String>> imagesByOrderId = new HashMap<>();
 
         for (String imgUrl : listImg) {
@@ -298,7 +312,6 @@ public class ImageService {
         File tempFile = new File(fileName);
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(multipartFile.getBytes());
-            fos.close();
         }
         return tempFile;
     }
@@ -307,57 +320,51 @@ public class ImageService {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
-    public String upload(MultipartFile multipartFile, String FOLDER_NAME, String key) {
+    public String upload(MultipartFile multipartFile, String folderName, String key) {
         try {
-            String fileName = multipartFile.getOriginalFilename(); // to get original file name
-            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName)); // to generated random string
-                                                                                         // values for file name.
-            String URL = null;
-            File file = this.convertToFile(multipartFile, fileName); // to convert multipartFile to File
-            if (FOLDER_NAME.equals("Material")) {
-                URL = this.uploadFileForMaterial(file, fileName, key); // to get uploaded file link
-            } else if (FOLDER_NAME.equals("Diamond")) {
-                URL = this.uploadFileForDiamond(file, fileName, key); // to get uploaded file link
-            } else if (FOLDER_NAME.equals("Category")) {
-                URL = this.uploadFileForCategory(file, fileName, key); // to get uploaded file link
+            String fileName = multipartFile.getOriginalFilename();
+            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));
+            File file = this.convertToFile(multipartFile, fileName);
+            String url;
+
+            if (folderName.equals("Material")) {
+                url = this.uploadFileForMaterial(file, fileName, key);
+            } else if (folderName.equals("Diamond")) {
+                url = this.uploadFileForDiamond(file, fileName, key);
+            } else if (folderName.equals("Category")) {
+                url = this.uploadFileForCategory(file, fileName, key);
             } else {
-                URL = this.uploadFile(file, fileName); // to get uploaded file link
+                url = this.uploadFile(file, fileName);
             }
 
             file.delete();
-            return URL;
+            return url;
         } catch (Exception e) {
             e.printStackTrace();
             return "Image couldn't upload, Something went wrong";
         }
     }
 
-    public String uploadForProductionOrder(MultipartFile multipartFile, String FOLDER_NAME, String key,
-            String production_order_id) {
+    public String uploadForProductionOrder(MultipartFile multipartFile, String folderName, String key,
+            String productionOrderId) {
         try {
-            String fileName = multipartFile.getOriginalFilename(); // to get original file name
-            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName)); // to generated random string
-                                                                                         // values for file name.
-            String URL = null;
-            File file = this.convertToFile(multipartFile, fileName); // to convert multipartFile to File
-            if (FOLDER_NAME.equals("Customer_Production_Order")) {
-                URL = this.uploadFileForCustomerProductionOrder(file, fileName, key, production_order_id); // to get
-                                                                                                           // uploaded
-                                                                                                           // file link
-            } else if (FOLDER_NAME.equals("Customer_Design")) {
-                URL = this.uploadFileForDesignStaff(file, fileName, key, production_order_id); // to get
-                                                                                               // uploaded
-                                                                                               // file link
-            } else if (FOLDER_NAME.equals("Customer_Progress_Photo")) {
-                URL = this.uploadFileForProductionStaff(file, fileName, key, production_order_id); // to get
-                                                                                               // uploaded
-                                                                                               // file link
+            String fileName = multipartFile.getOriginalFilename();
+            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));
+            File file = this.convertToFile(multipartFile, fileName);
+            String url;
+
+            if (folderName.equals("Customer_Production_Order")) {
+                url = this.uploadFileForCustomerProductionOrder(file, fileName, key, productionOrderId);
+            } else if (folderName.equals("Customer_Design")) {
+                url = this.uploadFileForDesignStaff(file, fileName, key, productionOrderId);
+            } else if (folderName.equals("Customer_Progress_Photo")) {
+                url = this.uploadFileForProductionStaff(file, fileName, key, productionOrderId);
             } else {
-                URL = this.uploadFile(file, fileName); // to get uploaded file link
+                url = this.uploadFile(file, fileName);
             }
 
             file.delete();
-            return URL;
+            return url;
         } catch (Exception e) {
             e.printStackTrace();
             return "Image couldn't upload, Something went wrong";
@@ -365,16 +372,15 @@ public class ImageService {
     }
 
     public boolean deleteImage(String imageUrl) throws IOException {
-        String bucketName = "kirajewelry-a2n2k.appspot.com";
         String blobName = URLDecoder.decode(
                 imageUrl.substring(imageUrl.indexOf("/o/") + 3, imageUrl.indexOf("?alt=media")),
                 StandardCharsets.UTF_8.toString());
 
-        InputStream inputStream = ImageService.class.getClassLoader().getResourceAsStream("serviceAccountKey.json");
-        Credentials credentials = GoogleCredentials.fromStream(inputStream);
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        BlobId blobId = BlobId.of(bucketName, blobName);
-        return storage.delete(blobId);
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseURL)) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+            Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+            BlobId blobId = BlobId.of(BUCKET_NAME, blobName);
+            return storage.delete(blobId);
+        }
     }
-
 }

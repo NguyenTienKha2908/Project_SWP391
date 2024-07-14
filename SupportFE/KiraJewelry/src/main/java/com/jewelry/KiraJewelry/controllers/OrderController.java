@@ -237,11 +237,13 @@ public class OrderController {
         List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized");
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
+        List<ProductionOrder> completeOrders = productionOrderService.getProductionOrderByStatus("Completed");
 
         List<ProductionOrder> allOrders = new ArrayList<>();
         allOrders.addAll(customizedOrders);
         allOrders.addAll(paymentOrders);
         allOrders.addAll(deliveringOrders);
+        allOrders.addAll(completeOrders);
 
         List<ProductionOrder> customerOrders = allOrders.stream()
                 .filter(porder -> customerId.equalsIgnoreCase(porder.getCustomer().getCustomer_Id()))
@@ -254,6 +256,85 @@ public class OrderController {
 
     @GetMapping("/userCustomizedOrder")
     public String userViewCustomizedOrder(@RequestParam("orderId") String orderId, Model model) throws IOException {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
+        if (productionOrder == null) {
+            // Handle the case where the production order is not found
+            return "error";
+        }
+
+        String customerName = productionOrder.getCustomer().getFull_Name();
+        Customer customer = customerService.getCustomerIdByCustomerName(customerName);
+
+        ProductMaterial productMaterial = productMaterialService
+                .getProductMaterialByProduct_id(productionOrder.getProduct().getProduct_Id());
+        Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
+        Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+        Product product = productService.getProductById(productMaterial.getId().getProduct_Id());
+
+        model.addAttribute("customer", customer);
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("diamond", diamond);
+        model.addAttribute("product", product);
+        model.addAttribute("productMaterial", productMaterial);
+        model.addAttribute("material", material);
+
+        return "customer/customizeJewelry/orderSummary";
+    }
+
+    @GetMapping("/userHistoryOrders")
+    public String userHistoryOrders(HttpSession session, Model model) {
+        String customerId = (String) session.getAttribute("customerId");
+        Customer customer = customerService.getCustomerByCustomerId(customerId);
+
+        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Delivered");
+        List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Canceled");
+
+        List<ProductionOrder> allOrders = new ArrayList<>();
+        allOrders.addAll(customizedOrders);
+        allOrders.addAll(paymentOrders);
+
+        List<ProductionOrder> customerOrders = allOrders.stream()
+                .filter(porder -> customerId.equalsIgnoreCase(porder.getCustomer().getCustomer_Id()))
+                .collect(Collectors.toList());
+
+        List<ProductMaterial> proMaterialList = new ArrayList<>();
+        List<String> imagesByCategory = new ArrayList<>();
+        List<Diamond> diamonds = new ArrayList<>();
+        List<Material> materials = new ArrayList<>();
+        // Iterate through each material to get its image URL
+        for (ProductionOrder order : customerOrders) {
+
+            ProductMaterial productMaterial = productMaterialService
+                    .getProductMaterialByProductId(order.getProduct().getProduct_Id());
+            Diamond diamond = diamondService.getDiamondByProductId(productMaterial.getId().getProduct_Id());
+            Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+            diamonds.add(diamond);
+            proMaterialList.add(productMaterial);
+            materials.add(material);
+
+        }
+        model.addAttribute("materials", materials);
+        model.addAttribute("diamonds", diamonds);
+        model.addAttribute("productMaterials", proMaterialList);
+        model.addAttribute("imagesByCategory", imagesByCategory);
+        model.addAttribute("customerOrders", customerOrders);
+        model.addAttribute("customer", customer);
+        return "customer/userHistoryOrders";
+    }
+
+    @PostMapping("/userAcceptQuote")
+    public String acceptUserQuote(@RequestParam("productionOrderId") String productionOrderId) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+
+        productionOrder.setStatus("Order(NP)");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+
+        return "redirect:/userOrder";
+    }
+
+    @GetMapping("/viewWarrantyPDF")
+    public String viewWarrantyPDF(@RequestParam("orderId") String orderId, Model model) throws IOException {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
         if (productionOrder == null) {
             // Handle the case where the production order is not found
@@ -284,65 +365,6 @@ public class OrderController {
         model.addAttribute("materialUrl", materialUrl);
         model.addAttribute("diamondUrl", diamondUrl);
 
-        return "customer/customizeJewelry/orderSummary";
+        return "customer/warrantyPDF/warranty";
     }
-
-    @GetMapping("/userHistoryOrders")
-    public String userHistoryOrders(HttpSession session, Model model) {
-        String customerId = (String) session.getAttribute("customerId");
-        Customer customer = customerService.getCustomerByCustomerId(customerId);
-
-        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Delivered");
-        List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Canceled");
-
-        List<ProductionOrder> allOrders = new ArrayList<>();
-        allOrders.addAll(customizedOrders);
-        allOrders.addAll(paymentOrders);
-
-        List<ProductionOrder> customerOrders = allOrders.stream()
-                .filter(porder -> customerId.equalsIgnoreCase(porder.getCustomer().getCustomer_Id()))
-                .collect(Collectors.toList());
-
-        List<ProductMaterial> proMaterialList = new ArrayList<>();
-        List<String> imagesByCategory = new ArrayList<>();
-        List<Diamond> diamonds = new ArrayList<>();
-        List<Material> materials = new ArrayList<>();
-        // Iterate through each material to get its image URL
-        for (ProductionOrder order : customerOrders) {
-            try {
-                String imageUrl = imageService.getImgByCateogryID(String.valueOf(order.getCategory().getCategory_Id()));
-                imagesByCategory.add(imageUrl);
-                ProductMaterial productMaterial = productMaterialService
-                        .getProductMaterialByProductId(order.getProduct().getProduct_Id());
-                Diamond diamond = diamondService.getDiamondByProductId(productMaterial.getId().getProduct_Id());
-                Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
-                System.out.println(imageUrl);
-                diamonds.add(diamond);
-                proMaterialList.add(productMaterial);
-                materials.add(material);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-        model.addAttribute("materials", materials);
-        model.addAttribute("diamonds", diamonds);
-        model.addAttribute("productMaterials", proMaterialList);
-        model.addAttribute("imagesByCategory", imagesByCategory);
-        model.addAttribute("customerOrders", customerOrders);
-        model.addAttribute("customer", customer);
-        return "customer/userHistoryOrders";
-    }
-
-    @PostMapping("/userAcceptQuote")
-    public String acceptUserQuote(@RequestParam("productionOrderId") String productionOrderId) {
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-
-        productionOrder.setStatus("Order(NP)");
-
-        productionOrderService.saveProductionOrder(productionOrder);
-
-        return "redirect:/userOrder";
-    }
-
 }
