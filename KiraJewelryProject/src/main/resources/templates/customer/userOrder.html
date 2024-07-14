@@ -259,10 +259,42 @@
                                 (Order placed at <span
                                     th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></span>
                             </span>)
-                            <span style="font-size: 1.05rem; font-style: italic; color: grey;">
+                            <span style="font-size: 1.05rem; font-style: italic; color: grey;"
+                                th:if="${productionOrder.status=='Deposit In Confirm'} or ${productionOrder.status == 'Canceled'} or ${productionOrder.status == 'Last Payment In Confirm'}">
                                 - Status: <span th:text="${productionOrder.status}"></span>
                             </span>
                         </h1>
+                        <div class="wrapper-order bg-transparent border-0 shadow-none">
+                            <a href="#" class="float-end col-1 btn btn-danger my-2" data-bs-toggle="modal"
+                                data-bs-target="#Reject">Delete</a>
+                            <div class="modal fade" id="Reject">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">This is just a confirm message</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <p>Are you sure?</p>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <form th:action="@{/deleteProductionOrder}" method="post">
+                                                <input type="hidden" name="productionOrderId"
+                                                    th:value="${productionOrder.production_Order_Id}" />
+                                                <button class="btn btn-danger" type="submit">Yes</button>
+                                                <a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="wrapper-order row justify-content-md-center mx-auto my-5">
                             <div class="col-md-12">
                                 <h4 class="my-4" th:text="${product.product_Name}">

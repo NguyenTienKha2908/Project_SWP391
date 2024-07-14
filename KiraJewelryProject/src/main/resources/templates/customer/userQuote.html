@@ -287,20 +287,41 @@
                             </table>
                         </div>
                         <div th:if="${productionOrder.status == 'Quoted(WC)'}" class="group-link my-4">
-                            <a class="btn btn-secondary fw-bold mx-3 w-25"
+                            <a class="btn btn-secondary fw-bold mx-3 col-3"
                                 th:href="@{/customerAcceptQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
                                 Approve
                             </a>
-                            <a class="btn btn-danger fw-bold mx-3 w-25" data-bs-toggle="modal"
+                            <a class="btn btn-warning fw-bold mx-3 col-3" data-bs-toggle="modal"
                                 data-bs-target="#Reject">Reject</a>
-                            <!-- <a class="mx-0 text-decoration-none text-danger"
-                                th:href="@{/customerRejectQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
-                                <button type="button">Reject</button>
-                            </a> -->
-                            <!-- <a class="mx-0 text-decoration-none text-success"
-                                th:href="@{/customerAcceptQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
-                                <button type="button">Accept</button>
-                            </a> -->
+                            <a href="#" class="btn btn-danger fw-bold mx-3 col-3" data-bs-toggle="modal"
+                                data-bs-target="#Delete">Delete</a>
+                            <div class="modal fade" id="Delete">
+                                <div class=" modal-dialog modal-xl">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">This is just a confirm message</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <p>Are you sure to delete this production order?</p>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <form th:action="@{/deleteProductionOrder}" method="post">
+                                                <input type="hidden" name="productionOrderId"
+                                                    th:value="${productionOrder.production_Order_Id}" />
+                                                <button class="btn btn-danger" type="submit">Yes</button>
+                                                <a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="modal fade" id="Reject">
@@ -314,7 +335,7 @@
 
                                     <!-- Modal body -->
                                     <div class="modal-body">
-                                        <p>Are you sure?</p>
+                                        <p>Are you sure to reject this production order?</p>
                                     </div>
 
                                     <!-- Modal footer -->
@@ -323,6 +344,7 @@
                                             th:href="@{/customerRejectQuote(production_Order_Id=${productionOrder.production_Order_Id})}">
                                             <button class="btn btn-danger fw-bold" type="button">Yes</button>
                                         </a>
+                                        <a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
                                     </div>
                                 </div>
                             </div>

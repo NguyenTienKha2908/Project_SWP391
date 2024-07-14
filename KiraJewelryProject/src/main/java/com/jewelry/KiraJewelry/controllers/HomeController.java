@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.models.User;
-import com.jewelry.KiraJewelry.service.CustomerService;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.UserService;
 
@@ -19,8 +18,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private CustomerService customerService;
+    // @Autowired
+    // private CustomerService customerService;
 
     @Autowired
     private EmployeeService employeeService;

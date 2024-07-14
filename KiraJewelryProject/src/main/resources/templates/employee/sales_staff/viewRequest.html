@@ -96,13 +96,9 @@
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
-                                        <a class="mx-0"
+                                        <a class="mx-0 border-0 "
                                             th:href="@{/viewInformationRequestForSS(productionOrderId=${productionOrder.production_Order_Id})}">
-                                            <button type="button">View</button>
-                                        </a>
-                                        <a
-                                            th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
-                                            <button type="button">Quote</button>
+                                            <button class="text-decoration-none" type="button">View</button>
                                         </a>
                                     </div>
 

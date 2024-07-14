@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Customer;
 import com.jewelry.KiraJewelry.models.Diamond;
@@ -25,14 +26,12 @@ import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.models.Product;
 import com.jewelry.KiraJewelry.models.ProductMaterial;
 import com.jewelry.KiraJewelry.models.ProductMaterialId;
-// import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.models.ProductionOrder;
 import com.jewelry.KiraJewelry.models.User;
 import com.jewelry.KiraJewelry.service.CustomerService;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialPriceListService;
-// import com.jewelry.KiraJewelry.service.MaterialPriceListService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 import com.jewelry.KiraJewelry.service.ProductMaterialService;
 import com.jewelry.KiraJewelry.service.ProductService;
@@ -125,8 +124,19 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewIngredientsPage")
-    public String getIngredients(@RequestParam("productionOrderId") String productionOrderId, Model model,
-            HttpSession session) {
+    public String getIngredients(
+            @RequestParam("productionOrderId") String productionOrderId,
+            Model model,
+            HttpSession session,
+            @RequestParam(value = "message", required = false) String message,
+            @RequestParam(value = "materialName", required = false) String materialName,
+            @RequestParam(value = "material", required = false) Material material,
+            @RequestParam(value = "materialPriceList", required = false) List<MaterialPriceList> materialPriceList,
+            @RequestParam(value = "materials", required = false) List<Material> materials,
+            @RequestParam(value = "messageDiamond", required = false) String messageDiamond,
+            @RequestParam(value = "diamondName", required = false) String diamondName,
+            @RequestParam(value = "diamondPriceList", required = false) List<DiamondPriceList> diamondPriceList,
+            @RequestParam(value = "diamonds", required = false) List<Diamond> diamonds) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         Product product = productionOrder.getProduct();
         ProductMaterial oldProductMaterial = productMaterialService
@@ -155,11 +165,51 @@ public class ProductionOrderController {
         session.setAttribute("product", product);
         model.addAttribute("product", product);
         model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("productionOrderId", productionOrderId);
 
         session.setAttribute("oldDiamond", oldDiamond);
         session.setAttribute("productMaterial", oldProductMaterial);
 
+        model.addAttribute("message", message);
+        model.addAttribute("materialName", materialName);
+        model.addAttribute("materialPriceList", materialPriceList);
+        model.addAttribute("materials", materials);
+        model.addAttribute("messageDiamond", messageDiamond);
+        model.addAttribute("diamondName", diamondName);
+        model.addAttribute("materialPriceList", diamondPriceList);
+        model.addAttribute("diamonds", diamonds);
+        model.addAttribute("material", material);
+
         return "employee/sales_staff/findIngredientsPage";
+    }
+
+    @PostMapping("/updateSize")
+    public String updateSize(@RequestParam("production_Order_Id") String productionOrderId,
+            @RequestParam("productSize") int productSize,
+            Model model) {
+
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setProduct_Size(productSize);
+        productionOrderService.saveProductionOrder(productionOrder);
+        List<Diamond> listDiamonds = diamondService.getAllActiveDiamonds();
+
+        // Extract unique values for dropdowns
+        Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
+        Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
+        Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
+        Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
+
+        model.addAttribute("listDiamonds", listDiamonds);
+        model.addAttribute("origins", origins);
+        model.addAttribute("colors", colors);
+        model.addAttribute("clarities", clarities);
+        model.addAttribute("cuts", cuts);
+
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("product", productionOrder.getProduct());
+
+        return "employee/sales_staff/findIngredientsPage";
+
     }
 
     @GetMapping("/searchMaterial")
@@ -201,7 +251,8 @@ public class ProductionOrderController {
     public String saveMaterial(
             @RequestParam("production_Order_Id") String productionOrderId,
             @RequestParam("material_Id") int materialId,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         String message = "";
 
@@ -230,7 +281,7 @@ public class ProductionOrderController {
                     + ", Material Name : " + material.getMaterial_Name() + ", Price 1 units - Day effective : "
                     + mpl.getPrice() + " - " + mpl.getEff_Date();
 
-            model.addAttribute("material", material);
+            redirectAttributes.addAttribute("material", material);
             model.addAttribute("productionOrder", productionOrder);
             model.addAttribute("product", productionOrder.getProduct());
         } catch (Exception e) {
@@ -250,14 +301,14 @@ public class ProductionOrderController {
         model.addAttribute("colors", colors);
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
-        model.addAttribute("message", message);
 
-        return "employee/sales_staff/findIngredientsPage";
+        return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
     @GetMapping("/saveMaterialWeight")
     public String saveMaterialWeight(@RequestParam("production_Order_Id") String productionOrderId,
-            @RequestParam(value = "materialWeight", required = false) Double materialWeight, Model model) {
+            @RequestParam(value = "materialWeight", required = false) Double materialWeight,
+            Model model) {
         String message = "";
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         int productId = productionOrder.getProduct().getProduct_Id();
@@ -300,7 +351,9 @@ public class ProductionOrderController {
         model.addAttribute("productionOrder", productionOrder);
         model.addAttribute("product", productionOrder.getProduct());
         model.addAttribute("message", message);
-        return "employee/sales_staff/findIngredientsPage";
+        // return "employee/sales_staff/findIngredientsPage";
+        return "redirect:/viewIngredientsPage?productionOrderId=" +
+                productionOrderId;
     }
 
     @GetMapping("/searchDiamond")
@@ -327,11 +380,17 @@ public class ProductionOrderController {
             if (diamond == null || diamond.isEmpty()) {
                 model.addAttribute("messageDiamond", "Please select valid values to find diamond !");
             } else {
+                List<Diamond> dia = new ArrayList<>();
+                for (Diamond d : diamond) {
+                    if (d.isStatus()) {
+                        dia.add(d);
+                    }
+                }
 
-                model.addAttribute("diamonds", diamond);
+                model.addAttribute("diamonds", dia);
 
                 List<DiamondPriceList> diamondPriceList = new ArrayList<>();
-                for (Diamond d : diamond) {
+                for (Diamond d : dia) {
                     List<DiamondPriceList> dplList = diamondPriceListService.findPriceListByCriteria(
                             d.getCarat_Weight(),
                             d.getColor(),
@@ -339,7 +398,7 @@ public class ProductionOrderController {
                             d.getCut(),
                             d.getOrigin());
                     for (DiamondPriceList dpl : dplList) {
-                        if (dpl != null && d.isStatus()) {
+                        if (dpl != null) {
                             diamondPriceList.add(dpl);
                         }
                     }
@@ -389,10 +448,12 @@ public class ProductionOrderController {
             for (Diamond d : diamonds) {
                 if (d.getProduct() != null && d.getProduct().getProduct_Id() == productId) {
                     d.setProduct(null);
+                    d.setStatus(true);
                     productionOrder.setQ_Diamond_Amount(0.0);
                     productionOrderService.saveProductionOrder(productionOrder);
                 }
             }
+            diamond.setStatus(false);
             diamond.setProduct(productService.getProductById(productId));
 
             List<DiamondPriceList> dpl = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),
@@ -430,7 +491,7 @@ public class ProductionOrderController {
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
         model.addAttribute("messageDiamond", messageDiamond);
-        return "employee/sales_staff/findIngredientsPage";
+        return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
     @PostMapping("/saveProductionOrder")
@@ -472,7 +533,7 @@ public class ProductionOrderController {
         model.addAttribute("colors", colors);
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
-        return "employee/sales_staff/findIngredientsPage";
+        return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
     @GetMapping("/previewQuotePage")
@@ -546,7 +607,7 @@ public class ProductionOrderController {
         model.addAttribute("user", customer.getUser());
         model.addAttribute("productionOrder", productionOrder);
         model.addAttribute("product", productionOrder.getProduct());
-        return "employee/sales_staff/viewQuote";
+        return "redirect:/viewQuotesforSS";
     }
 
     @GetMapping("/viewQuotesforSS")
@@ -619,15 +680,15 @@ public class ProductionOrderController {
                 .getProductionOrderByStatus("Last Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
         List<ProductionOrder> deliveredgOrders = productionOrderService.getProductionOrderByStatus("Delivered");
+        List<ProductionOrder> deliveredgOrders2 = productionOrderService.getProductionOrderByStatus("Ordered");
 
         List<ProductionOrder> allOrders = new ArrayList<>();
         allOrders.addAll(completedOrders);
         allOrders.addAll(paymentOrders);
         allOrders.addAll(deliveringOrders);
         allOrders.addAll(deliveredgOrders);
-        allOrders.addAll(depositOrders);
+        allOrders.addAll(deliveredgOrders2);
         allOrders.addAll(lastdepositOrders);
-
         List<ProductionOrder> customerOrders = allOrders.stream()
                 .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
                 .collect(Collectors.toList());
@@ -699,6 +760,7 @@ public class ProductionOrderController {
         return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
     }
 
+
     @PostMapping("/confirmCustomizedDepositBySS")
     public String confirmCustomizedDepositBySS(
             @RequestParam("productionOrderId") String productionOrderId,
@@ -726,7 +788,9 @@ public class ProductionOrderController {
     }
 
     @PostMapping("/deleteProductionOrder")
-    public String deleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId) {
+    public String deleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
+            HttpSession session) {
+        User user = (User) session.getAttribute("user");
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         String status = productionOrder.getStatus();
         Product product = productService.getProductById(productionOrder.getProduct().getProduct_Id());
@@ -737,6 +801,7 @@ public class ProductionOrderController {
             Diamond diamond = diamondService.getDiamondByProductId(productId);
             if (diamond != null) {
                 diamond.setProduct(null);
+                diamond.setStatus(true);
             }
             ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(productId);
             if (productMaterial != null) {
@@ -765,14 +830,26 @@ public class ProductionOrderController {
                 e.printStackTrace();
             }
         }
-        if ("Created".equals(status) || "Requested".equals(status)) {
-            return "redirect:/viewRequestsforManager";
-        } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
-                || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
+        if (user.getRole_Id() == 1) {
+            if ("Created".equals(status) || "Requested".equals(status)) {
+                return "redirect:/userRequests";
+            } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
+                    || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
 
-            return "redirect:/viewQuotesforManager";
+                return "redirect:/userQuotes";
+            }
+            return "redirect:/userOrders";
+        } else {
+            if ("Created".equals(status) || "Requested".equals(status)) {
+                return "redirect:/viewRequestsforManager";
+            } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
+                    || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
+
+                return "redirect:/viewQuotesforManager";
+            }
+            return "redirect:/viewOrdersforManager";
         }
-        return "redirect:/viewOrdersforManager";
+
     }
 
     @GetMapping("/viewQuotesforManager")
@@ -860,7 +937,7 @@ public class ProductionOrderController {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         productionOrder.setStatus("Quoted(RJ)");
         productionOrderService.saveProductionOrder(productionOrder);
-        return "employee/manager/viewQuote";
+        return "redirect:/viewQuotesforSS";
     }
 
     @GetMapping("/acceptQuote")
@@ -871,7 +948,8 @@ public class ProductionOrderController {
 
         productionOrderService.saveProductionOrder(productionOrder);
 
-        return "employee/manager/viewQuote";
+        return "redirect:/viewQuotesforManager";
+
     }
 
     @GetMapping("/viewOrdersforManager")
@@ -882,6 +960,8 @@ public class ProductionOrderController {
         List<ProductionOrder> listOrder4 = productionOrderService.getProductionOrderByStatus("Delivering");
         List<ProductionOrder> listOrder5 = productionOrderService.getProductionOrderByStatus("Delivered");
         List<ProductionOrder> listOrder6 = productionOrderService.getProductionOrderByStatus("Completed");
+        List<ProductionOrder> listOrder7 = productionOrderService
+                .getProductionOrderByStatus("Last Payment In Confirm");
         List<ProductionOrder> lists = new ArrayList<>();
         lists.addAll(listOrders);
         lists.addAll(listOrder2);
@@ -889,6 +969,8 @@ public class ProductionOrderController {
         lists.addAll(listOrder4);
         lists.addAll(listOrder5);
         lists.addAll(listOrder6);
+        lists.addAll(listOrder7);
+
         model.addAttribute("listOrders", lists);
         return "employee/manager/viewOrder";
     }
@@ -975,9 +1057,9 @@ public class ProductionOrderController {
             Employee employee = employeeService.getEmployeeById(pemployeeId);
             productionOrder.setProduction_Staff(employee.getEmployee_Id());
         }
-
         productionOrderService.saveProductionOrder(productionOrder);
-        return "redirect:/viewRequestsforManager";
+
+        return "redirect:/viewOrdersforManager";
     }
 
     @GetMapping("/viewEditPage")
@@ -1007,19 +1089,6 @@ public class ProductionOrderController {
         model.addAttribute("material", material);
         return "employee/sales_staff/materialAndGem";
     }
-
-    // @PostMapping("/acceptQuote")
-    // public String acceptQuote(@RequestParam("productionOrderId") String
-    // productionOrderId) {
-    // ProductionOrder productionOrder =
-    // productionOrderService.getProductionOrderById(productionOrderId);
-
-    // productionOrder.setStatus("Quoted");
-
-    // productionOrderService.saveProductionOrder(productionOrder);
-
-    // return "redirect:/viewOrdersforManager";
-    // }
 
     @GetMapping("/viewRequestsforDE")
     public String getAllRequestsForDE(Model model, HttpSession session) {
@@ -1340,7 +1409,7 @@ public class ProductionOrderController {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         productionOrder.setStatus("Quoted(CRJ)");
         productionOrderService.saveProductionOrder(productionOrder);
-        return "customer/allUserQuotes";
+        return "redirect:/userQuotes";
     }
 
     @GetMapping("/customerAcceptQuote")
@@ -1355,7 +1424,7 @@ public class ProductionOrderController {
 
         productionOrderService.saveProductionOrder(productionOrder);
 
-        return "customer/allUserOrder";
+        return "redirect:/userOrders";
     }
 
     @GetMapping("/viewInformationOrderForCustomer")

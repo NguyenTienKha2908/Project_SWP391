@@ -143,21 +143,42 @@
             </div>
 
             <div class="content">
+
                 <h1 class="text-center">Find ingredients for customer's jewelry</h1>
+
+                <a class="mx-0 border-0 "
+                    th:href="@{/viewInformationRequestForSS(productionOrderId=${productionOrder.production_Order_Id})}">
+                    <button class="text-decoration-none text-white bg-dark ms-5 me-5 p-2 pt-1 pb-1"
+                        type="button">Back</button>
+                </a>
+
                 <div class="wrapper-order">
                     <div class="d-flex">
-                        <b>
+                        <b class="me-3">
                             Production Order Id :
                         </b>
                         <i class="fw-bold text-secondary" th:value="${productionOrder.production_Order_Id}"
                             th:text="${productionOrder.production_Order_Id}"></i>
                     </div>
                     <div class="d-flex">
-                        <b>
+                        <b class="me-3">
                             Product Id :
                         </b>
                         <i class="fw-bold text-secondary" th:value="${product.product_Id}"
                             th:text="${product.product_Id}"></i>
+                    </div>
+                    <div class="d-flex">
+                        <b class="me-3">
+                            Size:
+                        </b>
+                        <form th:action="@{/updateSize}" method="POST">
+                            <input type="number" min="0" name="productSize" th:value="${productionOrder.product_Size}"
+                                id="productSize">
+                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                th:value="${productionOrder.production_Order_Id}">
+                            <button class="text-decoration-none">Update</button>
+                        </form>
+
                     </div>
                 </div>
 
@@ -443,6 +464,8 @@
                                 </button>
                             </div>
                         </div>
+                        <input th:if="${productionOrder.q_Production_Amount != 0}" type="text" class="form-control w-25"
+                            disabled th:placeholder="${productionOrder.q_Production_Amount}">
                     </div>
                 </form>
             </div>

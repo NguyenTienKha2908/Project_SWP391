@@ -78,10 +78,6 @@ public class MaterialPriceListController {
             @RequestParam("price") double price,
             @RequestParam("id") int id,
             Model model) {
-        // if (result.hasErrors()) {
-        // model.addAttribute("materials", materialService.getAllActiveMaterials());
-        // return "MaterialPriceList/update_material_price_list";
-        // }
 
         MaterialPriceList materialPriceList = materialPriceListService.getMaterialPriceListById(id);
         materialPriceList.setPrice(price);

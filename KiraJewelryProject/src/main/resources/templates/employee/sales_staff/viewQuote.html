@@ -96,9 +96,9 @@
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
-                                        <a class="mx-0"
+                                        <a class="mx-0 border-0"
                                             th:href="@{/viewInformationQuoteForSS(production_Order_Id=${productionOrder.production_Order_Id})}">
-                                            <button type="button">View</button>
+                                            <button class="text-decoration-none" type="button">View</button>
                                         </a>
                                         <a th:if="${productionOrder.status == 'Quoted(RJ)' or productionOrder.status == 'Quoted(CRJ)'}"
                                             th:href="@{/viewIngredientsPage(productionOrderId=${productionOrder.production_Order_Id})}">
