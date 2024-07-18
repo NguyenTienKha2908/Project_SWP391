@@ -33,13 +33,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable())
                 .authorizeRequests(request -> request
-                .requestMatchers("/", "/registration", "/css/**").permitAll()
-                .requestMatchers("/").hasAuthority("1")
-                .requestMatchers("employee/manager/profile").hasAuthority("3")
-                .requestMatchers("employee/sale_staff/profile").hasAuthority("4")
-                .requestMatchers("employee/design_staff/home").hasAuthority("5")
-                .requestMatchers("employee/production_staff/home").hasAuthority("6")
-                .anyRequest().authenticated())
+                        .requestMatchers("/", "/registration", "/css/**", "/BlogList", "/education",
+                                "/viewCustomerMaterialPriceListPage", "/viewCustomerMaterialsPage",
+                                "/viewCustomerDiaPriceListPage", "/customerDiamondsPage", "/collection", "/request")
+                        .permitAll()
+                        .requestMatchers("/customizeJewelry", "/request").hasAuthority("1")
+                        .requestMatchers("employee/manager/profile").hasAuthority("3")
+                        .requestMatchers("employee/sale_staff/profile").hasAuthority("4")
+                        .requestMatchers("employee/design_staff/home").hasAuthority("5")
+                        .requestMatchers("employee/production_staff/home").hasAuthority("6")
+                        .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")

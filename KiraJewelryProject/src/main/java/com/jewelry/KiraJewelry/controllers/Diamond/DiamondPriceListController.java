@@ -1,5 +1,6 @@
 package com.jewelry.KiraJewelry.controllers.Diamond;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -148,10 +149,15 @@ public class DiamondPriceListController {
     }
 
     @GetMapping("/viewCustomerDiaPriceListPage")
-    public String viewCustomerDiaPriceListPage(Model model, @RequestParam(defaultValue = "0") int page) {
+    public String viewCustomerDiaPriceListPage(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, 20);
         Page<DiamondPriceList> diaPriceListPage = diaPriceListService.getAllDiaPriceLists(pageable);
         model.addAttribute("diaPriceListPage", diaPriceListPage);
+        model.addAttribute("requestURI", request.getRequestURI());
+
         return "price/diamondPriceList";
     }
 
@@ -163,7 +169,8 @@ public class DiamondPriceListController {
 
     @GetMapping("/getPriceListByColorRange")
     @ResponseBody
-    public List<String> getPriceListByColorRange(@RequestParam String origin,
+    public List<String> getPriceListByColorRange(
+            @RequestParam String origin,
             @RequestParam float carat_weight_from,
             @RequestParam float carat_weight_to) {
         return diaPriceListService.getColorsByOriginAndCaratWeightRange(origin, carat_weight_from, carat_weight_to);

@@ -13,6 +13,7 @@ import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.Blog.BlogService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +27,9 @@ public class BlogController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
     private BlogService blogService;
+
     public String viewBlogsPage(Model model) {
         List<Blog> listBlogs = blogService.getAllBlogs();
         model.addAttribute("listBlogs", listBlogs);
@@ -171,9 +174,10 @@ public class BlogController {
     // CUSTOMER
 
     @GetMapping("/BlogList")
-    public String listBlogs(Model model) {
+    public String listBlogs(Model model, HttpServletRequest request) {
         List<Blog> listBlogs = blogService.getAllBlogs();
         model.addAttribute("listBlogs", listBlogs);
+        model.addAttribute("requestURI", request.getRequestURI());
         return "blog/BlogList";
     }
 

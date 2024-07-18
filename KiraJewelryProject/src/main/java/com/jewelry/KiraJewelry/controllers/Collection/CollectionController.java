@@ -9,13 +9,27 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Collection;
+import com.jewelry.KiraJewelry.models.Diamond;
+import com.jewelry.KiraJewelry.models.Material;
+import com.jewelry.KiraJewelry.models.Product;
+import com.jewelry.KiraJewelry.models.ProductDesign;
+import com.jewelry.KiraJewelry.models.ProductMaterial;
+import com.jewelry.KiraJewelry.models.ProductionOrder;
+import com.jewelry.KiraJewelry.service.MaterialService;
+import com.jewelry.KiraJewelry.service.ProductDesignService;
+import com.jewelry.KiraJewelry.service.ProductMaterialService;
+import com.jewelry.KiraJewelry.service.ProductService;
+import com.jewelry.KiraJewelry.service.ProductionOrderService;
 import com.jewelry.KiraJewelry.service.Collection.CollectionService;
+import com.jewelry.KiraJewelry.service.Diamond.DiamondService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -106,27 +120,6 @@ public class CollectionController {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
                 return "employee/manager/Collection/update_collection";
             }
-        // } else if (collection.getImg_Url() != null && !collection.getImg_Url().isEmpty()) {
-        //     if (collection.getImageData() == null || collection.getImageData().length == 0) {
-        //         try {
-        //             @SuppressWarnings("deprecation")
-        //             URL url = new URL(collection.getImg_Url());
-        //             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //             try (InputStream is = url.openStream()) {
-        //                 byte[] buffer = new byte[1024];
-        //                 int n;
-        //                 while ((n = is.read(buffer)) != -1) {
-        //                     baos.write(buffer, 0, n);
-        //                 }
-        //             }
-        //             byte[] imageBytes = baos.toByteArray();
-        //             collection.setImageData(imageBytes);
-        //         } catch (IOException e) {
-        //             redirectAttributes.addFlashAttribute("errorMessage",
-        //                     "Could not retrieve image from URL: " + e.getMessage());
-        //             return "employee/manager/Collection/update_collection";
-        //         }
-        //     }
         }
 
         collectionService.saveCollection(collection);
@@ -164,5 +157,60 @@ public class CollectionController {
         collectionService.deleteCollectionById(id);
         redirectAttributes.addFlashAttribute("message", "Collection deleted successfully.");
         return "redirect:/collections";
+    }
+
+    @GetMapping("/customerViewCollection")
+    public String customerViewCollection(Model model, HttpServletRequest request) {
+        List<Collection> listCollections = collectionService.getAllCollections();
+        model.addAttribute("listCollections", listCollections);
+        model.addAttribute("requestURI", request.getRequestURI());
+        return "collection/collectionPage";
+    }
+
+    @Autowired
+    private ProductMaterialService productMaterialService;
+
+    @Autowired
+    private DiamondService diamondService;
+
+    @Autowired
+    private MaterialService materialService;
+
+    @Autowired
+    private ProductionOrderService productionOrderService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ProductDesignService productDesignService;
+
+    @GetMapping("/viewCollection")
+    public String viewCollectionDetail(Model model, @RequestParam("id") int id) {
+        List<Product> products = productService.getProductsByColId(id);
+        List<ProductDesign> productDesigns = productDesignService.getProductDesignsByColId(id);
+        List<ProductMaterial> productMaterials = new ArrayList<>();
+        List<Diamond> diamonds = new ArrayList<>();
+        List<ProductionOrder> productionOrders = new ArrayList<>();
+        List<Material> materials = new ArrayList<>();
+
+        for (Product p : products) {
+            ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(p.getProduct_Id());
+            productMaterials.add(productMaterial);
+            Diamond diamond = diamondService.getDiamondByProductId(p.getProduct_Id());
+            diamonds.add(diamond);
+            ProductionOrder productionOrder = productionOrderService.getProductionOrderByProductId(p.getProduct_Id());
+            productionOrders.add(productionOrder);
+            Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+            materials.add(material);
+        }
+
+        model.addAttribute("productDesignList", productDesigns);
+        model.addAttribute("productMaterialList", productMaterials);
+        model.addAttribute("diamondList", diamonds);
+        model.addAttribute("productionOrderList", productionOrders);
+        model.addAttribute("materialList", materials);
+
+        return "collection/collectionDetail";
     }
 }

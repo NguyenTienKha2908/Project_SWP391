@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jewelry.KiraJewelry.models.Product;
+import com.jewelry.KiraJewelry.models.ProductDesign;
 import com.jewelry.KiraJewelry.repository.ProductRepository;
 
 import java.util.List;
@@ -54,5 +55,11 @@ public class ProductService {
         int newNumericPart = numericPart + 1;
         return "PO" + String.format("%05d", newNumericPart);
     }
+
+    public List<Product> getProductsByColId(int collection_id) {
+        return productRepository.getProductByCollectionId(collection_id);
+    }
+
+    
 }
 

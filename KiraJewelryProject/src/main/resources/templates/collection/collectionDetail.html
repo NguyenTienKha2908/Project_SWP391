@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon"
+        th:href="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3}"
+        type="image/x-icon" />
+    <title>Collection</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/collection/collection.css}" />
+</head>
+
+<body>
+    <!--Page header-->
+    <header th:replace="fragments/homepage_header :: homepage_header_comp">
+        <script type="text/javascript" th:src="@{/js/component/general/homepage_header.js}"></script>
+    </header>
+
+
+    <div class="header-content">
+        <h1>New Summer Collection</h1>
+        <p>Summer 2024</p>
+    </div>
+    </div>
+
+    <!--Main page-->
+    <div class="summer-col-content">
+        <div class="summer-header">
+            <h1>What is inside our collection</h1>
+            <p>
+                Modern jewelry is made of gold, silver, or platinum, often with
+                precious of semiprecious stones.
+            </p>
+        </div>
+
+        <div class="container">
+            <div th:each="order, index : ${productionOrderList}" class="row">
+                <div class="col-md-5">
+                    <img class="h-100 img-responsive img-fluid" th:src="@{${order.category.img_Url}}" alt="" />
+                </div>
+                <div class="col-md-12">
+                    <h1>Information</h1>
+                    <nav>
+                        <details>
+                            <summary th:text="${order.category.category_Name}"></summary>
+                            <p>Category: <span th:text="${order.product.product_Name}">Necklace</span></p>
+                            <p>Diamond: <span>
+                                    <span th:if="${diamondList != null}">
+                                        <span th:text="${diamondList[index.index].dia_Name}"></span>,
+                                        <span th:text="${diamondList[index.index].carat_Weight}"></span> ct,
+                                        <span th:text="${diamondList[index.index].origin}"></span>,
+                                        <span th:text="${diamondList[index.index].color}"></span>,
+                                        <span th:text="${diamondList[index.index].clarity}"></span>,
+                                        <span th:text="${diamondList[index.index].cut}"></span> cut,
+                                    </span>
+                                    <div class="other-diamond-info">
+                                        <p>Proportion: <span th:text="${diamondList[index.index].proportions}"></span>
+                                        </p>
+                                        <p>Symmetry: <span th:text="${diamondList[index.index].symmetry}"></span>
+                                        </p>
+                                        <p>Fluorescence: <span
+                                                th:text="${diamondList[index.index].fluorescence}"></span>
+                                        </p>
+                                        <p>Polish: <span th:text="${diamondList[index.index].polish}"></span></p>
+                                    </div>
+                                </span></p>
+                            <p>Material:
+                                <span th:text="${materialList[index.index].material_Name}"></span> -
+                                <span th:text="${productMaterialList[index.index].material_Weight}"></span>
+                                mace
+                            </p>
+                            <p>
+                                Description:
+                                <span th:text="${order.product.description}"></span>
+                            </p>
+                            <p>Price:
+                                <span style="font-weight: 700;">Total Price:</span>
+                                <span th:text="${#numbers.formatDecimal(order.o_Total_Amount, 1, 2)}"></span>
+                                (<span style="color:#4e64c9; font-style: italic;"
+                                    th:text="${#numbers.formatDecimal(order.q_Total_Amount, 1, 2)}"></span>)
+
+                            </p>
+                        </details>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h1>Information</h1>
+            <nav>
+                <details>
+                    <summary>Earrings</summary>
+                    <p>Name: <span>Chrome Diopside Drop Earrings</span></p>
+                    <p>Type: <span>Necklace</span></p>
+                    <p>Gemstone: <span>Rhodochrosite</span></p>
+                    <p>Material: <span>Silver</span></p>
+                    <p>
+                        Description:
+                        <span>Chrome diopside drop earrings, capturing the intense green
+                            color and brilliance of the gemstones as they catch the
+                            light</span>
+                    </p>
+                    <p>Price: <span>$1298.99</span></p>
+                </details>
+                <details>
+                    <summary>Necklace</summary>
+                    <p>Name: <span>Chrome Diopside Drop Earrings</span></p>
+                    <p>Type: <span>Necklace</span></p>
+                    <p>Gemstone: <span>Rhodochrosite</span></p>
+                    <p>Material: <span>Silver</span></p>
+                    <p>
+                        Description:
+                        <span>Chrome diopside drop earrings, capturing the intense green
+                            color and brilliance of the gemstones as they catch the
+                            light</span>
+                    </p>
+                    <p>Price: <span>$1298.99</span></p>
+                </details>
+                <details>
+                    <summary>Bracelet</summary>
+                    <p>Name: <span>Chrome Diopside Drop Earrings</span></p>
+                    <p>Type: <span>Necklace</span></p>
+                    <p>Gemstone: <span>Rhodochrosite</span></p>
+                    <p>Material: <span>Silver</span></p>
+                    <p>
+                        Description:
+                        <span>Chrome diopside drop earrings, capturing the intense green
+                            color and brilliance of the gemstones as they catch the
+                            light</span>
+                    </p>
+                    <p>Price: <span>$1298.99</span></p>
+                </details>
+                <details>
+                    <summary>Ring</summary>
+                    <p>Name: <span>Chrome Diopside Drop Earrings</span></p>
+                    <p>Type: <span>Necklace</span></p>
+                    <p>Gemstone: <span>Rhodochrosite</span></p>
+                    <p>Material: <span>Silver</span></p>
+                    <p>
+                        Description:
+                        <span>Chrome diopside drop earrings, capturing the intense green
+                            color and brilliance of the gemstones as they catch the
+                            light</span>
+                    </p>
+                    <p>Price: <span>$1298.99</span></p>
+                </details>
+            </nav>
+        </div>
+
+
+    </div>
+
+
+
+    <!--Page footer-->
+    <div th:replace="fragments/homepage_footer :: homepage_footer_comp"></div>
+    <script>
+        window.onscroll = function () {
+            myFunction();
+        };
+        var header = document.getElementById("myHeader");
+        var sticky = header.offsetTop;
+        function myFunction() {
+            if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+    </script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

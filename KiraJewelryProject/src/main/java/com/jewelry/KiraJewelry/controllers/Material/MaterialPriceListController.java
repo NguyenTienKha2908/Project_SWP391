@@ -1,5 +1,6 @@
 package com.jewelry.KiraJewelry.controllers.Material;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,12 +100,13 @@ public class MaterialPriceListController {
     }
 
     @GetMapping("/viewCustomerMaterialPriceListPage")
-    public String viewCustomerMaterialPriceListPage(Model model) {
+    public String viewCustomerMaterialPriceListPage(Model model, HttpServletRequest request) {
         List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
                 .filter(mpl -> mpl.getMaterial().getStatus() == 1)
                 .collect(Collectors.toList());
         model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
         model.addAttribute("materialPriceList", new MaterialPriceList());
+        model.addAttribute("requestURI", request.getRequestURI());
         return "price/materialPriceList";
     }
 }
