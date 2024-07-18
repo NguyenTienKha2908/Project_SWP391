@@ -391,7 +391,7 @@ public class ProductionOrderController {
 
                 model.addAttribute("diamonds", dia);
 
-                List<DiamondPriceList> diamondPriceList = new ArrayList<>();
+                Map<String, DiamondPriceList> uniqueDiamondPriceMap = new HashMap<>();
                 for (Diamond d : dia) {
                     List<DiamondPriceList> dplList = diamondPriceListService.findPriceListByCriteria(
                             d.getCarat_Weight(),
@@ -401,14 +401,18 @@ public class ProductionOrderController {
                             d.getOrigin());
                     for (DiamondPriceList dpl : dplList) {
                         if (dpl != null) {
-                            diamondPriceList.add(dpl);
+                            String key = dpl.getOrigin() + "_" + dpl.getColor() + "_" + dpl.getClarity() + "_"
+                                    + dpl.getCut() + "_" + dpl.getCarat_Weight_From() + "_" + dpl.getCarat_Weight_To();
+                            if (!uniqueDiamondPriceMap.containsKey(key)) {
+                                uniqueDiamondPriceMap.put(key, dpl);
+                            }
                         }
                     }
                 }
-                model.addAttribute("diamondPriceList", diamondPriceList);
-
+                model.addAttribute("diamondPriceList", uniqueDiamondPriceMap.values());
             }
         }
+
         List<Diamond> listDiamonds = diamondService.getAllDiamonds();
 
         // Extract unique values for dropdowns
@@ -500,17 +504,20 @@ public class ProductionOrderController {
     @PostMapping("/saveProductionOrder")
     public String saveProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
             @RequestParam(value = "staff", required = false) String employeeId,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-
+        String message = "";
         if (employeeId != null && !employeeId.isEmpty()) {
             Employee employee = employeeService.getEmployeeById(employeeId);
             productionOrder.setSales_Staff(employee.getEmployee_Id());
             productionOrder.setStatus("Requested");
+            productionOrderService.saveProductionOrder(productionOrder);
+            message = "true";
+        } else if (employeeId == null || employeeId.isEmpty()) {
+            message = "false";
         }
-
-        productionOrderService.saveProductionOrder(productionOrder);
-        return "redirect:/viewRequestsforManager";
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/viewInformationRequestForManager?productionOrderId=" + productionOrderId;
     }
 
     @GetMapping("/saveProductionPrice")

@@ -168,17 +168,24 @@
                             th:text="${product.product_Id}"></i>
                     </div>
                     <div class="d-flex">
-                        <b class="me-3">
+                        <b class="me-3 d-flex align-items-center">
                             Size:
                         </b>
-                        <form th:action="@{/updateSize}" method="POST">
+                        <div id="sizeDisplay">
+                            <span th:text="${productionOrder.product_Size}"></span>
+                            <button type="button" class="btn btn-link text-decoration-none"
+                                onclick="showEditForm()">Edit</button>
+                        </div>
+                        <!-- Phần hiển thị biểu mẫu cập nhật kích thước -->
+                        <form th:action="@{/updateSize}" method="POST" id="sizeEditForm" style="display: none;">
                             <input type="number" min="0" name="productSize" th:value="${productionOrder.product_Size}"
                                 id="productSize">
                             <input type="hidden" id="production_Order_Id" name="production_Order_Id"
                                 th:value="${productionOrder.production_Order_Id}">
-                            <button class="text-decoration-none">Update</button>
+                            <button type="submit" class="text-decoration-none btn btn-success">Update</button>
+                            <button type="button" class="btn btn-link text-decoration-none bg-danger text-white"
+                                onclick="hideEditForm()">Cancel</button>
                         </form>
-
                     </div>
                 </div>
 
@@ -190,37 +197,74 @@
                             th:value="${productionOrder.production_Order_Id}">
 
                         <div class="form-row row">
-                            <div class="form-group col-md-10">
-                                <label for="materialName">Material Name:</label>
-                                <div class="d-flex">
-                                    <input type="text" id="materialName" name="materialName" class="form-control"
-                                        th:value="${materialName}">
-                                    <button type="submit" class="w-75 btn btn-secondary mx-3">
-                                        Search Material
-                                    </button>
-                                    <input th:if="${session.material != null}" type="text" class="form-control w-75"
-                                        disabled th:placeholder="${session.material.material_Name}">
+                            <div class="form-group col-md-10 d-flex">
+                                <label for="materialName" class="me-3">Material Name:</label>
+                                <div class="d-flex align-items-center">
+                                    <div id="materialDisplay" class="d-flex align-items-center flex-row"
+                                        th:if="${session.material == null || session.material.material_Name == ''}">
+                                        <span class="text-danger">No material selected</span>
+                                        <button type="button" class="btn btn-link text-decoration-none"
+                                            onclick="showMaterialEditForm()">Edit</button>
+                                    </div>
+
+                                    <div id="materialDisplay"
+                                        th:if="${session.material != null && session.material.material_Name != ''}">
+                                        <span class="d-flex align-items-center text-secondary"
+                                            th:text="${session.material.material_Name}"></span>
+
+                                        <button type="button" class="btn btn-link text-decoration-none"
+                                            onclick="showMaterialEditForm()">Edit</button>
+
+                                    </div>
+
+                                    <div id="materialEditForm" style="display: none;">
+                                        <input type="text" id="materialName" name="materialName"
+                                            class="form-control me-3" th:value="${materialName}"
+                                            th:placeholder="${session.material != null ? session.material.material_Name : ''}">
+                                        <button type="submit" class="btn btn-secondary me-2 text-nowrap">Search
+                                            Material</button>
+                                        <button type="button"
+                                            class="btn btn-link text-decoration-none bg-danger text-white"
+                                            onclick="hideMaterialEditForm()">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
 
-                    <form th:action="@{/saveMaterialWeight}" method="get">
+
+                    <form th:action="@{/saveMaterialWeight}" method="GET">
                         <input type="hidden" id="production_Order_Id" name="production_Order_Id"
                             th:value="${productionOrder.production_Order_Id}">
 
                         <div class="form-row row">
-                            <div class="form-group col-md-10">
-                                <label for="materialWeight" class="text-nowrap">Material Weight:</label>
-                                <div class="d-flex">
-                                    <input type="text" id="materialWeight" name="materialWeight" class="form-control"
-                                        th:value="${materialWeight}">
-                                    <button type="submit" class="w-100 btn btn-secondary mx-3">
-                                        Save Material Weight
-                                    </button>
-                                    <input th:if="${session.productMaterial != null}" type="text"
-                                        class="form-control w-50" disabled
-                                        th:placeholder="${session.productMaterial.material_Weight}">
+                            <div class="form-group col-md-10 d-flex">
+                                <label for="materialWeight" class="text-nowrap me-3">Material Weight:</label>
+                                <div class="d-flex align-items-center">
+                                    <div id="weightDisplay"
+                                        th:if="${session.productMaterial == null || session.productMaterial.material_Weight == ''}">
+                                        <span>No material weight specified</span>
+                                        <button type="button" class="btn btn-link text-decoration-none"
+                                            onclick="showWeightEditForm()">Edit</button>
+                                    </div>
+
+                                    <div id="weightDisplay"
+                                        th:if="${session.productMaterial != null && session.productMaterial.material_Weight != ''}">
+                                        <span class="text-secondary"
+                                            th:text="${session.productMaterial.material_Weight}"></span>
+                                        <button type="button" class="btn btn-link text-decoration-none"
+                                            onclick="showWeightEditForm()">Edit</button>
+                                    </div>
+
+                                    <div id="weightEditForm" style="display: none;">
+                                        <input type="text" id="materialWeight" name="materialWeight"
+                                            class="form-control me-3" th:value="${materialWeight}"
+                                            th:placeholder="${session.productMaterial != null ? session.productMaterial.material_Weight : ''}">
+                                        <button type="submit" class="btn btn-secondary me-2">Save</button>
+                                        <button type="button"
+                                            class="btn btn-link text-decoration-none bg-danger text-white"
+                                            onclick="hideWeightEditForm()">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -242,132 +286,157 @@
                                     <th>ID</th>
                                     <th>Code</th>
                                     <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Eff Date</th>
                                     <th>Action</th>
                                 </tr>
                                 <tr th:each="material : ${materials}">
-                                    <td th:text="${material.material_Id}"></td>
-                                    <td th:text="${material.material_Code}"></td>
-                                    <td th:text="${material.material_Name}"></td>
-                                    <td>
-                                        <form th:action="@{/saveMaterial}" method="get">
-                                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                                                th:value="${productionOrder.production_Order_Id}">
-                                            <input type="hidden" name="material_Id"
-                                                th:value="${material.material_Id}" />
-                                            <button class="text-decoration-none text-success">Save</button>
-                                        </form>
-                                    </td>
+                                    <div th:if="${materialPriceList != null }">
+                                        <td th:text="${material.material_Id}"></td>
+                                        <td th:text="${material.material_Code}"></td>
+                                        <td th:text="${material.material_Name}"></td>
+                                        <div th:each="materialPriceList : ${materialPriceList}">
+                                            <td th:if="${materialPriceList.material.material_Id == material.material_Id}"
+                                                th:text="${materialPriceList.price}"></td>
+                                            <td th:if="${materialPriceList.material.material_Id == material.material_Id}"
+                                                th:text="${materialPriceList.eff_Date}"></td>
+                                        </div>
+                                        <td>
+                                            <form th:action="@{/saveMaterial}" method="get">
+                                                <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                                    th:value="${productionOrder.production_Order_Id}">
+                                                <input type="hidden" name="material_Id"
+                                                    th:value="${material.material_Id}" />
+                                                <button class="text-decoration-none text-success">Save</button>
+                                            </form>
+                                        </td>
+                                    </div>
                                 </tr>
                             </table>
                         </div>
                     </div>
-                    <div th:if="${materialPriceList != null }">
-                        <br>
-                        <div class="wrapper-order m-0">
-                            <table class="w-100">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Price</th>
-                                    <th>Eff Date</th>
-                                    <th>Material ID</th>
-                                </tr>
-                                <tr th:each="materialPriceList : ${materialPriceList}">
-                                    <td th:text="${materialPriceList.Id}"></td>
-                                    <td th:text="${materialPriceList.price}"></td>
-                                    <td th:text="${materialPriceList.eff_Date}"></td>
-                                    <td th:text="${materialPriceList.material.material_Id}"></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="wrapper-order">
                     <h3 class="fw-bold text-center" style="color: rgb(179, 174, 185)">Diamond</h3>
-                    <p th:if="${session.oldDiamond != null}" class="form-control w-100 my-3" disabled
-                        style="color: #6C757D; background-color: #E9ECEF;">
-                        <span th:text="${session.oldDiamond.dia_Name}"></span>,
-                        <span th:text="${session.oldDiamond.carat_Weight}"></span> ct,
-                        <span th:text=" ${session.oldDiamond.origin}"></span>,
-                        <span th:text=" ${session.oldDiamond.color}"></span>,
-                        <span th:text=" ${session.oldDiamond.clarity}"></span>,
-                        <span th:text=" ${session.oldDiamond.cut}"></span>, cut,
+                    <div th:if="${session.oldDiamond != null}" class="form-control w-100 my-3  border-0" disabled>
 
-                    </p>
-                    <div class="form-row row">
-                        <div class="form-group col-md-12">
-                            <form th:action="@{/searchDiamond}" method="GET" onsubmit="return validateForm()">
-                                <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                                    th:value="${productionOrder.production_Order_Id}">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <label for="diamondName">Diamond Name:</label>
-                                            <input type="text" id="diamondName" name="diamondName" class="form-control"
-                                                th:value="${diamondName}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div>
-                                            <label for="caratWeight">Carat weight:</label>
-                                            <input type="number" step="any" min="0" id="caratWeight" name="caratWeight"
-                                                class="form-control" th:value="${caratWeight}">
-                                        </div>
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="diamondName">Diamond Name:</label>
+                                    <span th:text="${session.oldDiamond.dia_Name}"></span>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="origin">Origin:</label>
-                                        <select id="origin" name="origin" class="form-control">
-                                            <option class="text-center" disabled selected>~~ Choose Origin ~~
-                                            </option>
-                                            <option th:each="origin : ${origins}" th:value="${origin}"
-                                                th:text="${origin}">
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="color">Color:</label>
-                                        <select id="color" name="color" class="form-control">
-                                            <option class="text-center" disabled selected>~~ Choose Color ~~
-                                            </option>
-                                            <option th:each="color : ${colors}" th:value="${color}" th:text="${color}">
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="clarity">Clarity:</label>
-                                        <select id="clarity" name="clarity" class="form-control">
-                                            <option class="text-center" disabled selected>~~ Choose Clarity ~~
-                                            </option>
-                                            <option th:each="clarity : ${clarities}" th:value="${clarity}"
-                                                th:text="${clarity}"></option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="cut">Cut:</label>
-                                        <select id="cut" name="cut" class="form-control">
-                                            <option class="text-center" disabled selected>~~ Choose Cut ~~
-                                            </option>
-                                            <option th:each="cut : ${cuts}" th:value="${cut}" th:text="${cut}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-4 m-auto">
-                                    <button type="submit" class="btn btn-secondary w-100 my-4">Search
-                                        Diamond</button>
-                                </div>
-                            </form>
-                            <br>
-                            <div th:if="${messageDiamond != null}" class="text-center">
-
-                                <i class="fw-bold" th:text="${messageDiamond}"></i>
                             </div>
+                            <div class="col-md-6">
+                                <div>
+                                    <label for="caratWeight">Carat weight:</label>
+                                    <span th:text="${session.oldDiamond.carat_Weight}"></span> ct
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="origin">Origin:</label>
+                                <span th:text=" ${session.oldDiamond.origin}"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="color">Color:</label>
+                                <span th:text=" ${session.oldDiamond.color}"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="clarity">Clarity:</label>
+                                <span th:text=" ${session.oldDiamond.clarity}"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cut">Cut:</label>
+                                <span th:text=" ${session.oldDiamond.cut}"></span>
+                            </div>
+                        </div>
+
+
+                        <button type="button" class="btn btn-link text-decoration-none"
+                            onclick="showDiamondEditForm()">Edit</button>
+                    </div>
+                    <div th:if="${session.oldDiamond == null}" class="form-control w-100 my-3" disabled
+                        style="color: #6C757D; background-color: #E9ECEF;">
+                        <span class="text-danger">Not selected yet</span>
+                        <button type="button" class="btn btn-link text-decoration-none"
+                            onclick="showDiamondEditForm()">Edit</button>
+                    </div>
+
+                    <div id="diamondEditForm" style="display: none;">
+                        <form th:action="@{/searchDiamond}" method="GET" onsubmit="return validateForm()">
+                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                th:value="${productionOrder.production_Order_Id}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div>
+                                        <label for="diamondName">Diamond Name:</label>
+                                        <input type="text" id="diamondName" name="diamondName" class="form-control"
+                                            th:value="${diamondName}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <label for="caratWeight">Carat weight:</label>
+                                        <input type="number" step="any" min="0" id="caratWeight" name="caratWeight"
+                                            class="form-control" th:value="${caratWeight}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="origin">Origin:</label>
+                                    <select id="origin" name="origin" class="form-control">
+                                        <option class="text-center" disabled selected>~~ Choose Origin ~~</option>
+                                        <option th:each="origin : ${origins}" th:value="${origin}" th:text="${origin}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="color">Color:</label>
+                                    <select id="color" name="color" class="form-control">
+                                        <option class="text-center" disabled selected>~~ Choose Color ~~</option>
+                                        <option th:each="color : ${colors}" th:value="${color}" th:text="${color}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="clarity">Clarity:</label>
+                                    <select id="clarity" name="clarity" class="form-control">
+                                        <option class="text-center" disabled selected>~~ Choose Clarity ~~</option>
+                                        <option th:each="clarity : ${clarities}" th:value="${clarity}"
+                                            th:text="${clarity}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cut">Cut:</label>
+                                    <select id="cut" name="cut" class="form-control">
+                                        <option class="text-center" disabled selected>~~ Choose Cut ~~</option>
+                                        <option th:each="cut : ${cuts}" th:value="${cut}" th:text="${cut}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-4 m-auto">
+                                <button type="submit" class="btn btn-secondary w-100 my-4">Search Diamond</button>
+                                <button type="button" class="btn btn-link text-decoration-none bg-danger text-white"
+                                    onclick="hideDiamondEditForm()">Cancel</button>
+                            </div>
+                        </form>
+                        <br>
+                        <div th:if="${messageDiamond != null}" class="text-center">
+                            <i class="fw-bold" th:text="${messageDiamond}"></i>
                         </div>
                     </div>
                 </div>
@@ -378,70 +447,64 @@
                         <br>
                         <div class="wrapper-order m-0">
                             <table class="w-100">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Origin</th>
-                                    <th>Carat Weight</th>
-                                    <th>Color</th>
-                                    <th>Clarity</th>
-                                    <th>Cut</th>
-                                    <th>Action</th>
-                                </tr>
-                                <tr th:each="diamond : ${diamonds}">
-                                    <td th:text="${diamond.dia_Id}"></td>
-                                    <td th:text="${diamond.dia_Code}"></td>
-                                    <td th:text="${diamond.dia_Name}"></td>
-                                    <td th:text="${diamond.origin}"></td>
-                                    <td th:text="${diamond.carat_Weight}"></td>
-                                    <td th:text="${diamond.color}"></td>
-                                    <td th:text="${diamond.clarity}"></td>
-                                    <td th:text="${diamond.cut}"></td>
-                                    <td>
-                                        <form th:action="@{/saveDiamond}" method="GET">
-                                            <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                                                th:value="${productionOrder.production_Order_Id}">
-                                            <input type="hidden" name="dia_Id" th:value="${diamond.dia_Id}" />
-                                            <button class="text-decoration-none text-success">Save</button>
-                                        </form>
-                                    </td>
-                                </tr>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                        <th>Origin</th>
+                                        <th>Carat Weight</th>
+                                        <th>Color</th>
+                                        <th>Clarity</th>
+                                        <th>Cut</th>
+                                        <th>Carat Weight From</th>
+                                        <th>Carat Weight To</th>
+                                        <th>Price</th>
+                                        <th>Effective Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="diamond : ${diamonds}">
+                                        <td th:text="${diamond.dia_Id}"></td>
+                                        <td th:text="${diamond.dia_Code}"></td>
+                                        <td th:text="${diamond.dia_Name}"></td>
+                                        <td th:text="${diamond.origin}"></td>
+                                        <td th:text="${diamond.carat_Weight}"></td>
+                                        <td th:text="${diamond.color}"></td>
+                                        <td th:text="${diamond.clarity}"></td>
+                                        <td th:text="${diamond.cut}"></td>
+                                        <div th:each="diamondPrice, stat : ${diamondPriceList}">
+                                            <div th:if="${diamondPrice.origin == diamond.origin 
+                                                        and diamondPrice.color == diamond.color 
+                                                        and diamondPrice.clarity == diamond.clarity 
+                                                        and diamondPrice.cut == diamond.cut 
+                                                        and diamondPrice.carat_Weight_From <= diamond.carat_Weight 
+                                                        and diamondPrice.carat_Weight_To >= diamond.carat_Weight}">
+
+                                                <td th:text="${diamondPrice.carat_Weight_From}"></td>
+                                                <td th:text="${diamondPrice.carat_Weight_To}"></td>
+                                                <td th:text="${diamondPrice.price}"></td>
+                                                <td th:text="${diamondPrice.eff_Date}"></td>
+                                            </div>
+                                        </div>
+                                        <td>
+                                            <form th:action="@{/saveDiamond}" method="GET">
+                                                <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                                                    th:value="${productionOrder.production_Order_Id}">
+                                                <input type="hidden" name="dia_Id" th:value="${diamond.dia_Id}" />
+                                                <button class="text-decoration-none text-success">Save</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div th:if="${diamondPriceList != null && #lists.size(diamondPriceList) > 0 }">
-                        <br>
 
-                        <div class="wrapper-order m-0">
-                            <table class="w-100">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Origin</th>
-                                    <th>Carat Weight From</th>
-                                    <th>Carat Weight To</th>
-                                    <th>Color</th>
-                                    <th>Clarity</th>
-                                    <th>Cut</th>
-                                    <th>Price</th>
-                                    <th>Effective Date</th>
-                                </tr>
-                                <tr th:each="diamondPriceList : ${diamondPriceList}">
-                                    <td th:text="${diamondPriceList.id}"></td>
-                                    <td th:text="${diamondPriceList.origin}"></td>
-                                    <td th:text="${diamondPriceList.carat_Weight_From}"></td>
-                                    <td th:text="${diamondPriceList.carat_Weight_To}"></td>
-                                    <td th:text="${diamondPriceList.color}"></td>
-                                    <td th:text="${diamondPriceList.clarity}"></td>
-                                    <td th:text="${diamondPriceList.cut}"></td>
-                                    <td th:text="${diamondPriceList.price}"></td>
-                                    <td th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd HH:mm:ss')}">
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+
+
                 </div>
 
             </div>
@@ -449,32 +512,40 @@
             <div class="wrapper-order">
                 <h3 class="fw-bold text-center" style="color: rgb(21, 131, 58)">Production Price</h3>
 
-                <form th:action="@{/saveProductionPrice}" method="GET">
-                    <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                        th:value="${productionOrder.production_Order_Id}">
-
-                    <div class="form-row row">
-                        <div class="form-group col-md-8">
-                            <label for="productionAmount">Enter production price </label>
-                            <div class="d-flex">
-                                <input type="number" min="0" step="any" id="productionAmount" name="productionAmount"
-                                    class="form-control" th:value="${productionAmount}">
-                                <button type="submit" class="w-75 btn btn-secondary mx-3">
-                                    Save Price
-                                </button>
-                            </div>
-                        </div>
-                        <input th:if="${productionOrder.q_Production_Amount != 0}" type="text" class="form-control w-25"
-                            disabled th:placeholder="${productionOrder.q_Production_Amount}">
+                <div class="d-flex">
+                    <b class="me-3 d-flex align-items-center">
+                        Price:
+                    </b>
+                    <div id="priceDisplay" th:if="${productionOrder.q_Production_Amount != 0}">
+                        <span th:text="${productionOrder.q_Production_Amount}"></span>
+                        <button type="button" class="btn btn-link text-decoration-none"
+                            onclick="showPriceEditForm()">Edit</button>
                     </div>
-                </form>
+                    <div id="priceDisplay" th:if="${productionOrder.q_Production_Amount == 0}">
+                        <span class="text-danger">Not selected yet</span>
+                        <button type="button" class="btn btn-link text-decoration-none"
+                            onclick="showPriceEditForm()">Edit</button>
+                    </div>
+
+                    <form th:action="@{/saveProductionPrice}" method="GET" id="priceEditForm" style="display: none;">
+                        <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                            th:value="${productionOrder.production_Order_Id}">
+                        <div class="d-flex">
+                            <input type="number" min="0" step="any" id="productionAmount" name="productionAmount"
+                                class="form-control me-3" th:value="${productionAmount}">
+                            <button type="submit" class="btn btn-secondary me-2 text-nowrap">Save Price</button>
+                            <button type="button" class="btn btn-link text-decoration-none bg-danger text-white"
+                                onclick="hidePriceEditForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div th:if="${productionOrder.q_Diamond_Amount != 0 && productionOrder.q_Material_Amount != 0 && productionOrder.q_Production_Amount !=0}"
                 class="my-5" style="margin: 0 auto; width: 85%">
-                <form th:action="@{/previewQuotePage}" method="GET">
+                <form th:action="@{/previewQuotePage}" method="GET" class="text-end">
                     <input type="hidden" id="production_Order_Id" name="production_Order_Id"
                         th:value="${productionOrder.production_Order_Id}">
-                    <button class="text-decoration-none btn btn-danger w-100 my-4">Next</button>
+                    <button class="text-decoration-none btn btn-primary w-25 rounded my-4">Next</button>
                 </form>
             </div>
         </div>
@@ -509,7 +580,65 @@
                     logoutMessage.classList.add('close');
                 }, 2000);
             }
+
         });
+
+        function showEditForm() {
+            document.getElementById('sizeDisplay').style.display = 'none';
+            document.getElementById('sizeEditForm').style.display = 'block';
+        }
+
+        function hideEditForm() {
+            document.getElementById('sizeDisplay').style.display = 'block';
+            document.getElementById('sizeEditForm').style.display = 'none';
+        }
+        function showMaterialEditForm() {
+            document.getElementById('materialDisplay').style.display = 'none';
+            document.getElementById('materialEditForm').style.display = 'flex';
+        }
+
+        function hideMaterialEditForm() {
+            document.getElementById('materialEditForm').style.display = 'none';
+            document.getElementById('materialDisplay').style.display = 'flex';
+        }
+
+        function showWeightEditForm() {
+            document.getElementById('weightDisplay').style.display = 'none';
+            document.getElementById('weightEditForm').style.display = 'flex';
+        }
+
+        function hideWeightEditForm() {
+            document.getElementById('weightEditForm').style.display = 'none';
+            document.getElementById('weightDisplay').style.display = 'flex';
+        }
+        function showDiamondEditForm() {
+            document.querySelectorAll('[id^="materialDisplay"]').forEach(function (elem) {
+                elem.style.display = 'none';
+            });
+            document.getElementById('diamondEditForm').style.display = 'block';
+        }
+
+        function hideDiamondEditForm() {
+            document.getElementById('diamondEditForm').style.display = 'none';
+            if (document.getElementById('materialDisplayFilled')) {
+                document.getElementById('materialDisplayFilled').style.display = 'flex';
+            } else {
+                document.getElementById('materialDisplayEmpty').style.display = 'flex';
+            }
+        }
+        function showPriceEditForm() {
+            document.querySelectorAll('[id^="priceDisplay"]').forEach(function (elem) {
+                elem.style.display = 'none';
+            });
+            document.getElementById('priceEditForm').style.display = 'flex';
+        }
+
+        function hidePriceEditForm() {
+            document.getElementById('priceEditForm').style.display = 'none';
+            document.querySelectorAll('[id^="priceDisplay"]').forEach(function (elem) {
+                elem.style.display = 'flex';
+            });
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

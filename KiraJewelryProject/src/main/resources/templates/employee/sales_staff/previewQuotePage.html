@@ -138,7 +138,14 @@
             </div>
 
             <div class="content">
+
                 <h1 class="text-center">Preview Quotes</h1>
+
+                <a class="mx-0 border-0 "
+                    th:href="@{/viewIngredientsPage(productionOrderId=${productionOrder.production_Order_Id})}">
+                    <button class="text-decoration-none text-white bg-dark ms-5 me-5 p-2 pt-1 pb-1"
+                        type="button">Back</button>
+                </a>
                 <div class="wrapper-order">
                     <h3>General Information</h3>
                     <table class="border-0">
