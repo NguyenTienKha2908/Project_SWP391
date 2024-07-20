@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitty Food</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="content">
+            <h1>Pick Product Shell </h1>
+            <p>Seeking the perfect shell for your material, <br> and let us know the size you wish to have for your
+                jewelry</p>
+            <div class="img-container">
+                <a href="#">
+
+                    <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                    <p>Gold 10K</p>
+                </a>
+                <a href="#">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                    <p>Gold 10K</p>
+                </a>
+                <a href="#">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                    <p>Gold 10K</p>
+                </a>
+                <a href="#">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                    <p>Gold 10K</p>
+                </a>
+                <a href="#">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                    <p>Gold 10K</p>
+                </a>
+                <a href="#">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                    <p>Gold 10K</p>
+                </a>
+            </div>
+            <div class="weight-box">
+                <h1>Weight</h1>
+
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="4" value="2" class="slider" id="myRange">
+                    <p>Weight: <span id="demo"></span></p>
+                </div>
+
+                <div class="button-group">
+                    <a href="index.html">Back</a>
+                    <a href="customized_gem.html">Next</a>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script>
+
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function () {
+            output.innerHTML = this.value;
+        }
+
+    </script>
+</body>
+
+</html>

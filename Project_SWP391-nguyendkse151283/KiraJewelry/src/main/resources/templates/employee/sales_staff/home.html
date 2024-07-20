@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Production Orders - Sales Staff</title>
+    <!-- Add your CSS and other head elements here -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Production Orders - Sales Staff</h1>
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Category</th>
+          <th>Material</th>
+          <th>Gem</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be dynamically populated here -->
+      </tbody>
+    </table>
+
+    <script>
+      fetch("/production-orders/api/requested-orders", {
+        method: "GET",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const tableBody = document.querySelector("#ordersTable tbody");
+          data.forEach((order) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${order.productionOrderId}</td>
+                <td>${order.customer.fullName}</td>
+                <td>${order.categoryId}</td>
+                <td>${order.materialName}</td>
+                <td>${order.gemName}</td>
+                <td><button onclick="acceptOrder('${order.productionOrderId}')">Accept</button></td>
+            `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
+
+      function acceptOrder(orderId) {
+        fetch(`/production-orders/api/accept-order/${orderId}`, {
+          method: "POST",
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Order accepted:", data);
+            // Optionally, refresh the orders list or update the row status
+            location.reload(); // Reload the page to see the updated list
+          })
+          .catch((error) => {
+            console.error("Fetch error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitty Food</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="content">
+            <h1>Pick Category </h1>
+            <p>Seeking the perfect ring, or another type of jewelry?</p>
+            <div class="img-container">
+                <a href="#">
+                    <img onclick="toggleClass(event)"
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                </a>
+                <a href="#">
+                    <img onclick="toggleClass(event)"
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                </a>
+                <a href="#">
+                    <img onclick="toggleClass(event)"
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                </a>
+                <a href="#">
+                    <img onclick="toggleClass(event)"
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                </a>
+                <a href="#">
+                    <img onclick="toggleClass(event)"
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Full_Product%2Fbracelet%2FDefault_10K_Gold_Diamond_Charm_Bracelet_A_10K_gold_charm_brace_0.jpg?alt=media&token=e4ef44db-812c-4e48-a0cf-08fba66f5e07"
+                        alt="">
+                </a>
+            </div>
+            <div class="button-group">
+                <a href="customized_shell.html">Next</a>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script>
+
+        function toggleClass(event) {
+            event.preventDefault(); // Prevent the default action if any
+
+            // Remove 'selected' class from any currently selected image
+            const currentlySelected = document.querySelector('.img-container .selected');
+            if (currentlySelected) {
+                currentlySelected.classList.remove('selected');
+            }
+
+            // Add 'selected' class to the clicked image
+            var img = event.currentTarget;
+            img.classList.add('selected');
+        }
+
+    </script>
+</body>
+
+</html>

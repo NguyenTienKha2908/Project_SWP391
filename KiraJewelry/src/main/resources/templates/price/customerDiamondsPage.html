@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Diamond List</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href=@{/css/price/customerDiamondsPage.css} />
+  </head>
+  <body>
+    <!--Page header-->
+    <header id="myHeader">
+      <div class="top_header">
+        <h1 class="header_logo">
+          <a th:href="@{/}"
+            ><img
+              src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3"
+            />Kira Jewelry</a
+          >
+        </h1>
+        <div class="tools_header">
+          <div>
+            <span th:if="${session.customerName != null}">
+              <a
+                th:href="@{/userRequest(customerName=${session.customerName})}"
+              >
+                Welcome, <span th:text="${session.customerName}"></span
+              ></a>
+              |
+              <a th:href="@{/logout}">Log out</a>
+            </span>
+            <span th:if="${session.customerName == null}">
+              <a th:href="@{/login}"> Log in</a>
+            </span>
+          </div>
+
+          <a th:href="@{/currentOrder}" class="cart"
+            ><img
+              src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7"
+          /></a>
+          <a th:href="@{/}" class="search"
+            ><img
+              src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b"
+          /></a>
+        </div>
+      </div>
+      <nav class="home_categories">
+        <ul>
+          <li><a class="active-link" th:href="@{/}">Home</a></li>
+          <li>
+            <a th:href="@{/}">Blogs</a>
+          </li>
+          <li>
+            <a th:href="@{/}">Collections</a>
+          </li>
+          <li class="active dropdown">
+            <a
+              th:href="@{/currentOrder}"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Jewelry</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/request}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Order Jewelry Now
+                </a>
+              </li>
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/chooseCategory}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Customize Your Jewelry
+                </a>
+              </li>
+              <li class="dropdown-item">
+                <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+              </li>
+            </ul>
+          </li>
+          <li class="active dropdown">
+            <a
+              th:href="@{/}"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Diamonds</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/customerDiamondsPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  All Diamonds
+                </a>
+              </li>
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/viewCustomerDiaPriceListPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Diamonds Price List
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="active dropdown">
+            <a
+              th:href="@{/}"
+              class="navbar-link collapsed has-dropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span>Materials</span>
+            </a>
+            <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/viewCustomerMaterialsPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  All Materials
+                </a>
+              </li>
+              <li class="dropdown-item">
+                <a
+                  th:href="@{/viewCustomerMaterialPriceListPage}"
+                  th:if="${session.customerName != null}"
+                  class="sidebar-link"
+                >
+                  Materials Price List
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li><a th:href="@{#education}">Education</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container my-3">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Origin</th>
+              <th>Carat Weight</th>
+              <th>Color</th>
+              <th>Clarity</th>
+              <th>Cut</th>
+              <th>Proportions</th>
+              <th>Polish</th>
+              <th>Symmetry</th>
+              <th>Fluorescence</th>
+              <th>Q_Price</th>
+              <!-- Added Q Price -->
+              <th>O_Price</th>
+              <!-- Added O Price -->
+              <th>Status</th>
+              <th>Image</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="diamond, index : ${diamondPage.getContent()}">
+              <td th:text="${diamond.dia_Id}"></td>
+              <td th:text="${diamond.dia_Code}"></td>
+              <td th:text="${diamond.dia_Name}"></td>
+              <td th:text="${diamond.origin}"></td>
+              <td th:text="${diamond.carat_Weight}"></td>
+              <td th:text="${diamond.color}"></td>
+              <td th:text="${diamond.clarity}"></td>
+              <td th:text="${diamond.cut}"></td>
+              <td th:text="${diamond.proportions}"></td>
+              <td th:text="${diamond.polish}"></td>
+              <td th:text="${diamond.symmetry}"></td>
+              <td th:text="${diamond.fluorescence}"></td>
+              <td th:text="${diamond.q_Price}"></td>
+              <!-- Display Q Price -->
+              <td th:text="${diamond.o_Price}"></td>
+              <!-- Display O Price -->
+              <td th:text="${diamond.status == 1 ? 'Active' : 'Inactive'}"></td>
+              <!-- <td><img th:src="@{${diamond.img_Url}}" alt="Diamond Image"
+                                            style="width:100px;height:100px;" />
+                                    </td> -->
+              <td>
+                <img
+                  th:src="@{${imagesByDiamond[index.index]}}"
+                  alt="Diamond Image"
+                  style="width: 100px; height: 100px"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="pagination">
+        <li th:classappend="${diamondPage.hasPrevious()} ? '' : 'disabled'">
+          <a th:href="@{/customerDiamondsPage(page=${diamondPage.number - 1})}"
+            >Previous</a
+          >
+        </li>
+        <li
+          th:each="i : ${#numbers.sequence(1, diamondPage.totalPages)}"
+          th:classappend="${i == diamondPage.number + 1} ? 'active-pg'"
+        >
+          <a
+            th:href="@{/customerDiamondsPage(page=${i - 1})}"
+            th:text="${i}"
+          ></a>
+        </li>
+        <li th:classappend="${diamondPage.hasNext()} ? '' : 'disabled'">
+          <a th:href="@{/customerDiamondsPage(page=${diamondPage.number + 1})}"
+            >Next</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!--Page footer-->
+    <footer>
+      <div class="container-fluid">
+        <div id="others_info" class="row">
+          <div class="footer col-md-3">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="footer_logo">
+                  <img
+                    th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b}"
+                    class="logo"
+                  />
+                  Kira Jewelry
+                </h2>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <p>Hotline: 123123123</p>
+                  <p>Address: 12AS, Austin, 123</p>
+                  <p>Email: abc1234@fpt.edu.vn</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer col-md-9">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#policy">Policy</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#">Return and Refund</a></li>
+                    <li><a href="#">Cancellation</a></li>
+                    <li><a href="#">Delivery</a></li>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#resources">Resources</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#">Gold price</a></li>
+                    <li><a href="#">Blogs</a></li>
+                    <li><a href="#">Jewelry price</a></li>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#company">Company</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#">Join us</a></li>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="col-md-12">
+                  <h4><a href="#support">Support</a></h4>
+                </div>
+                <div class="col-md-12">
+                  <div>
+                    <li><a href="#">Help center</a></li>
+                    <li><a href="#">Chat support</a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="sercurity_contact" class="row">
+          <div class="copyright col-md-4">
+            <p>&copy; 2022 Kira Jewelry, Inc</p>
+          </div>
+          <div id="sercurity" class="copyright col-md-4">
+            <a href="#privacy">Privacy</a>
+            <a href="#terms">Terms</a>
+            <a href="#sitemap">Sitemap</a>
+          </div>
+          <div id="contact" class="copyright col-md-4">
+            <div class="contact_footer">
+              <a class="twitter"
+                ><img
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d}"
+              /></a>
+              <a class="facebook"
+                ><img
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd}"
+              /></a>
+              <a class="linkedin"
+                ><img
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84}"
+              /></a>
+              <a class="youtube"
+                ><img
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c}"
+              /></a>
+              <a class="instagram"
+                ><img
+                  th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e}"
+              /></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

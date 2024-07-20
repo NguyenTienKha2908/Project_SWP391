@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Material</title>
+</head>
+<body>
+    <h2>Update Material</h2>
+    <form action="/saveMaterial" method="post">
+        <input type="hidden" name="materialId" th:value="${material.materialId}"/>
+        <div>
+            <label>Material Code:</label>
+            <input type="text" name="materialCode" th:value="${material.materialCode}" required/>
+        </div>
+        <div>
+            <label>Material Name:</label>
+            <input type="text" name="materialName" th:value="${material.materialName}" required/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+    <a href="/materials">Back to Materials</a>
+    
+</body>
+</html>

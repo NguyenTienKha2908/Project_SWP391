@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Quote</title>
+    <link rel="stylesheet" href="/path/to/bootstrap.min.css">
+</head>
+<body>
+    <h1>View Quote</h1>
+    <div>
+        <h2>General Information</h2>
+        <p>Customer Name: <span th:text="${order.customer.fullName}"></span></p>
+        <p>Phone: <span th:text="${order.customer.phoneNumber}"></span></p>
+        <p>Date Created: <span th:text="${#dates.format(order.dateCreated, 'MM/dd/yyyy')}"></span></p>
+        <p>Product Category: <span th:text="${order.productCategory}"></span></p>
+        <p>Product Size: <span th:text="${order.productSize}"></span></p>
+    </div>
+    <div>
+        <h2>Material Information</h2>
+        <p>Material: <span th:text="${order.materialName}"></span></p>
+        <p>Weight: <span th:text="${order.materialWeight}"></span></p>
+        <p>Color: <span th:text="${order.materialColor}"></span></p>
+    </div>
+    <div>
+        <h2>Gemstone Information</h2>
+        <p>Gem Name: <span th:text="${order.gemName}"></span></p>
+        <p>Weight: <span th:text="${order.gemWeight}"></span></p>
+        <p>Color: <span th:text="${order.gemColor}"></span></p>
+    </div>
+    <div>
+        <h2>Other Information</h2>
+        <p>Description: <span th:text="${order.description}"></span></p>
+        <p>Status: <span th:text="${order.status}"></span></p>
+    </div>
+</body>
+</html>

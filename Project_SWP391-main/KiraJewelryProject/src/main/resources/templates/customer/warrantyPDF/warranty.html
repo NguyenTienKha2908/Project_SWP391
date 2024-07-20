@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF demo</title>
+    <link rel="stylesheet" th:href="@{/css/pdf/warranty.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <div class="link">
+        <a th:href="@{/}" class="btn btn-secondary">
+            Back To Home
+        </a>
+        <a class="btn btn-secondary mx-3" href="javascript:generatePDF()" id="downloadButton">Download As PDF</a>
+    </div>
+    
+    <div id="whatToPrint">
+        <div class="container-fluid">
+            <div class="wrapper-order">
+                <div class="top-header d-flex">
+                    <div class="right-header">
+                        <h1 class="header_logo">
+                            <img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b" />Kira
+                            Jewelry
+                        </h1>
+                        <p class="mx-5">Your satisfaction is our happiness
+                            <br>Let us serve you to craft your dream
+                        </p>
+                    </div>
+                    <div class="left-header">
+                        <p>Warranty ID: <span th:text="'W' + ${productionOrder.production_Order_Id}"></span></p>
+                        <p>Date issued: <span th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></span></p>
+                        <p>Valid Time: 1 year</p>
+                    </div>
+                </div>
+                <div class="middle-content row">
+                    <div class="my-3 col-md-12 text-center">
+                        <h2>Certificate of Jewelry Warranty</h2>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="material-info">
+                            <h5>Material:</h5>
+                            <p>
+                                <span th:text="${material.material_Name}"></span> -
+                                <span th:text="${productMaterial.material_Weight}"></span> mace
+                            </p>
+                        </div>
+                        <div class="diamond-info">
+                            <h5>Diamond:</h5>
+                            <p>
+                                <span th:text="${diamond.dia_Name}"></span>,
+                                <span th:text="${diamond.carat_Weight}"></span> ct,
+                                <span th:text=" ${diamond.origin}"></span>,
+                                <span th:text=" ${diamond.color}"></span>,
+                                <span th:text=" ${diamond.clarity}"></span>,
+                                <span th:text=" ${diamond.cut}"></span>, cut,
+                            </p>
+                            <div class="other-diamond-info">
+                                <p>Proportion: <span th:text=" ${diamond.proportions}"></span></p>
+                                <p>Symmetry: <span th:text=" ${diamond.symmetry}"></span></p>
+                                <p>Fluorescence: <span th:text=" ${diamond.fluorescence}"></span></p>
+                                <p>Polish: <span th:text=" ${diamond.polish}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="description">
+                            <h5>Description:</h5>
+                            <p><span th:text="${productionOrder.description}"></span></p>
+                        </div>
+                        <img class="my-2 w-100" th:src="@{${cateUrl}}" alt="Category Image" />
+                    </div>
+                </div>
+                <div class="bottom-content my-3">
+                    <div class="addition">
+                        <h5>Additional Information:</h5>
+                        <p>We will replace your
+                            <span th:text="'diamond and gold' + ${productionOrder.category.category_Name}"></span>,
+                            purchased from us and set by us, which in
+                            normal use separates from
+                            its mounting and is lost, with a diamond and gold of equal retail value, provided the
+                            diamond and
+                            mounting has been cleaned
+                            and checked by us at least every six months, and that such inspection has been verified in
+                            writing.
+                        </p>
+                        <p class="my-2">
+                            Although diamonds are the hardest substance known, they should be handled with care.
+                            We cannot be responsible for chipping and cracking. A sudden blow can chip the surface. Take
+                            full advantage of the
+                            free semi-annual inspection and cleaning. We may recommend replacing prongs, or setting your
+                            diamond in a new
+                            head, in order to eliminate the possibility of loss of your diamond. In the event such
+                            repair or replacement is
+                            required, you may be charged a nominal fee. This warranty does not apply to, nor cover,
+                            accidental loss or theft of
+                            diamond and mounting.
+                        </p>
+                        <p>
+                            We urge you to insure your diamond jewelry for casualty loss. Consult your insurance agent
+                            for proper coverage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        async function generatePDF() {
+            try {
+                // Change button text
+                document.getElementById("downloadButton").innerText = "Generating PDF...";
+
+                // Capture the element
+                const element = document.getElementById("whatToPrint");
+
+                // Use a higher quality for capturing canvas
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                });
+
+                // Create a PDF document
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+
+                // Get the width and height of the pdf page
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                // Calculate the aspect ratio of the canvas
+                const aspectRatio = canvas.width / canvas.height;
+
+                // Calculate the height for the given width, maintaining the aspect ratio
+                const imgHeight = pdfWidth / aspectRatio;
+
+                // Add the captured image to the PDF
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, imgHeight);
+
+                // Save the PDF
+                pdf.save("Document.pdf");
+
+                // Restore button text
+                document.getElementById("downloadButton").innerText = "Click to download";
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                // Handle errors gracefully, e.g., display an error message
+                alert('Error generating PDF. Please try again.');
+                document.getElementById("downloadButton").innerText = "Click to download";
+            }
+        }
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Staff Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a th:href="@{#}">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
+                            alt="logo"> <span>KIRA JEWELRY</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class=" sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeSalesStaff}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
+                            alt="profile">
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
+                            alt="request">
+                        <span>Requests</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
+                        class="active sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
+                            alt="quote">
+                        <span>Quotes</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewMaterialAndGem}'|"
+                        class="sidebar-link">
+                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
+                            alt="materialAndGem">
+                        <span>Material & Gem</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a th:href="@{/logout}" class="sidebar-link">
+                    <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Flogout.svg?alt=media&token=a42d85ca-8e13-44a6-a054-a98137802c4e}"
+                        alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main">
+            <div class="out">
+                <div class="top-header">
+                    <div class="first-ele">
+                        <img th:src="@{/img/person/profile1.svg}" alt="person">
+                        <span th:if="${session.employeeName != null}">
+                            Welcome, <span th:text="${session.employeeName}"></span>
+                        </span>
+                    </div>
+                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
+                </div>
+            </div>
+            <div class="content">
+                <h1>All Customer Quotes</h1>
+                <hr>
+                <div class="container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Quote ID</th>
+                                <th>Date</th>
+                                <th>Customer ID</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="productionOrder : ${listRequests}">
+                                <td th:text="${productionOrder.production_Order_Id}"></td>
+                                <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${productionOrder.customer_Id}"></td>
+                                <td th:text="${productionOrder.status}"></td>
+                                <td>
+                                    <div class="group-link d-flex align-content-center">
+                                        <a class="mx-0"
+                                            th:href="@{/viewInformationQuoteForSS(productionOrderId=${productionOrder.production_Order_Id})}">
+                                            <button type="button">View</button>
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

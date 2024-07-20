@@ -1,0 +1,111 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Blog</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #333; margin: 0; padding: 0; color: #fff; }
+        .container { width: 50%; margin: auto; overflow: hidden; }
+        header { background: #444; color: #fff; padding-top: 30px; min-height: 70px; border-bottom: #77d4d8 3px solid; }
+        header a { color: #fff; text-decoration: none; text-transform: uppercase; font-size: 16px; }
+        form { background: #222; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        label { display: block; margin-bottom: 10px; }
+        input[type="text"], input[type="date"], input[type="file"], textarea { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #555; border-radius: 5px; background: #333; color: #fff; }
+        input[type="submit"] { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; }
+        input[type="submit"]:hover { background-color: #3e8e41 }
+        input[type="submit"]:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; margin: 10px 0; }
+        .btn:hover { background-color: #3e8e41 }
+        .btn:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn-secondary { background-color: #555; }
+        .btn-secondary:hover { background-color: #444; }
+        .btn-secondary:active { background-color: #444; }
+        .combined-input { display: flex; align-items: center; margin-bottom: 20px; }
+        .combined-input input[type="file"] { flex: 2; margin-right: 10px; }
+        .combined-input input[type="text"] { flex: 8; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Edit Blog</h1>
+        </div>
+    </header>
+    <div class="container">
+        <form th:action="@{/updateBlog}" th:object="${blog}" method="post" enctype="multipart/form-data">
+            <label>Title: <input type="text" th:field="*{title}" required/></label>
+            <label>Content: <textarea th:field="*{content}" required></textarea></label>
+            <label>Date: <input type="date" th:field="*{date}" required/></label>
+            <label>Employee ID: <input type="text" th:field="*{employee_Id}" required/></label>
+            <label>Image URL or Upload Image:</label>
+            <div class="combined-input">
+                <input type="file" name="imgFile" />
+                <input type="text" th:field="*{img_Url}" placeholder="Enter image URL" />
+            </div>
+            <input type="submit" value="Save" />
+        </form>
+        <a th:href="@{/blogs}" class="btn btn-secondary">Back to Blogs</a>
+    </div>
+    <script src="/js/validation.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Blog</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #333; margin: 0; padding: 0; color: #fff; }
+        .container { width: 50%; margin: auto; overflow: hidden; }
+        header { background: #444; color: #fff; padding-top: 30px; min-height: 70px; border-bottom: #77d4d8 3px solid; }
+        header a { color: #fff; text-decoration: none; text-transform: uppercase; font-size: 16px; }
+        form { background: #222; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        label { display: block; margin-bottom: 10px; }
+        input[type="text"], input[type="date"], input[type="file"], textarea { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #555; border-radius: 5px; background: #333; color: #fff; }
+        input[type="submit"] { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; }
+        input[type="submit"]:hover { background-color: #3e8e41 }
+        input[type="submit"]:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn { display: inline-block; padding: 10px 15px; font-size: 14px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999; margin: 10px 0; }
+        .btn:hover { background-color: #3e8e41 }
+        .btn:active { background-color: #3e8e41; box-shadow: 0 5px #666; transform: translateY(4px); }
+        .btn-secondary { background-color: #555; }
+        .btn-secondary:hover { background-color: #444; }
+        .btn-secondary:active { background-color: #444; }
+        .error-tooltip { display: block; color: #f00; font-size: 12px; margin-top: -10px; margin-bottom: 10px; }
+        .combined-input { display: flex; align-items: center; margin-bottom: 20px; }
+        .combined-input input[type="file"] { flex: 2; margin-right: 10px; }
+        .combined-input input[type="text"] { flex: 8; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Edit Blog</h1>
+        </div>
+    </header>
+    <div class="container">
+        <form th:action="@{/updateBlog}" th:object="${blog}" method="post" enctype="multipart/form-data">
+            <label>Title: <input type="text" th:field="*{title}" required/></label>
+            <div th:if="${#fields.hasErrors('title')}" class="error-tooltip" th:errors="*{title}">Title Error</div>
+            
+            <label>Content: <textarea th:field="*{content}" required></textarea></label>
+            <div th:if="${#fields.hasErrors('content')}" class="error-tooltip" th:errors="*{content}">Content Error</div>
+            
+            <label>Date: <input type="date" th:field="*{date}" required/></label>
+            <div th:if="${#fields.hasErrors('date')}" class="error-tooltip" th:errors="*{date}">Date Error</div>
+            
+            <label>Employee ID: <input type="text" th:field="*{employee_Id}" required/></label>
+            <div th:if="${#fields.hasErrors('employee_Id')}" class="error-tooltip" th:errors="*{employee_Id}">Employee ID Error</div>
+            
+            <label>Image URL or Upload Image:</label>
+            <div class="combined-input">
+                <input type="file" name="imgFile" />
+                <input type="text" th:field="*{img_Url}" placeholder="Enter image URL" />
+            </div>
+            <div class="error-tooltip" th:if="${#fields.hasErrors('img_Url')}" th:errors="*{img_Url}">Image URL Error</div>
+            
+            <input type="submit" value="Save" />
+        </form>
+        <a th:href="@{/blogs}" class="btn btn-secondary">Back to Blogs</a>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kira Jewelry</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/mainUP.css}">
+
+    <style>
+        .bottom-product-info {
+            display: inline-flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .wrapper-order {
+            padding: 3% 6%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mess-container" th:if="${param.approved}">
+        <div class="mess-content open" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#155724">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b12a">
+                <p>Thank you! Your approval has been sent!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.reject}">
+        <div class="mess-content close" id="error-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Thank you! We will make sure to update a new design for your jewelry!</p>
+            </div>
+        </div>
+    </div>
+
+    <!--Page header-->
+    <header>
+        <div class="top_header">
+            <h1 class="header_logo">
+                <a th:href="@{/}"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3" />Kira
+                    Jewelry</a>
+            </h1>
+            <div class="tools_header">
+                <div>
+                    <span th:if="${session.customerName != null}">
+                        Welcome, <span th:text="${session.customerName}"></span> |
+                        <a th:href="@{/logout}">Log out</a>
+                    </span>
+                    <span th:if="${session.customerName == null}">
+                        <a th:href="@{/login}">
+                            Log in</a>
+
+                    </span>
+                </div>
+
+                <a th:href="@{/currentOrder}" class="cart"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
+                <a th:href="@{/}" class="search"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
+            </div>
+        </div>
+        <nav class="home_categories">
+            <ul>
+                <li><a th:href="@{/}">Home</a></li>
+                <li>
+                    <a th:href="@{/}">Blogs</a>
+                </li>
+                <li>
+                    <a th:href="@{/}">Collections</a>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/currentOrder}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Jewelry</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/request}" th:if="${session.customerName != null}" class="sidebar-link">Order
+                                Jewelry Now</a>
+                            <a th:href="@{/login}" th:unless="${session.customerName != null}"
+                                class="sidebar-link">Order Jewelry Now</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/userOrders}" class="sidebar-link">All Jewelry</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#gemstones">Gemstones</a></li>
+                <li><a href="/html/price/Material.html">Materials</a></li>
+                <li><a href="#education">Education</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--Page information-->
+    <div class="container-fluid px-5">
+        <div class="row">
+            <div class="col-md-3">
+                <aside id="sidebar">
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-item">
+                            <a href="Profile.html" class="sidebar-link mainUp">
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="History.html" class="sidebar-link mainUp">
+                                <span>History Orders</span>
+                            </a>
+                        </li>
+                        <li class="active-mainUp sidebar-item">
+                            <a class="sidebar-link mainUp collapsed has-dropdown" data-bs-toggle="collapse"
+                                data-bs-target="#auth1" aria-expanded="false" aria-controls="auth1">
+                                <span>Current Order</span>
+                            </a>
+                            <ul id="auth1" class="dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                                <li class="sidebar-item">
+                                    <a th:href="@{/userRequests(customerName=${session.customerName})}"
+                                        class="sidebar-link mainUp">Requests</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a th:href="@{/userQuotes(customerName=${session.customerName})}"
+                                        class="sidebar-link mainUp">Quotes</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a th:href="@{/userOrders(customerName=${session.customerName})}"
+                                        class="active-mini-link sidebar-link mainUp">Orders</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a th:href="@{/userCustomizedOrders(customerName=${session.customerName})}"
+                                        class="sidebar-link mainUp">Customized Jewelry</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-md-9">
+                <div class="container-fluid">
+
+                    <div th:if="${productionOrder == null or productionOrder.description == null}">
+                        <h2>You don't have any customized jewelry order at the moment,
+                            please order one and we will help you craft your dream.
+                            <br>Or you may want to check your Quote and Order Section.
+                            <br>Your order may be moved to these sections if the status is updated!
+                        </h2>
+                    </div>
+
+                    <div th:if="${productionOrder != null}">
+                        <h1 class="my-5" style="width: 80%;">Your Customized Jewelry <span style="font-size: 1rem;">
+                                (Order placed at <span
+                                    th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></span>
+                            </span>)</h1>
+                        <div class="wrapper-order row justify-content-md-center mx-auto my-5">
+                            <div class="col-md-12">
+                                <h4 class="my-4" th:text="${product.product_Name}">
+                                </h4>
+                                <div class="product-content">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <img th:src="@{${cateUrl}}" alt="Category Image" style="width:100%" />
+                                            <p style="text-align: center; font-size:0.75rem;">This is only an
+                                                illustration of your order</p>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <p>
+                                                <span th:text="${material.material_Name}"></span> -
+                                                <span th:text="${productMaterial.material_Weight}"></span> mace
+                                            </p>
+                                            <p class="my-2">
+                                                <span style="font-weight: 700;">Total Material Price: </span>
+                                                <span
+                                                    th:text="${#numbers.formatDecimal(productionOrder.o_Material_Amount, 1, 2)}"></span>
+                                                (<span style="color:#4e64c9; font-style: italic;"
+                                                    th:text="${#numbers.formatDecimal(productionOrder.q_Material_Amount, 1, 2)}"></span>)
+
+                                            </p>
+                                            <hr class="my-3">
+                                            <p>
+                                                <span th:text="${diamond.dia_Name}"></span>,
+                                                <span th:text="${diamond.carat_Weight}"></span> ct,
+                                                <span th:text=" ${diamond.origin}"></span>,
+                                                <span th:text=" ${diamond.color}"></span>,
+                                                <span th:text=" ${diamond.clarity}"></span>,
+                                                <span th:text=" ${diamond.cut}"></span>, cut,
+                                            </p>
+                                            <div class="other-diamond-info">
+                                                <p>Proportion: <span th:text=" ${diamond.proportions}"></span></p>
+                                                <p>Symmetry: <span th:text=" ${diamond.symmetry}"></span></p>
+                                                <p>Fluorescence: <span th:text=" ${diamond.fluorescence}"></span></p>
+                                                <p>Polish: <span th:text=" ${diamond.polish}"></span></p>
+                                            </div>
+                                            <p class="my-2">
+                                                <span style="font-weight: 700;">Total Diamond Price: </span>
+                                                <span
+                                                    th:text="${#numbers.formatDecimal(productionOrder.o_Diamond_Amount, 1, 2)}"></span>
+                                                (<span style="color:#4e64c9; font-style: italic;"
+                                                    th:text="${#numbers.formatDecimal(productionOrder.q_Diamond_Amount, 1, 2)}"></span>)
+                                            </p>
+                                            <hr class="my-3">
+                                            <p>
+                                                <span style="font-weight: 700;">Total Production Cost: </span>
+                                                <span th:text="${productionOrder.o_Production_Amount}"></span>
+                                                (<span style="color:#4e64c9; font-style: italic;"
+                                                    th:text="${productionOrder.q_Production_Amount}"></span>)
+                                            </p>
+                                            <div class="bottom-product-info my-3">
+                                                <p>
+                                                    <span style="font-weight: 700;">Product Size: </span>
+                                                    <span th:text="${productionOrder.product_Size}">9</span>
+                                                </p>
+                                                <p>
+                                                    <span style="font-weight: 700;">Total Price:</span>
+                                                    <span
+                                                        th:text="${#numbers.formatDecimal(productionOrder.o_Total_Amount, 1, 2)}"></span>
+                                                    (<span style="color:#4e64c9; font-style: italic;"
+                                                        th:text="${#numbers.formatDecimal(productionOrder.q_Total_Amount, 1, 2)}"></span>)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-md-center mx-auto my-5">
+                            <div class="wrapper-order col-md-5">
+                                <h2 class="my-3">Your Information</h2>
+                                <div class="information">
+                                    <h2>Customer Name</h2>
+                                    <p th:text="${productionOrder.customer.full_Name}"></p>
+                                </div>
+                                <div class="information">
+                                    <h2>Phone</h2>
+                                    <p th:text="${productionOrder.customer.phoneNumber}"></p>
+                                </div>
+
+                                <div class="information">
+                                    <h2>Address</h2>
+                                    <p th:text="${productionOrder.customer.address}"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="wrapper-order col-md-5">
+                                <h2 class="my-3">Choose Payment Method</h2>
+                                <div class="payment-option">
+                                    <a href="#">Pay COD</a>
+                                    <a href="#">Pay through Bank Transfer</a>
+                                    <a href="#">Pay through Paypal</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mx-auto justify-content-md-center">
+                            <div class="order-one col-md-6">
+
+                            </div>
+                        </div>
+
+                        <h1 class="my-5">Project Section</h1>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Designs from Our Staff</h6>
+                                <div
+                                    th:if="${productionOrder.status == 'Ordered' or productionOrder.status == 'Ordered(NP)'}">
+                                    <p>If you link the design, please hit the button "Approve"
+                                        and we will start making your jewelry! If you don't like it,
+                                        hit the button "Reject", and we will update your design!
+                                    </p>
+                                </div>
+
+
+                                <p th:if="${message != null}" th:text="${message}"
+                                    style="font-style: italic; color:rgb(158, 56, 56)"></p>
+                                <div th:each="entry : ${imagesByStaffId}">
+                                    <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                        data-bs-ride="carousel" data-bs-interval="2000">
+                                        <div class="carousel-inner">
+                                            <div th:each="img, iterStat : ${entry.value}">
+                                                <div
+                                                    th:classappend="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                                    <img th:src="@{${img}}" alt="Material Image"
+                                                        class="d-block w-100" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    th:if="${productionOrder.status == 'Ordered' or productionOrder.status == 'Ordered(NP)'}">
+                                    <div class="btnGroup">
+                                        <a
+                                            th:href="@{/handleUserApprove(productionOrderId=${productionOrder.production_Order_Id})}">Approve</a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#Reject">Reject</a>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal fade" id="Reject">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">This is just a confirm message</h4>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <p>Are you sure?</p>
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <form th:action="@{/handleUserReject}" method="post"
+                                                    enctype="multipart/form-data">
+                                                    <input type="hidden" name="productionOrderId"
+                                                        th:value="${productionOrder.production_Order_Id}" />
+                                                    <input type="submit" name="btnSubmit" class="btn btn-danger"
+                                                        value="Yes">
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <img src="/img/collection/summer/s1.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Progress Photos for you Jewelry</h6>
+                                <div th:each="entry : ${imagesByPRId}">
+                                    <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade"
+                                        data-bs-ride="carousel" data-bs-interval="2000">
+                                        <div class="carousel-inner">
+                                            <div th:each="img, iterStat : ${entry.value}">
+                                                <div
+                                                    th:classappend="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                                    <img th:src="@{${img}}" alt="Material Image"
+                                                        class="d-block w-100" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <hr>
+                            <div class="bottom-note">
+                                <div class="note">
+                                    <p>Note</p>
+                                    <p>This is the information about your customized jewelry!</p>
+                                    <p>If you are pleased with the product, please process to check out.
+                                    </p>
+                                    <p>Thank you for choosing our service!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--Page footer-->
+    <footer>
+        <div class="container-fluid">
+            <div id="others_info" class="row">
+                <div class="footer col-md-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="footer_logo">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fwhite_logo.svg?alt=media&token=0d784ec8-4a47-46f3-a9d6-a1dc153da10b"
+                                    class="logo" /> Kira
+                                Jewelry
+                            </h2>
+                        </div>
+                        <div class="col-md-12">
+                            <div>
+                                <p>Hotline: 123123123</p>
+                                <p>Address: 12AS, Austin, 123</p>
+                                <p>Email: abc1234@fpt.edu.vn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#policy">Policy</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Return and Refund</a></li>
+                                    <li><a href="#">Cancellation</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#resources">Resources</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Gold price</a></li>
+                                    <li><a href="#">Blogs</a></li>
+                                    <li><a href="#">Jewelry price</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#company">Company</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#about">About</a></li>
+                                    <li><a href="#">Join us</a></li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <h4><a href="#support">Support</a></h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    <li><a href="#">Help center</a></li>
+                                    <li><a href="#">Chat support</a></li>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sercurity_contact" class="row">
+                <div class="copyright col-md-4">
+                    <p>&copy; 2022 Kira Jewelry, Inc</p>
+                </div>
+                <div id="sercurity" class="copyright col-md-4">
+                    <a href="#privacy">Privacy</a>
+                    <a href="#terms">Terms</a>
+                    <a href="#sitemap">Sitemap</a>
+                </div>
+                <div id="contact" class="copyright col-md-4">
+                    <div class="contact_footer">
+                        <a class="twitter"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ftwitter.svg?alt=media&token=10ac99d3-ad24-49fa-be3c-858e3df5be3d" /></a>
+                        <a class="facebook"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Ffacebook.svg?alt=media&token=cfd900e2-2b26-4b79-9753-a40a98b6d4bd" /></a>
+                        <a class="linkedin"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2FlinkedIn.svg?alt=media&token=719b6dc3-faff-4e09-a3ce-76cf963e3c84" /></a>
+                        <a class="youtube"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Fyoutube.svg?alt=media&token=c5560932-c276-45fa-91ec-cddee11ce57c" /></a>
+                        <a class="instagram"><img
+                                src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Ffooter%2Finstagram.svg?alt=media&token=9b0f029f-d6b1-4249-a999-6f92488d0b6e" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function upload() {
+
+            const fileUploadInput = document.querySelector('.file-uploader');
+
+            if (!fileUploadInput.value) {
+                return;
+            }
+            const image = fileUploadInput.files[0];
+            if (!image.type.includes('image')) {
+                return alert('Only images are allowed!');
+            }
+            if (image.size > 10_000_000) {
+                return alert('Maximum upload size is 10MB!');
+            }
+
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(image);
+
+            fileReader.onload = (fileReaderEvent) => {
+                const profilePicture = document.querySelector('.profile-picture');
+                profilePicture.style.backgroundImage = `url(${fileReaderEvent.target.result})`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+
+            if (urlParams.has('approved')) {
+                successMessage.classList.remove('close');
+                successMessage.classList.add('open');
+                setTimeout(() => {
+                    successMessage.classList.remove('open');
+                    successMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('reject')) {
+                errorMessage.classList.remove('close');
+                errorMessage.classList.add('open');
+                setTimeout(() => {
+                    errorMessage.classList.remove('open');
+                    errorMessage.classList.add('close');
+                }, 2000);
+            }
+        });
+
+    </script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

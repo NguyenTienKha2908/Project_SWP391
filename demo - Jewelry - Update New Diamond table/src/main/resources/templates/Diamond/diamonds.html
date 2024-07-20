@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Diamond List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d4d8 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            margin: 10px 0; 
+        }
+        .btn:hover {background-color: #3e8e41}
+        .btn:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+        .btn-secondary {
+            background-color: #555;
+        }
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        .btn-secondary:active {
+            background-color: #444;
+        }
+        .message {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            margin-bottom: 15px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+        .pagination li {
+            display: inline;
+            margin: 0 5px;
+        }
+        .pagination a {
+            text-decoration: none;
+            color: #333;
+        }
+        .pagination .active a {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Diamond List</h1>
+            <a th:href="@{/showNewDiamondForm}" class="btn">Add New Diamond</a>
+            <a th:href="@{/}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </header>
+    <div class="container">
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Diamond ID</th>
+                    <th>Diamond Code</th>
+                    <th>Diamond Name</th>
+                    <th>Origin</th>
+                    <th>Carat Weight</th>
+                    <th>Color</th>
+                    <th>Clarity</th>
+                    <th>Cut</th>
+                    <th>Proportions</th>
+                    <th>Polish</th>
+                    <th>Symmetry</th>
+                    <th>Fluorescence</th>
+                    <th>Status</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="diamond : ${diamondPage.getContent()}">
+                    <td th:text="${diamond.diaId}"></td>
+                    <td th:text="${diamond.diaCode}"></td>
+                    <td th:text="${diamond.diaName}"></td>
+                    <td th:text="${diamond.origin}"></td>
+                    <td th:text="${diamond.caratWeight}"></td> <!-- Changed field name -->
+                    <td th:text="${diamond.color}"></td>
+                    <td th:text="${diamond.clarity}"></td>
+                    <td th:text="${diamond.cut}"></td>
+                    <td th:text="${diamond.proportions}"></td>
+                    <td th:text="${diamond.polish}"></td>
+                    <td th:text="${diamond.symmetry}"></td>
+                    <td th:text="${diamond.fluorescence}"></td>
+                    <td th:text="${diamond.status == 1 ? 'Active' : 'Inactive'}"></td>
+                    <td><img th:src="@{${diamond.imgUrl}}" alt="Diamond Image" style="width:100px;height:100px;"/></td> <!-- Changed field name -->
+                    <td>
+                        <a th:href="@{/showFormForUpdateDiamond/{id}(id=${diamond.diaId})}" class="btn btn-secondary">Edit</a>
+                        <a th:href="@{${diamond.status == 1 ? '/deactivateDiamond/' + diamond.diaId : '/activateDiamond/' + diamond.diaId}}"
+                           th:text="${diamond.status == 1 ? 'Deactivate' : 'Activate'}" class="btn btn-secondary"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <li th:classappend="${diamondPage.hasPrevious()} ? '' : 'disabled'">
+                <a th:href="@{/diamonds(page=${diamondPage.number - 1})}">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(1, diamondPage.totalPages)}"
+                th:classappend="${i == diamondPage.number + 1} ? 'active'">
+                <a th:href="@{/diamonds(page=${i - 1})}" th:text="${i}"></a>
+            </li>
+            <li th:classappend="${diamondPage.hasNext()} ? '' : 'disabled'">
+                <a th:href="@{/diamonds(page=${diamondPage.number + 1})}">Next</a>
+            </li>
+        </ul>
+        <a th:href="@{/}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</body>
+</html>

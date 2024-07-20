@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Material List</title>
+  </head>
+  <body>
+    <div class="container my-3">
+      <table class="table table-responsive-md table-hover">
+        <thead>
+          <tr>
+            <th>Material Code</th>
+            <th>Material Name</th>
+            <th>Image</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="material, index : ${listMaterials}">
+            <td th:text="${material.material_Code}"></td>
+            <td th:text="${material.material_Name}"></td>
+            <td>
+              <img
+                th:src="@{${imagesByMaterials[index.index]}}"
+                alt="Material Image"
+                style="width: 100px; height: 100px"
+              />
+            </td>
+            <td th:text="${material.status == 1 ? 'Active' : 'Inactive'}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

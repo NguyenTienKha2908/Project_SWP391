@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Summary</title>
+</head>
+<body>
+    <h1>Order Summary</h1>
+    <div th:if="${product != null}">
+        <p>Product Code: <span th:text="${product.product_Code}"></span></p>
+        <p>Category: <span th:text="${product.category_Id}"></span></p>
+        <!-- Display other product details -->
+    </div>
+</body>
+</html>

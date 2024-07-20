@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Staff</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d4d8 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            margin: 10px 0; 
+        }
+        .btn:hover {background-color: #3e8e41}
+        .btn:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+        .btn-secondary {
+            background-color: #555;
+        }
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        .btn-secondary:active {
+            background-color: #444;
+        }
+        .message {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Manage Staff</h1>
+            <a th:href="@{/add_staff}" class="btn">Add New Staff</a>
+            <a th:href="@{/manageUsers}" class="btn btn-secondary">Back to Manage Users</a>
+        </div>
+    </header>
+    <div class="container">
+        <div th:if="${message}" class="message" th:text="${message}"></div>
+
+        <h2>Admins</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Role ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="admin : ${admins}">
+                    <td th:text="${admin.email}"></td>
+                    <td th:text="${admin.role_Id}"></td>
+                    <td th:text="${admin.status ? 'ACTIVE' : 'INACTIVE'}"></td>
+                    <td>
+                        <a th:href="@{/users/showFormForUpdateStaff/{id}(id=${admin.user_Id})}" class="btn btn-secondary">Edit</a>
+                        <form th:action="@{${admin.status ? '/users/deactivateStaff/' + admin.user_Id : '/users/activateStaff/' + admin.user_Id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary" th:text="${admin.status ? 'Deactivate' : 'Activate'}"></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Managers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Role ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="manager : ${managers}">
+                    <td th:text="${manager.email}"></td>
+                    <td th:text="${manager.role_Id}"></td>
+                    <td th:text="${manager.status ? 'ACTIVE' : 'INACTIVE'}"></td>
+                    <td>
+                        <a th:href="@{/users/showFormForUpdateStaff/{id}(id=${manager.user_Id})}" class="btn btn-secondary">Edit</a>
+                        <form th:action="@{${manager.status ? '/users/deactivateStaff/' + manager.user_Id : '/users/activateStaff/' + manager.user_Id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary" th:text="${manager.status ? 'Deactivate' : 'Activate'}"></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Sales Staff</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Role ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="salesStaff : ${salesStaff}">
+                    <td th:text="${salesStaff.email}"></td>
+                    <td th:text="${salesStaff.role_Id}"></td>
+                    <td th:text="${salesStaff.status ? 'ACTIVE' : 'INACTIVE'}"></td>
+                    <td>
+                        <a th:href="@{/users/showFormForUpdateStaff/{id}(id=${salesStaff.user_Id})}" class="btn btn-secondary">Edit</a>
+                        <form th:action="@{${salesStaff.status ? '/users/deactivateStaff/' + salesStaff.user_Id : '/users/activateStaff/' + salesStaff.user_Id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary" th:text="${salesStaff.status ? 'Deactivate' : 'Activate'}"></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Production Staff</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Role ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="productionStaff : ${productionStaff}">
+                    <td th:text="${productionStaff.email}"></td>
+                    <td th:text="${productionStaff.role_Id}"></td>
+                    <td th:text="${productionStaff.status ? 'ACTIVE' : 'INACTIVE'}"></td>
+                    <td>
+                        <a th:href="@{/users/showFormForUpdateStaff/{id}(id=${productionStaff.user_Id})}" class="btn btn-secondary">Edit</a>
+                        <form th:action="@{${productionStaff.status ? '/users/deactivateStaff/' + productionStaff.user_Id : '/users/activateStaff/' + productionStaff.user_Id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary" th:text="${productionStaff.status ? 'Deactivate' : 'Activate'}"></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Design Staff</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Role ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="designStaff : ${designStaff}">
+                    <td th:text="${designStaff.email}"></td>
+                    <td th:text="${designStaff.role_Id}"></td>
+                    <td th:text="${designStaff.status ? 'ACTIVE' : 'INACTIVE'}"></td>
+                    <td>
+                        <a th:href="@{/users/showFormForUpdateStaff/{id}(id=${designStaff.user_Id})}" class="btn btn-secondary">Edit</a>
+                        <form th:action="@{${designStaff.status ? '/users/deactivateStaff/' + designStaff.user_Id : '/users/activateStaff/' + designStaff.user_Id}}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary" th:text="${designStaff.status ? 'Deactivate' : 'Activate'}"></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a th:href="@{/manageUsers}" class="btn btn-secondary">Back to Manage Users</a>
+        <a th:href="@{/}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</body>
+</html>
