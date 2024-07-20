@@ -243,7 +243,7 @@
                                 <div class="d-flex align-items-center">
                                     <div id="weightDisplay"
                                         th:if="${session.productMaterial == null || session.productMaterial.material_Weight == ''}">
-                                        <span>No material weight specified</span>
+                                        <span class="text-danger">No material weight specified</span>
                                         <button type="button" class="btn btn-link text-decoration-none"
                                             onclick="showWeightEditForm()">Edit</button>
                                     </div>
@@ -363,8 +363,8 @@
                         <button type="button" class="btn btn-link text-decoration-none"
                             onclick="showDiamondEditForm()">Edit</button>
                     </div>
-                    <div th:if="${session.oldDiamond == null}" class="form-control w-100 my-3" disabled
-                        style="color: #6C757D; background-color: #E9ECEF;">
+                    <div th:if="${session.oldDiamond == null}" class="form-control w-100 my-3 border-0" disabled>
+                        <label class="text-nowrap me-3">Diamond Information:</label>
                         <span class="text-danger">Not selected yet</span>
                         <button type="button" class="btn btn-link text-decoration-none"
                             onclick="showDiamondEditForm()">Edit</button>
@@ -542,11 +542,40 @@
             </div>
             <div th:if="${productionOrder.q_Diamond_Amount != 0 && productionOrder.q_Material_Amount != 0 && productionOrder.q_Production_Amount !=0}"
                 class="my-5" style="margin: 0 auto; width: 85%">
-                <form th:action="@{/previewQuotePage}" method="GET" class="text-end">
+                <!-- <form th:action="@{/previewQuotePage}" method="GET" class="text-end">
                     <input type="hidden" id="production_Order_Id" name="production_Order_Id"
                         th:value="${productionOrder.production_Order_Id}">
                     <button class="text-decoration-none btn btn-primary w-25 rounded my-4">Next</button>
-                </form>
+                </form> -->
+                <a href="#" data-bs-toggle="modal" data-bs-target="#Next">Next</a>
+            </div>
+            <div class="modal fade" id="Next">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">This is just a confirm message</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <p>Are you sure with these information jewelry ?</p>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <form th:action="@{/previewQuotePage}" method="GET" enctype="multipart/form-data">
+                                <input type="hidden" name="production_Order_Id" id="production_Order_Id"
+                                    th:value="${productionOrder.production_Order_Id}" />
+                                <input type="submit" name="btnSubmit" class="btn btn-danger" value="Yes">
+                                <a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

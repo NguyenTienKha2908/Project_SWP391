@@ -203,11 +203,14 @@
                                         <span>
                                             <input type="hidden" name="productionOrderId"
                                                 th:value="${productionOrder.production_Order_Id}" />
-                                            <button class="text-decoration-none btn btn-success" type="submit"
+                                            <button th:if="${productionOrder.sales_Staff == null}"
+                                                class="text-decoration-none btn btn-success" type="submit"
                                                 id="saveButton">Save</button>
                                             <a href="#" class="btn btn-danger my-5" data-bs-toggle="modal"
                                                 data-bs-target="#Reject">Delete</a>
                                         </span>
+                                    </td>
+                                </tr>
                             </form>
 
                             <div class="modal fade" id="Reject">

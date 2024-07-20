@@ -189,7 +189,7 @@
                         </tr>
                         <tr>
                             <td><label for="">Price</label></td>
-                            <td><span th:text="${productMaterial.q_Price}"></span> - (<span
+                            <td>$<span th:text="${productMaterial.q_Price}"></span> - (<span
                                     th:text="${materialPriceList.price}"></span>/mace)</td>
                         </tr>
                         <tr>
@@ -249,9 +249,9 @@
                         </tr>
                         <tr>
                             <td><label for="">Price</label></td>
-                            <td><span th:text="${diamond.q_Price}"></span>- (<span
+                            <td>$<span th:text="${diamond.q_Price}"></span>- (<span
                                     th:text="${diamondPriceList.carat_Weight_From}"></span> - <span
-                                    th:text="${diamondPriceList.carat_Weight_To}"></span> => <span
+                                    th:text="${diamondPriceList.carat_Weight_To}"></span> => $<span
                                     th:text="${diamondPriceList.price}"></span> )</td>
                         </tr>
                         <tr>
@@ -266,11 +266,11 @@
                     <table class="border-0">
                         <tr>
                             <td><label for="">Production Price</label></td>
-                            <td><span th:text="${productionOrder.q_Production_Amount}"></span></td>
+                            <td>$<span th:text="${productionOrder.q_Production_Amount}"></span></td>
                         </tr>
                         <tr>
                             <td><label for="">Total price</label></td>
-                            <td><span th:text="${productionOrder.q_Total_Amount}"></span></td>
+                            <td>$<span th:text="${productionOrder.q_Total_Amount}"></span></td>
                         </tr>
 
                     </table>
