@@ -38,6 +38,24 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ProductMaterialService productMaterialService;
+
+    @Autowired
+    private DiamondService diamondService;
+
+    @Autowired
+    private MaterialService materialService;
+
+    @Autowired
+    private ProductionOrderService productionOrderService;
+
+    @Autowired
+    private ProductDesignService productDesignService;
+
     @GetMapping("/collections")
     public String viewCollectionsPage(Model model) {
         List<Collection> listCollections = collectionService.getAllCollections();
@@ -98,7 +116,31 @@ public class CollectionController {
     @GetMapping("/showFormForUpdateCollection/{id}")
     public String showFormForUpdateCollection(@PathVariable(value = "id") int id, Model model) {
         Collection collection = collectionService.getCollectionById(id);
+        List<Product> products = productService.getProductsByColId(id);
+        List<ProductDesign> productDesigns = productDesignService.getProductDesignsByColId(id);
+        List<ProductMaterial> productMaterials = new ArrayList<>();
+        List<Diamond> diamonds = new ArrayList<>();
+        List<ProductionOrder> productionOrders = new ArrayList<>();
+        List<Material> materials = new ArrayList<>();
+
+        for (Product p : products) {
+            ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(p.getProduct_Id());
+            productMaterials.add(productMaterial);
+            Diamond diamond = diamondService.getDiamondByProductId(p.getProduct_Id());
+            diamonds.add(diamond);
+            ProductionOrder productionOrder = productionOrderService.getProductionOrderByProductId(p.getProduct_Id());
+            productionOrders.add(productionOrder);
+            Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+            materials.add(material);
+        }
+
         model.addAttribute("collection", collection);
+        model.addAttribute("productDesignList", productDesigns);
+        model.addAttribute("productMaterialList", productMaterials);
+        model.addAttribute("diamondList", diamonds);
+        model.addAttribute("productionOrderList", productionOrders);
+        model.addAttribute("products", products);
+        model.addAttribute("materialList", materials);
         return "employee/manager/Collection/update_collection";
     }
 
@@ -167,24 +209,6 @@ public class CollectionController {
         return "collection/collectionPage";
     }
 
-    @Autowired
-    private ProductMaterialService productMaterialService;
-
-    @Autowired
-    private DiamondService diamondService;
-
-    @Autowired
-    private MaterialService materialService;
-
-    @Autowired
-    private ProductionOrderService productionOrderService;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private ProductDesignService productDesignService;
-
     @GetMapping("/viewCollection")
     public String viewCollectionDetail(Model model, @RequestParam("id") int id) {
         List<Product> products = productService.getProductsByColId(id);
@@ -193,6 +217,7 @@ public class CollectionController {
         List<Diamond> diamonds = new ArrayList<>();
         List<ProductionOrder> productionOrders = new ArrayList<>();
         List<Material> materials = new ArrayList<>();
+        Collection collection = collectionService.getCollectionById(id);
 
         for (Product p : products) {
             ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(p.getProduct_Id());
@@ -205,6 +230,7 @@ public class CollectionController {
             materials.add(material);
         }
 
+        model.addAttribute("collection", collection);
         model.addAttribute("productDesignList", productDesigns);
         model.addAttribute("productMaterialList", productMaterials);
         model.addAttribute("diamondList", diamonds);
