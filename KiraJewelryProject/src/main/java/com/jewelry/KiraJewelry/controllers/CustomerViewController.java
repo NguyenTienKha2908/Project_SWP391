@@ -523,7 +523,7 @@ public class CustomerViewController {
             @RequestParam("productId") int productId,
             @RequestParam("orderId") String orderId,
             @RequestParam("diamondId") int diamondId,
-            Model model, RedirectAttributes redirectAttributes) {
+            Model model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         Product product = productService.getProductById(productId);
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
@@ -532,6 +532,10 @@ public class CustomerViewController {
 
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
+        if (productionOrder.getCustomer() == null) {
+            Customer customer = customerService.getCustomerByCustomerId((String) session.getAttribute("customerId"));
+            productionOrder.setCustomer(customer);
+        }
         model.addAttribute("diamond", diamond);
         model.addAttribute("material", material);
         model.addAttribute("productMaterial", productMaterial);

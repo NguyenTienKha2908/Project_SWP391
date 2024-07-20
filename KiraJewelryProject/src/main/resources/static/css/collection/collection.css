@@ -1,0 +1,115 @@
+/*Page info CSS*/
+
+#page_info {
+  display: flex;
+  justify-content: space-around;
+
+  .header_intro {
+    text-align: center;
+
+  }
+
+  #introduce {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  #left {
+    width: 450px;
+    padding-top: 50px;
+
+    #inner_left {
+      width: 200px;
+      margin: 70px 20px 20px 0;
+      padding: 10px;
+    }
+  }
+
+  #right {
+    width: 450px;
+    padding: 50px 0 40px 0;
+  }
+}
+
+#u_introduce {
+  margin-bottom: 5%;
+
+  .containers {
+    position: relative;
+  }
+
+  img {
+    display: block;
+
+    &:nth-child(1) {
+      position: relative;
+      width: 100%;
+    }
+
+    &:nth-child(2) {
+      width: 38%;
+      display: inline;
+      position: absolute;
+      top: 60%;
+      left: 10%;
+      z-index: 2;
+    }
+  }
+
+  #description {
+    height: 150px;
+    display: flex;
+    justify-content: end;
+    margin: 100px 300px 0 0;
+
+    p {
+      height: 100px;
+      width: 300px;
+    }
+  }
+}
+
+.d-flex {
+  align-items: center;
+  margin: 7%;
+}
+
+#collection1 {
+  height: 90%;
+
+  h1 {
+    width: 100%;
+  }
+  div:nth-child(1) {
+    margin: 5% 0 5% 10%;
+    height: 300px;
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  div:nth-child(2) {
+    width: 50%;
+    display: flex;
+    justify-content: end;
+
+    img {
+      width: 70%;
+      height: 80%;
+    }
+  }
+}
+
+.collection-btn {
+  border: none;
+  border-radius: 10px;
+  color: #FFFFFF;
+  background-color: #f7b050;
+  transition: 0.25s ease-in-out;
+  padding: 5px 10px;
+}
+
+.collection-btn:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}

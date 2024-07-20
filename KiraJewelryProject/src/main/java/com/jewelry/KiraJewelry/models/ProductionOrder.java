@@ -42,7 +42,6 @@ public class ProductionOrder {
     @Column(name = "product_size")
     private int product_Size;
 
-
     @Column(name = "description")
     private String description;
 

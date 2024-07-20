@@ -13,6 +13,7 @@ import com.jewelry.KiraJewelry.models.User;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -28,7 +29,8 @@ public class HomeController {
     private UserService userService;
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model, HttpServletRequest request) {
+        model.addAttribute("requestURI", request.getRequestURI());
         return "home";
     }
 

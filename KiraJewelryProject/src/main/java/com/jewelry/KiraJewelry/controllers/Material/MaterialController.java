@@ -12,6 +12,7 @@ import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
@@ -183,9 +184,10 @@ public class MaterialController {
     }
 
     @GetMapping("/viewCustomerMaterialsPage")
-    public String viewCustomerMaterialsPage(Model model) {
+    public String viewCustomerMaterialsPage(Model model, HttpServletRequest request) {
         List<Material> allMaterials = materialService.getAllMaterials();
         model.addAttribute("listMaterials", allMaterials);
+        model.addAttribute("requestURI", request.getRequestURI());
         return "price/customerMaterialsPage";
     }
 }

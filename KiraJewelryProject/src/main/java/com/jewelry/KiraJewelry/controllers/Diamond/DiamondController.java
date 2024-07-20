@@ -17,6 +17,7 @@ import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.Diamond.DiamondService;
 import com.jewelry.KiraJewelry.service.DiamondPriceList.DiamondPriceListService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -264,16 +265,20 @@ public class DiamondController {
     public String viewCustomerDiamondsPage(Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(value = "message", required = false) String message) {
+            @RequestParam(value = "message", required = false) String message,
+            HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Diamond> diamondPage = diamondService.getAllDiamonds(pageable);
 
         if (page >= diamondPage.getTotalPages() && diamondPage.getTotalPages() > 0) {
+            model.addAttribute("requestURI", request.getRequestURI());
             return "redirect:/customerDiamondsPage?page=" + (diamondPage.getTotalPages() - 1) + "&size=" + size;
         }
 
         model.addAttribute("diamondPage", diamondPage);
         model.addAttribute("message", message);
+        model.addAttribute("requestURI", request.getRequestURI());
+
         return "price/customerDiamondsPage";
     }
 }
