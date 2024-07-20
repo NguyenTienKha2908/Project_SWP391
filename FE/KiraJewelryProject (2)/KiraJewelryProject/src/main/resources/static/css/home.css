@@ -1,0 +1,287 @@
+.carousel-inner {
+  img {
+    max-width: 100%;
+    width: 30%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.carousel-item {
+  height: auto;
+}
+
+/*About Us CSS*/
+#about {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 50px;
+  margin: 0 10%;
+}
+
+#achievement {
+  display: flex;
+  text-align: center;
+  padding: 50px;
+  margin: 0 10%;
+
+  h5 {
+    padding-bottom: 40px;
+  }
+}
+
+/*Special Collection CSS*/
+#collection {
+  padding: 50px;
+  background-image: url(https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FBG_Coll%2Fimage%2030.png?alt=media&token=cf74d63a-2fd3-4e97-b80d-2e745b3b6414);
+  background-size: cover;
+
+  #introduce {
+    text-align: center;
+    padding-bottom: 40px;
+  }
+
+  .col-md-6 {
+    display: flex;
+    justify-content: center;
+  }
+
+  .explore_more {
+    text-align: center;
+    padding-top: 40px;
+  }
+}
+
+/*Blogs CSS*/
+#blogs {
+  display: flex;
+  padding: 50px;
+  justify-content: center;
+  margin: 0 5%;
+
+  #introduce {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+
+  #link {
+    text-align: end;
+    padding: 0 100px 40px 0;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 8%;
+    height: auto;
+  }
+
+  #author_button {
+    margin: 5%;
+  }
+
+  #main {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    div:nth-child(2) {
+      margin-right: 11%;
+    }
+  }
+}
+
+/*InsDesign CSS*/
+#design {
+  padding: 50px;
+  background-image: url(https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FBG_Coll%2Fimage%2032.png?alt=media&token=dafc50c8-275b-4da7-a98b-73301e9cec39);
+  background-size: cover;
+  display: flex;
+
+  h1 {
+    text-align: center;
+    padding-bottom: 50px;
+  }
+
+  ul {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  li {
+    display: inline-block;
+    align-items: center;
+    text-align: center;
+    margin: 0 2% 2% 2%;
+
+    a:hover {
+      font-weight: 600;
+      border-bottom: 1px solid #f7b050;
+      color: #f7b050;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    font-size: 1em;
+  }
+
+  #img {
+    display: flex;
+    justify-content: center;
+  }
+
+  #link {
+    width: 100%;
+    text-align: center;
+    padding: 50px 70px 0 40px;
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+  }
+}
+
+/*Order CSS*/
+
+
+.all-collection-sect {
+  text-align: center;
+}
+
+.sect-content {
+
+  padding: 7%;
+
+  h1 {
+    color: #f7b050;
+    font-size: 1.75rem;
+  }
+
+  p {
+    margin-bottom: 5%;
+    font-size: 0.75rem;
+    color: #000000;
+    font-weight: 200;
+  }
+
+  a {
+    margin: 2%;
+    color: #ffffff;
+    padding: 15px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #f7b050;
+    text-decoration: none;
+    border-radius: 10px;
+
+    &:nth-of-type(1) {
+      margin-left: 0;
+    }
+  }
+
+  a:hover {
+    background-color: transparent;
+    border: 1px solid #f7b050;
+    color: #f7b050;
+  }
+}
+
+.top-cover {
+  padding: 4%;
+}
+
+#order {
+  display: flex;
+  padding: 70px;
+  justify-content: space-between;
+  margin: 0 6%;
+
+  label {
+    font-weight: 600;
+  }
+
+  input {
+    border: none;
+    border-bottom: 2px solid #9095a0;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  select {
+    border: none;
+    border-bottom: 2px solid #9095a0;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  #file {
+    border: none;
+  }
+
+  h1 {
+    text-align: center;
+    padding-bottom: 50px;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  #material {
+    display: flex;
+    justify-content: space-between;
+    gap: 2em;
+  }
+
+  #order_form {
+    width: 100%;
+
+
+  }
+
+  #img_container {
+    margin-top: 13%;
+    display: inline-flex;
+    width: 130%;
+    justify-content: space-evenly;
+
+    img {
+      margin: 5% 1%;
+      width: 120%;
+    }
+
+  }
+}
+
+/*Advertise CSS*/
+#advertise {
+  background-color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 0 5%;
+
+  .text {
+    margin: 2% 15%;
+  }
+
+  .bottom_img {
+    display: grid;
+    margin: 5%;
+  }
+}

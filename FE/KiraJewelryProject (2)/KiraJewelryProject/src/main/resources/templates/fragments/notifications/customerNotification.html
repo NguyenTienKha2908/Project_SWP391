@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notification</title>
+  </head>
+  <body>
+    <div th:fragment="notification" class="mess-container" th:if="${param.approved}">
+        <div class="mess-content open" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#155724">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b12a">
+                <p>Thank you! Your approval has been sent!</p>
+            </div>
+        </div>
+    </div>
+    <div th:fragment="notification" class="mess-container" th:if="${param.reject}">
+        <div class="mess-content close" id="error-message">
+        <div class="toast-header">
+          <strong class="me-auto" style="color: #721c24">Notification</strong>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+        <div class="toast-body" style="color: #b10101">
+          <p>
+            Thank you! We will make sure to update a new design for your
+            jewelry!
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
