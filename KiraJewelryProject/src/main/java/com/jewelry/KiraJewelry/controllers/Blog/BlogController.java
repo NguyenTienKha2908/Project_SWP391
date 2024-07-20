@@ -9,8 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Blog;
+import com.jewelry.KiraJewelry.models.Employee;
+import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.Blog.BlogService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,9 +25,11 @@ import java.util.List;
 public class BlogController {
 
     @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
     private BlogService blogService;
 
-    @GetMapping("/blogs")
     public String viewBlogsPage(Model model) {
         List<Blog> listBlogs = blogService.getAllBlogs();
         model.addAttribute("listBlogs", listBlogs);
@@ -164,5 +169,24 @@ public class BlogController {
         blogService.deleteBlogById(id);
         redirectAttributes.addFlashAttribute("message", "Blog deleted successfully.");
         return "redirect:/blogs";
+    }
+
+    // CUSTOMER
+
+    @GetMapping("/BlogList")
+    public String listBlogs(Model model, HttpServletRequest request) {
+        List<Blog> listBlogs = blogService.getAllBlogs();
+        model.addAttribute("listBlogs", listBlogs);
+        model.addAttribute("requestURI", request.getRequestURI());
+        return "blog/BlogList";
+    }
+
+    @GetMapping("/ViewBlogDetail")
+    public String ViewBlogDetail(@RequestParam("blog_Id") int blog_Id, Model model) {
+        Blog blog = blogService.getBlogById(blog_Id);
+        model.addAttribute("blog", blog);
+        Employee employee = employeeService.getEmployeeById(blog.getEmployee_Id());
+        model.addAttribute("employee", employee);
+        return "blog/BlogItems";
     }
 }

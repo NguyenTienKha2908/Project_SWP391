@@ -6,22 +6,18 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
   private final Path root = Paths.get("./uploads");
-  private final ImageService imageService = new ImageService();
+  // private final ImageService imageService = new ImageService();
 
   @Override
   public void init() {
@@ -35,8 +31,6 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   @Override
   public void save(MultipartFile file) {
     try {
-    //   String imgUrl = imageService.upload(file);
-      //System.out.println(imgUrl);
       Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
     } catch (Exception e) {
       if (e instanceof FileAlreadyExistsException) {
@@ -77,16 +71,4 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     }
   }
 
-  // @Override
-  // public List<String> listFiles() {
-  //   try {
-  //     return Files.walk(this.root, 1)
-  //         .filter(path -> !path.equals(this.root))
-  //         .map(this.root::relativize)
-  //         .map(Path::toString)
-  //         .collect(Collectors.toList());
-  //   } catch (IOException e) {
-  //     throw new RuntimeException("Could not load the files!");
-  //   }
-  // }
 }

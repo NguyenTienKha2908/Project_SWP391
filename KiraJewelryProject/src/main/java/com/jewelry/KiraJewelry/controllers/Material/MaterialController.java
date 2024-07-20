@@ -8,16 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.jewelry.KiraJewelry.crawler.CrawlerData;
-import com.jewelry.KiraJewelry.crawler.CrawlerService;
 import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,31 +27,12 @@ public class MaterialController {
     @Autowired
     private MaterialService materialService;
 
-    @Autowired
-    private CrawlerService crawlerService;
-
     @GetMapping("/materials")
     public String viewMaterialsPage(Model model) {
         // Get all materials
         List<Material> allMaterials = materialService.getAllMaterials();
 
-        // Initialize list to hold image URLs for each material
-        List<String> imagesByMaterials = new ArrayList<>();
-
-        // Iterate through each material to get its image URL
-        for (Material material : allMaterials) {
-            try {
-                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
-                imagesByMaterials.add(imageUrl);
-                System.out.println(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-
         // Add lists to the model
-        model.addAttribute("imagesByMaterials", imagesByMaterials);
         model.addAttribute("listMaterials", allMaterials);
         return "employee/manager/Material/materials";
     }
@@ -68,13 +47,14 @@ public class MaterialController {
 
     @PostMapping("/saveMaterial")
     public String saveMaterial(@ModelAttribute("material") @Valid Material material, BindingResult result,
-            @RequestParam("imgFile") MultipartFile imgFile, RedirectAttributes redirectAttributes) {
+            @RequestParam("file") MultipartFile imgFile, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.material", result);
             redirectAttributes.addFlashAttribute("material", material);
             return "redirect:/showNewMaterialForm";
         }
 
+        material.setImg_Url("temporary");
         materialService.saveMaterial(material);
         boolean resultSaveImg = handleImageUpload(material, imgFile, redirectAttributes);
         if (resultSaveImg == true) {
@@ -97,13 +77,14 @@ public class MaterialController {
 
     @PostMapping("/updateMaterial")
     public String updateMaterial(@ModelAttribute("material") @Valid Material material, BindingResult result,
-            @RequestParam("imgFile") MultipartFile imgFile, RedirectAttributes redirectAttributes) {
+            @RequestParam("file") MultipartFile imgFile, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.material", result);
             redirectAttributes.addFlashAttribute("material", material);
             return "redirect:/showFormForUpdateMaterial/" + material.getMaterial_Id();
         }
 
+        material.setImg_Url("temporary");
         materialService.saveMaterial(material);
         boolean resultSaveImg = handleImageUpdate(material, imgFile, redirectAttributes);
         if (resultSaveImg == true) {
@@ -168,6 +149,8 @@ public class MaterialController {
             try {
 
                 String url = imageService.upload(imgFile, "Material", String.valueOf(material.getMaterial_Id()));
+                material.setImg_Url(url);
+                materialService.saveMaterial(material);
                 return true;
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not save image file: " + e.getMessage());
@@ -179,10 +162,8 @@ public class MaterialController {
     private boolean handleImageUpdate(Material material, MultipartFile imgFile, RedirectAttributes redirectAttributes) {
         if (imgFile != null && !imgFile.isEmpty()) {
             try {
-                // Get the old image URL
                 String oldUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
 
-                // Delete the old image if it exists
                 if (oldUrl != null && !oldUrl.isEmpty()) {
                     boolean deleted = imageService.deleteImage(oldUrl);
                     if (!deleted) {
@@ -203,29 +184,10 @@ public class MaterialController {
     }
 
     @GetMapping("/viewCustomerMaterialsPage")
-    public String viewCustomerMaterialsPage(Model model) {
-        // Get all materials
-        //crawlerService.crawlAndSaveData();
+    public String viewCustomerMaterialsPage(Model model, HttpServletRequest request) {
         List<Material> allMaterials = materialService.getAllMaterials();
-
-        // Initialize list to hold image URLs for each material
-        List<String> imagesByMaterials = new ArrayList<>();
-
-        // Iterate through each material to get its image URL
-        for (Material material : allMaterials) {
-            try {
-                String imageUrl = imageService.getImgByMaterialID(String.valueOf(material.getMaterial_Id()));
-                imagesByMaterials.add(imageUrl);
-                System.out.println(imageUrl);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-
-        // Add lists to the model
-        model.addAttribute("imagesByMaterials", imagesByMaterials);
         model.addAttribute("listMaterials", allMaterials);
+        model.addAttribute("requestURI", request.getRequestURI());
         return "price/customerMaterialsPage";
     }
 }

@@ -58,5 +58,9 @@ public class ProductDesignService {
     public ProductDesign findByProductId(int productId) {
         return productDesignRepository.findByProductId(productId);
     }
+
+    public List<ProductDesign> getProductDesignsByColId(int collection_id) {
+        return productDesignRepository.getProductDesignByCollectionId(collection_id);
+    }
 }
 

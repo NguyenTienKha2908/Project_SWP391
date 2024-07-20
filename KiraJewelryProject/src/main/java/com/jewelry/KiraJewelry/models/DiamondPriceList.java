@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +49,7 @@ public class DiamondPriceList {
     @Column(name = "price")
     private double price;
 
-    @PastOrPresent
+    // @PastOrPresent
     @Column(name = "eff_date")
     private Date eff_Date;
 

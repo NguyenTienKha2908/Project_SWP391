@@ -5,9 +5,47 @@
     <title>Material Management</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/staff.css}">
+    <style>
+        .mess-container {
+            .mess-content {
+                position: fixed;
+                top: 20px;
+                right: 35px;
+                z-index: 999;
+                background-color: #FFFFFF;
+                width: 30%;
+                padding: 5px 20px;
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+                border-radius: 4px;
+                transition: transform 0.75s ease-in-out;
+            }
+        }
+
+        .close {
+            transform: translateX(120%);
+        }
+
+        .open {
+            transform: translateX(-20%);
+        }
+    </style>
 </head>
 
 <body>
+
+    <div class="mess-container" th:if="${message}">
+        <div class="mess-content open" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#155724">Notification</strong>
+                <a th:href="@{/categories}">
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </a>
+            </div>
+            <div class="toast-body" style="color:#01b12a">
+                <p th:text="${message}"></p>
+            </div>
+        </div>
+    </div>
 
     <div class="wrapper">
         <aside id="sidebar">
@@ -173,7 +211,7 @@
                                 <td th:text="${material.material_Code}"></td>
                                 <td th:text="${material.material_Name}"></td>
                                 <td>
-                                    <img th:src="@{${imagesByMaterials[index.index]}}" alt="Material Image"
+                                    <img th:src="@{${material.img_Url}}" alt="Material Image"
                                         style="width:100px;height:100px;" />
                                 </td>
                                 <td th:text="${material.status == 1 ? 'Active' : 'Inactive'}"></td>
@@ -193,7 +231,31 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
 
+            if (urlParams.has('success')) {
+                successMessage.classList.remove('close');
+                successMessage.classList.add('open');
+                setTimeout(() => {
+                    window.location.href = '/materials'; // Redirect to home page
+                    successMessage.classList.remove('open');
+                    successMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('error')) {
+                errorMessage.classList.remove('close');
+                errorMessage.classList.add('open');
+                setTimeout(() => {
+                    window.location.href = '/materials';
+                    errorMessage.classList.remove('open');
+                    errorMessage.classList.add('close');
+                }, 1500);
+            }
+        });
+    </script>
     <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>

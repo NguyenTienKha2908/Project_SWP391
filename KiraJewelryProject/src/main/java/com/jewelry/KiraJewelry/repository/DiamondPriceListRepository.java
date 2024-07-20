@@ -38,4 +38,24 @@ public interface DiamondPriceListRepository extends JpaRepository<DiamondPriceLi
                         @Param("color") String color,
                         @Param("clarity") String clarity,
                         @Param("cut") String cut, @Param("origin") String origin);
+
+        @Query("SELECT DISTINCT d.color FROM DiamondPriceList d WHERE d.origin = :origin AND d.carat_Weight_From >= :caratWeightFrom AND d.carat_Weight_To <= :caratWeightTo")
+        List<String> findDistinctColorsByOriginAndCaratWeightRange(@Param("origin") String origin,
+                        @Param("caratWeightFrom") double caratWeightFrom, @Param("caratWeightTo") double caratWeightTo);
+
+        @Query("SELECT DISTINCT d.clarity FROM DiamondPriceList d WHERE d.origin = :origin AND d.carat_Weight_From >= :caratWeightFrom AND d.carat_Weight_To <= :caratWeightTo AND d.color = :color")
+        List<String> findDistinctClaritiesByOriginCaratWeightRangeAndColor(@Param("origin") String origin,
+                        @Param("caratWeightFrom") double caratWeightFrom, @Param("caratWeightTo") double caratWeightTo,
+                        @Param("color") String color);
+
+        @Query("SELECT DISTINCT d.cut FROM DiamondPriceList d WHERE d.origin = :origin AND d.carat_Weight_From >= :caratWeightFrom AND d.carat_Weight_To <= :caratWeightTo AND d.color = :color AND d.clarity = :clarity")
+        List<String> findDistinctCutsByOriginCaratWeightRangeColorAndClarity(@Param("origin") String origin,
+                        @Param("caratWeightFrom") double caratWeightFrom, @Param("caratWeightTo") double caratWeightTo,
+                        @Param("color") String color, @Param("clarity") String clarity);
+
+        @Query("SELECT d FROM DiamondPriceList d WHERE d.origin = :origin AND d.carat_Weight_From >= :caratWeightFrom AND d.carat_Weight_To <= :caratWeightTo AND d.color = :color AND d.clarity = :clarity AND d.cut = :cut")
+        DiamondPriceList findByOriginCaratWeightRangeColorClarityAndCut(@Param("origin") String origin,
+                        @Param("caratWeightFrom") double caratWeightFrom, @Param("caratWeightTo") double caratWeightTo,
+                        @Param("color") String color, @Param("clarity") String clarity, @Param("cut") String cut);
+
 }

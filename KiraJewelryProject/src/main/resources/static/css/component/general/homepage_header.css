@@ -1,0 +1,94 @@
+/*Reset styles CSS*/
+body,
+h1,
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body {
+    background-color: #fcfaf9;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    transition: 0.2s ease-in-out;
+}
+
+/*Header CSS*/
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+}
+
+.sticky+.content {
+    padding-top: 102px;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+
+    a:hover {
+        font-weight: 500;
+        color: #f7b050;
+    }
+
+    .top_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    h1 {
+        font-weight: 200;
+        font-size: 2em;
+        flex: 1;
+        margin-left: 5%;
+    }
+
+    .tools_header {
+        display: inline-flex;
+        gap: 1em;
+        margin-right: 7%;
+    }
+
+    .img-b {
+        width: 10%;
+    }
+
+    .home_categories {
+        ul {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        li {
+            display: inline-block;
+            align-items: center;
+            margin: 0 2% 2% 2%;
+            font-size: 1em;
+
+            a:hover,
+            .active-link {
+                font-weight: 600;
+                border-bottom: #f7b050 1px solid;
+                color: #f7b050;
+            }
+
+
+        }
+    }
+}
