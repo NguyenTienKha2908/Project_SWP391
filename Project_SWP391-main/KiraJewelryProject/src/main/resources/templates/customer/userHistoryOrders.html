@@ -155,9 +155,9 @@
             </div>
             
             <div class="col-md-9">
-                <div class="container my-3">
+                <div class="d-flex justify-content-end mb-3">
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle my-4" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             Sort by Date
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -165,6 +165,7 @@
                             <li><a class="dropdown-item" href="#" onclick="sortOrders('DESC')">Descending</a></li>
                         </ul>
                     </div>
+                </div>
                     <div th:each="productionOrder, index : ${customerOrders}">
                         <div class="wrapper-order row justify-content-md-center mx-auto my-5">
                             <div class="col-md-12">
@@ -273,23 +274,23 @@
                                 class="btn btn-secondary">View Warranty PDF</a>
                         </div>
                     </div>
-                </div>
 
+                    <ul class="pagination my-5" style="display: inline-flex;">
+                        <li th:classappend="${customerOrders.hasPrevious()} ? '' : 'disabled'">
+                            <a th:href="@{/userHistoryOrders(sort=${sortDirection}, page=${customerOrders.number - 1})}">Previous</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, customerOrders.totalPages)}" th:classappend="${i == customerOrders.number + 1} ? 'active-pg'">
+                            <a th:href="@{/userHistoryOrders(sort=${sortDirection}, page=${i - 1})}" th:text="${i}"></a>
+                        </li>
+                        <li th:classappend="${customerOrders.hasNext()} ? '' : 'disabled'">
+                            <a th:href="@{/userHistoryOrders(sort=${sortDirection}, page=${customerOrders.number + 1})}">Next</a>
+                        </li>
+                    </ul>
             </div>
             
         </div>
     </div>
-    <ul class="pagination" style="display: inline-flex;">
-        <li th:classappend="${customerOrders.hasPrevious()} ? '' : 'disabled'">
-            <a th:href="@{/userHistoryOrders(sort=${sortDirection}, page=${customerOrders.number - 1})}">Previous</a>
-        </li>
-        <li th:each="i : ${#numbers.sequence(1, customerOrders.totalPages)}" th:classappend="${i == customerOrders.number + 1} ? 'active-pg'">
-            <a th:href="@{/userHistoryOrders(sort=${sortDirection}, page=${i - 1})}" th:text="${i}"></a>
-        </li>
-        <li th:classappend="${customerOrders.hasNext()} ? '' : 'disabled'">
-            <a th:href="@{/userHistoryOrders(sort=${sortDirection}, page=${customerOrders.number + 1})}">Next</a>
-        </li>
-    </ul>
+    
 
 
 

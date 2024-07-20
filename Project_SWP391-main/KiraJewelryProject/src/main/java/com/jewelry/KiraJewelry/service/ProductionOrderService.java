@@ -114,4 +114,12 @@ public class ProductionOrderService {
 
     return ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
   }
+
+  public List<ProductionOrder> getProductionOrderByDEEmployeeId(String design_Staff_Id) {
+    return productionOrderRepository.getProductionOrderByDEId(design_Staff_Id);
+  }
+
+  public List<ProductionOrder> getProductionOrderByPREmployeeId(String production_Staff_Id) {
+    return productionOrderRepository.getProductionOrderByPRId(production_Staff_Id);
+  }
 }

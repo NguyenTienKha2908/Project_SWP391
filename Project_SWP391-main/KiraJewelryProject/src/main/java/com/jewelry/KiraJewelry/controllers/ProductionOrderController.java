@@ -84,8 +84,8 @@ public class ProductionOrderController {
 
     // Sales Staff
 
-    @GetMapping("/viewRequestsforSS")
-    public String getAllRequests(Model model, HttpSession session) {
+    @GetMapping("/viewRequestsforSS1")
+    public String getAllRequests1(Model model, HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Requested",
                 employeeID);
@@ -100,9 +100,44 @@ public class ProductionOrderController {
         listRequests.addAll(productionOrders2);
         listRequests.addAll(productionOrders3);
 
-        model.addAttribute("listRequests", listRequests);
+        model.addAttribute("pageOrders", listRequests);
 
-        model.addAttribute("listRequests", productionOrders);
+        model.addAttribute("pageOrders", productionOrders);
+        return "employee/sales_staff/viewRequest";
+    }
+
+    @GetMapping("/viewRequestsforSS")
+    public String getAllRequests(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        String employeeId = (String) session.getAttribute("employeeId");
+
+        List<ProductionOrder> combinedList = new ArrayList<>();
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Requested", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(CRJ)", sortDirection));
+
+        // Sort the combined list
+        combinedList.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, combinedList.size());
+        int end = Math.min((start + 2), combinedList.size());
+        List<ProductionOrder> paginatedList = combinedList.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                combinedList.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/sales_staff/viewRequest";
     }
 
@@ -615,26 +650,44 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewQuotesforSS")
-    public String getAllQuotes(Model model, HttpSession session) {
-        String employeeID = (String) session.getAttribute("employeeId");
-        System.out.println("employeeId : " + employeeID);
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Quoted",
-                employeeID);
-        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(NA)",
-                employeeID);
-        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId("Quoted(WC)",
-                employeeID);
-        List<ProductionOrder> productionOrders4 = productionOrderService
-                .getProductionOrderByStatus("Quoted(RJ)");
-        List<ProductionOrder> productionOrders5 = productionOrderService
-                .getProductionOrderByStatus("Quoted(CRJ)");
-        List<ProductionOrder> listRequests = new ArrayList<>();
-        listRequests.addAll(productionOrders);
-        listRequests.addAll(productionOrders2);
-        listRequests.addAll(productionOrders3);
-        listRequests.addAll(productionOrders4);
-        listRequests.addAll(productionOrders5);
-        model.addAttribute("listRequests", listRequests);
+    public String getAllQuotes(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        String employeeId = (String) session.getAttribute("employeeId");
+
+        List<ProductionOrder> combinedList = new ArrayList<>();
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(NA)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(WC)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(CRJ)", sortDirection));
+
+        // Filter orders by sales staff
+        List<ProductionOrder> customerOrders = combinedList.stream()
+                .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
+                .collect(Collectors.toList());
+
+        // Sort the combined list
+        customerOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, customerOrders.size());
+        int end = Math.min((start + 2), customerOrders.size());
+        List<ProductionOrder> paginatedList = customerOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                customerOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/sales_staff/viewQuote";
     }
 
@@ -1304,8 +1357,8 @@ public class ProductionOrderController {
         return "employee/sales_staff/materialAndGem";
     }
 
-    @GetMapping("/viewRequestsforDE")
-    public String getAllRequestsForDE(Model model, HttpSession session) {
+    @GetMapping("/viewRequestsforDE1")
+    public String getAllRequestsForDE1(Model model, HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Ordered");
         List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Ordered(NP)");
@@ -1319,6 +1372,44 @@ public class ProductionOrderController {
                 .collect(Collectors.toList());
 
         model.addAttribute("listRequests", employeeOrders);
+        return "employee/design_staff/viewRequest";
+    }
+
+    @GetMapping("/viewRequestsforDE")
+    public String getAllRequestsForDE(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        String employeeID = (String) session.getAttribute("employeeId");
+
+        List<ProductionOrder> combinedList = new ArrayList<>();
+
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered(NP)", sortDirection));
+
+        List<ProductionOrder> employeeOrders = combinedList.stream()
+                .filter(porder -> employeeID.equalsIgnoreCase(porder.getDesign_Staff()))
+                .collect(Collectors.toList());
+        // Sort the combined list
+        employeeOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 10, employeeOrders.size());
+        int end = Math.min((start + 10), employeeOrders.size());
+        List<ProductionOrder> paginatedList = employeeOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 10),
+                employeeOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/design_staff/viewRequest";
     }
 
@@ -1403,8 +1494,8 @@ public class ProductionOrderController {
         return "redirect:/viewInformationRequestForDE?productionOrderId=" + productionOrderId + "&success";
     }
 
-    @GetMapping("/viewAllDesign")
-    public String viewAllDesign(
+    @GetMapping("/viewAllDesign1")
+    public String viewAllDesign1(
             HttpSession session,
             Model model) {
 
@@ -1422,6 +1513,47 @@ public class ProductionOrderController {
 
         model.addAttribute("imagesByStaffId", imagesByStaffId);
         model.addAttribute("listRequests", productionOrders);
+        model.addAttribute("employee", employee);
+        return "employee/design_staff/viewAllDesign";
+    }
+
+    @GetMapping("/viewAllDesign")
+    public String viewAllDesign(
+            @RequestParam(defaultValue = "0") int page,
+            HttpSession session,
+            Model model) {
+
+        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
+        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByDEEmployeeId(
+                employee.getEmployee_Id());
+
+        // Paginate the production orders list
+        int pageSize = 2;
+        int start = Math.min(page * pageSize, productionOrders.size());
+        int end = Math.min(start + pageSize, productionOrders.size());
+        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
+
+        Map<String, List<String>> imagesByStaffId = new HashMap<>();
+        try {
+            imagesByStaffId = imageService.getImgOrderedByStaffId(employee.getEmployee_Id());
+            System.out.println(imagesByStaffId);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
+        for (ProductionOrder order : paginatedList) {
+            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
+                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
+                        imagesByStaffId.get(order.getProduction_Order_Id()));
+            }
+        }
+
+        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
+                productionOrders.size());
+
+        model.addAttribute("pageOrders", productionOrdersPage);
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
         model.addAttribute("employee", employee);
         return "employee/design_staff/viewAllDesign";
     }
@@ -1449,7 +1581,47 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewRequestsforPR")
-    public String getAllRequestsForPR(Model model, HttpSession session) {
+    public String getAllRequestsForPR(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        String employeeID = (String) session.getAttribute("employeeId");
+        List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Confirmed");
+        List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Completed");
+
+        List<ProductionOrder> allOrders = new ArrayList<>();
+        allOrders.addAll(createdOrders);
+        allOrders.addAll(requestedOrders);
+
+        List<ProductionOrder> employeeOrders = allOrders.stream()
+                .filter(porder -> employeeID.equalsIgnoreCase(porder.getProduction_Staff()))
+                .collect(Collectors.toList());
+
+        // Sort the combined list
+        employeeOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 10, employeeOrders.size());
+        int end = Math.min((start + 10), employeeOrders.size());
+        List<ProductionOrder> paginatedList = employeeOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 10),
+                employeeOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
+        return "employee/production_staff/viewRequest";
+    }
+
+    @GetMapping("/viewRequestsforPR1")
+    public String getAllRequestsForPR1(Model model, HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Confirmed");
         List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Completed");
@@ -1535,8 +1707,8 @@ public class ProductionOrderController {
         return "redirect:/viewInformationRequestForPR?productionOrderId=" + productionOrderId + "&success";
     }
 
-    @GetMapping("/viewAllPhotos")
-    public String viewAllPhotos(
+    @GetMapping("/viewAllPhotos1")
+    public String viewAllPhotos1(
             HttpSession session,
             Model model) {
 
@@ -1556,6 +1728,129 @@ public class ProductionOrderController {
         model.addAttribute("listRequests", productionOrders);
         model.addAttribute("employee", employee);
         return "employee/production_staff/viewAllProgressPhoto";
+    }
+
+    @GetMapping("/viewAllPhotos2")
+    public String viewAllPhotos2(
+            @RequestParam(defaultValue = "0") int page,
+            HttpSession session,
+            Model model) {
+
+        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
+        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByPREmployeeId(
+                employee.getEmployee_Id());
+
+        // Paginate the production orders list
+        int pageSize = 2;
+        int start = Math.min(page * pageSize, productionOrders.size());
+        int end = Math.min(start + pageSize, productionOrders.size());
+
+        Map<String, List<String>> imagesByStaffId = new HashMap<>();
+        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
+        try {
+            imagesByStaffId = imageService.getImgOrderedByPRStaffId(employee.getEmployee_Id());
+            System.out.println(imagesByStaffId);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
+        for (ProductionOrder order : paginatedList) {
+            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
+                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
+                        imagesByStaffId.get(order.getProduction_Order_Id()));
+            }
+        }
+
+        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
+                productionOrders.size());
+
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
+        model.addAttribute("pageOrders", productionOrdersPage);
+        model.addAttribute("employee", employee);
+        return "employee/production_staff/viewAllProgressPhoto";
+    }
+
+    @GetMapping("/viewAllPhotos")
+    public String viewAllPhotos(@RequestParam(defaultValue = "0") int page, HttpSession session, Model model) {
+        String employeeId = (String) session.getAttribute("employeeId");
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        List<ProductionOrder> productionOrders = productionOrderService
+                .getProductionOrderByPREmployeeId(employee.getEmployee_Id());
+
+        // Paginate the production orders list
+        int pageSize = 2;
+        int start = Math.min(page * pageSize, productionOrders.size());
+        int end = Math.min(start + pageSize, productionOrders.size());
+
+        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
+
+        Map<String, List<String>> imagesByStaffId = new HashMap<>();
+        try {
+            imagesByStaffId = imageService.getImgOrderedByPRStaffId(employee.getEmployee_Id());
+            System.out.println(imagesByStaffId);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        // Filter images by paginated production order list
+        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
+        for (ProductionOrder order : paginatedList) {
+            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
+                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
+                        imagesByStaffId.get(order.getProduction_Order_Id()));
+            }
+        }
+
+        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
+                productionOrders.size());
+
+        model.addAttribute("imagesByStaffId", paginatedImagesByStaffId);
+        model.addAttribute("pageOrders", productionOrdersPage);
+        model.addAttribute("employee", employee);
+
+        return "employee/production_staff/viewAllProgressPhoto";
+    }
+
+    @GetMapping("/viewAllDesign2")
+    public String viewAllDesign2(
+            @RequestParam(defaultValue = "0") int page,
+            HttpSession session,
+            Model model) {
+
+        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
+        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByDEEmployeeId(
+                employee.getEmployee_Id());
+
+        // Paginate the production orders list
+        int pageSize = 2;
+        int start = Math.min(page * pageSize, productionOrders.size());
+        int end = Math.min(start + pageSize, productionOrders.size());
+        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
+
+        Map<String, List<String>> imagesByStaffId = new HashMap<>();
+        try {
+            imagesByStaffId = imageService.getImgOrderedByStaffId(employee.getEmployee_Id());
+            System.out.println(imagesByStaffId);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
+        for (ProductionOrder order : paginatedList) {
+            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
+                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
+                        imagesByStaffId.get(order.getProduction_Order_Id()));
+            }
+        }
+
+        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
+                productionOrders.size());
+
+        model.addAttribute("pageOrders", productionOrdersPage);
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
+        model.addAttribute("employee", employee);
+        return "employee/design_staff/viewAllDesign";
     }
 
     @PostMapping("/updateStatusByPR")
