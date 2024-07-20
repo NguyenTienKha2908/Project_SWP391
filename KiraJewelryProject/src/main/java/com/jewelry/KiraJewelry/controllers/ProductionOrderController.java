@@ -389,7 +389,7 @@ public class ProductionOrderController {
 
                 model.addAttribute("diamonds", dia);
 
-                List<DiamondPriceList> diamondPriceList = new ArrayList<>();
+                Map<String, DiamondPriceList> uniqueDiamondPriceMap = new HashMap<>();
                 for (Diamond d : dia) {
                     List<DiamondPriceList> dplList = diamondPriceListService.findPriceListByCriteria(
                             d.getCarat_Weight(),
@@ -399,14 +399,18 @@ public class ProductionOrderController {
                             d.getOrigin());
                     for (DiamondPriceList dpl : dplList) {
                         if (dpl != null) {
-                            diamondPriceList.add(dpl);
+                            String key = dpl.getOrigin() + "_" + dpl.getColor() + "_" + dpl.getClarity() + "_"
+                                    + dpl.getCut() + "_" + dpl.getCarat_Weight_From() + "_" + dpl.getCarat_Weight_To();
+                            if (!uniqueDiamondPriceMap.containsKey(key)) {
+                                uniqueDiamondPriceMap.put(key, dpl);
+                            }
                         }
                     }
                 }
-                model.addAttribute("diamondPriceList", diamondPriceList);
-
+                model.addAttribute("diamondPriceList", uniqueDiamondPriceMap.values());
             }
         }
+
         List<Diamond> listDiamonds = diamondService.getAllDiamonds();
 
         // Extract unique values for dropdowns
@@ -497,17 +501,20 @@ public class ProductionOrderController {
     @PostMapping("/saveProductionOrder")
     public String saveProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
             @RequestParam(value = "staff", required = false) String employeeId,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-
+        String message = "";
         if (employeeId != null && !employeeId.isEmpty()) {
             Employee employee = employeeService.getEmployeeById(employeeId);
             productionOrder.setSales_Staff(employee.getEmployee_Id());
             productionOrder.setStatus("Requested");
+            productionOrderService.saveProductionOrder(productionOrder);
+            message = "true";
+        } else if (employeeId == null || employeeId.isEmpty()) {
+            message = "false";
         }
-
-        productionOrderService.saveProductionOrder(productionOrder);
-        return "redirect:/viewRequestsforManager";
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/viewInformationRequestForManager?productionOrderId=" + productionOrderId;
     }
 
     @GetMapping("/saveProductionPrice")
@@ -787,6 +794,7 @@ public class ProductionOrderController {
         return "employee/manager/viewRequest";
     }
 
+    
     @PostMapping("/deleteProductionOrder")
     public String deleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
             HttpSession session) {
@@ -796,30 +804,48 @@ public class ProductionOrderController {
         Product product = productService.getProductById(productionOrder.getProduct().getProduct_Id());
         int productId = product.getProduct_Id();
 
-        // Xóa tất cả các đối tượng liên quan trước khi xóa Product
-        if (productionOrder.getStatus() != "Created" && productionOrder.getStatus() != "Requested") {
-            Diamond diamond = diamondService.getDiamondByProductId(productId);
-            if (diamond != null) {
-                diamond.setProduct(null);
-                diamond.setStatus(true);
-            }
-            ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(productId);
-            if (productMaterial != null) {
-                productMaterialService.deleteProductMaterial(productMaterial);
-            }
+        // Xử lý trạng thái của ProductionOrder
+        if ("Ordered".equals(status) || "Confirmed".equals(status)) {
+            productionOrder.setStatus("Canceled");
+            resetDiamondProductId(productId);
+        } else if ("Completed".equals(status) || "Delivered".equals(status) || "Delivering".equals(status)) {
+            productionOrder.setStatus("Canceled");
+        } else if (!"Created".equals(status) && !"Requested".equals(status)) {
+            deleteRelatedEntities(productId);
+            productionOrderService.deleteProductionOrderById(productionOrderId);
+            productService.deleteProductById(productId);
+            deleteImages(productionOrder.getCustomer().getCustomer_Id(), productionOrderId);
+        } else {
+            productionOrderService.deleteProductionOrderById(productionOrderId);
+            productService.deleteProductById(productId);
+            deleteImages(productionOrder.getCustomer().getCustomer_Id(), productionOrderId);
         }
 
-        // Xóa ProductionOrder
-        productionOrderService.deleteProductionOrderById(productionOrderId);
+        // Điều hướng lại trang dựa trên role của user
+        return redirectToPage(user.getRole_Id(), status);
+    }
 
-        // Xóa Product
-        productService.deleteProductById(productId);
+    // Các phương thức hỗ trợ
+    private void resetDiamondProductId(int productId) {
+        Diamond diamond = diamondService.getDiamondByProductId(productId);
+        if (diamond != null) {
+            diamond.setProduct(null);
+            diamond.setStatus(true);
+        }
+    }
 
-        // Xóa các hình ảnh liên quan
+    private void deleteRelatedEntities(int productId) {
+        resetDiamondProductId(productId);
+        ProductMaterial productMaterial = productMaterialService.getProductMaterialByProductId(productId);
+        if (productMaterial != null) {
+            productMaterialService.deleteProductMaterial(productMaterial);
+        }
+    }
+
+    private void deleteImages(String customerId, String productionOrderId) {
         List<String> imageLists = new ArrayList<>();
         try {
-            imageLists = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
-                    productionOrderId);
+            imageLists = imageService.getImgByCustomerID(customerId, productionOrderId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -830,12 +856,14 @@ public class ProductionOrderController {
                 e.printStackTrace();
             }
         }
-        if (user.getRole_Id() == 1) {
+    }
+
+    private String redirectToPage(int roleId, String status) {
+        if (roleId == 1) {
             if ("Created".equals(status) || "Requested".equals(status)) {
                 return "redirect:/userRequests";
             } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
                     || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
-
                 return "redirect:/userQuotes";
             }
             return "redirect:/userOrders";
@@ -844,12 +872,10 @@ public class ProductionOrderController {
                 return "redirect:/viewRequestsforManager";
             } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
                     || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
-
                 return "redirect:/viewQuotesforManager";
             }
             return "redirect:/viewOrdersforManager";
         }
-
     }
 
     @GetMapping("/viewQuotesforManager")
@@ -931,15 +957,6 @@ public class ProductionOrderController {
         return "employee/manager/viewInforQuote";
     }
 
-    @GetMapping("/rejectQuote")
-    public String getRejectQuote(@RequestParam("production_Order_Id") String productionOrderId,
-            Model model) {
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        productionOrder.setStatus("Quoted(RJ)");
-        productionOrderService.saveProductionOrder(productionOrder);
-        return "redirect:/viewQuotesforSS";
-    }
-
     @GetMapping("/acceptQuote")
     public String acceptQuote(@RequestParam("production_Order_Id") String productionOrderId) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
@@ -950,6 +967,15 @@ public class ProductionOrderController {
 
         return "redirect:/viewQuotesforManager";
 
+    }
+
+    @GetMapping("/rejectQuote")
+    public String getRejectQuote(@RequestParam("production_Order_Id") String productionOrderId,
+            Model model) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Quoted(RJ)");
+        productionOrderService.saveProductionOrder(productionOrder);
+        return "redirect:/viewQuotesforManager";
     }
 
     @GetMapping("/viewOrdersforManager")
