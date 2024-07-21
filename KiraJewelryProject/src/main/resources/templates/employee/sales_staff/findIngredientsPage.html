@@ -486,13 +486,16 @@
             </div>
             <div th:if="${productionOrder.q_Diamond_Amount != 0 && productionOrder.q_Material_Amount != 0 && productionOrder.q_Production_Amount !=0}"
                 class="my-5" style="margin: 0 auto; width: 85%">
-                <div class="col-4 d-flex align-items-center w-100 justify-content-center">
-                    <a class="btn btn-secondary w-25"
-                        th:href="@{/viewInformationRequestForSS(productionOrderId=${productionOrder.production_Order_Id})}">
-                        Back
-                    </a>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#Next" class="btn btn-danger w-25 mx-3">Next</a>
+                <!-- <form th:action="@{/previewQuotePage}" method="GET" class="text-end">
+                    <input type="hidden" id="production_Order_Id" name="production_Order_Id"
+                        th:value="${productionOrder.production_Order_Id}">
+                    <button class="text-decoration-none btn btn-primary w-25 rounded my-4">Next</button>
+                </form> -->
+                <div class="container text-center">
+                    <a href="#" data-bs-toggle="modal" style="border-radius: 10px;"
+                        class="btn btn-danger w-50 py-3 px-5" data-bs-target="#Next">Next</a>
                 </div>
+
             </div>
             <div class="modal fade" id="Next">
                 <div class="modal-dialog modal-lg">
