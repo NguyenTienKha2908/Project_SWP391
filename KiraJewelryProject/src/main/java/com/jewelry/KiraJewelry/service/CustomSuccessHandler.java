@@ -26,7 +26,6 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
     private CustomerService customerService;
 
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -36,9 +35,9 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         String email = authentication.getName();
         User user = userService.findByEmail(email);
 
+        // save user into session
+        session.setAttribute("user", user);
         if (user != null) {
-            //save user into session 
-            session.setAttribute("user",user);
             if (user.getRole_Id() == 1) {
                 Customer customer = customerService.getCustomerByUserId(user.getUser_Id());
                 session.setAttribute("customerName", customer.getFull_Name());

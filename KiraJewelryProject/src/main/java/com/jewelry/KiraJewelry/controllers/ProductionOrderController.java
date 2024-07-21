@@ -210,8 +210,6 @@ public class ProductionOrderController {
 
         return "employee/sales_staff/findIngredientsPage";
 
-        // return "redirect:/viewIngredientsPage";
-
     }
 
     @GetMapping("/searchMaterial")
@@ -498,7 +496,6 @@ public class ProductionOrderController {
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
         model.addAttribute("messageDiamond", messageDiamond);
-        // return "employee/sales_staff/findIngredientsPage";
         return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
@@ -544,7 +541,6 @@ public class ProductionOrderController {
         model.addAttribute("colors", colors);
         model.addAttribute("clarities", clarities);
         model.addAttribute("cuts", cuts);
-        // return "employee/sales_staff/findIngredientsPage";
         return "redirect:/viewIngredientsPage?productionOrderId=" + productionOrderId;
     }
 
@@ -700,9 +696,7 @@ public class ProductionOrderController {
         allOrders.addAll(deliveringOrders);
         allOrders.addAll(deliveredgOrders);
         allOrders.addAll(deliveredgOrders2);
-        allOrders.addAll(depositOrders);
         allOrders.addAll(lastdepositOrders);
-
         List<ProductionOrder> customerOrders = allOrders.stream()
                 .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
                 .collect(Collectors.toList());
@@ -768,6 +762,21 @@ public class ProductionOrderController {
         String employeeID = (String) session.getAttribute("employeeId");
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         productionOrder.setStatus("Ordered");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+        String message = "Update Status Successfully";
+        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+    }
+
+
+    @PostMapping("/confirmCustomizedDepositBySS")
+    public String confirmCustomizedDepositBySS(
+            @RequestParam("productionOrderId") String productionOrderId,
+            Model model,
+            HttpSession session) {
+        String employeeID = (String) session.getAttribute("employeeId");
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Confirmed");
 
         productionOrderService.saveProductionOrder(productionOrder);
         String message = "Update Status Successfully";

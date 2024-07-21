@@ -40,7 +40,7 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -103,7 +103,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a th:href="@{#education}">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -160,6 +160,32 @@
         </div>
     </div>
 
+    <div class="mess-container" th:if="${param.successPaypal}">
+        <div class="mess-content open" id="successPaypal-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#01b10a">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#01b101">
+                <p>Thank you! Your order has been deposited successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mess-container" th:if="${param.cancelPaypal}">
+        <div class="mess-content open" id="cancelPaypal-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color:#721c24">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+
+            </div>
+            <div class="toast-body" style="color:#b10101">
+                <p>Thank you! Your order has been deposited successfully!</p>
+            </div>
+        </div>
+    </div>
+
     <!--Page information-->
     <div class="container-fluid px-5">
         <div class="row">
@@ -167,7 +193,7 @@
                 <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
-                            <a th:href="@{/userHistoryOrders(customerId=${session.customerId})}"
+                            <a th:href="@{/profile(CustomerId=${session.customerId})}"
                                 class="sidebar-link mainUp">
                                 <span>Profile</span>
                             </a>
@@ -204,6 +230,7 @@
             </div>
             <div class="col-md-9">
                 <div class="request container-fluid px-5">
+                    <!-- Check if the productionOrder is null or if specific fields within it are null -->
                    
                     <div th:if="${productionOrder == null or productionOrder.description == null}">
                         <h2>You don't have any customized jewelry order at the moment,
@@ -218,8 +245,7 @@
                                 (Order placed at <span
                                     th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></span>
                                 ) </span>
-                            <span style="font-size: 1.05rem; font-style: italic; color: grey;"
-                                th:if="${productionOrder.status=='Payment In Confirm'} or ${productionOrder.status == 'Canceled'}">
+                            <span style="font-size: 1.05rem; font-style: italic; color: grey;">
                                 - Status: <span th:text="${productionOrder.status}"></span>
                             </span>
                         </h1>
@@ -268,7 +294,7 @@
                                 <div class="product-content">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <img th:src="@{${cateUrl}}" alt="Category Image" style="width:100%" />
+                                            <img th:src="@{${productionOrder.category.img_Url}}" alt="Category Image" style="width:100%" />
                                             <p style="text-align: center; font-size:0.75rem;">This is only an
                                                 illustration of your order</p>
                                         </div>
@@ -333,9 +359,9 @@
                             </div>
                         </div>
 
-                        <div th:if="${productionOrder.status != 'Canceled'}"
-                            class="row justify-content-md-center mx-auto my-5">
-                            <div class="wrapper-order col-md-5">
+
+                        <div class="row justify-content-md-center mx-auto my-5">
+                            <div class="wrapper-order col-md-12">
                                 <h2 class="my-3">Your Information</h2>
                                 <div class="information">
                                     <h2>Customer Name</h2>
@@ -345,25 +371,66 @@
                                     <h2>Phone</h2>
                                     <p th:text="${productionOrder.customer.phoneNumber}"></p>
                                 </div>
-
                                 <div class="information">
                                     <h2>Address</h2>
                                     <p th:text="${productionOrder.customer.address}"></p>
                                 </div>
                             </div>
-                            <div class="col-md-2"></div>
-                            <div class="wrapper-order col-md-5">
+
+                        </div>
+                        <div class="row justify-content-md-center mx-auto my-5">
+                            <div th:if="${productionOrder.status == 'Completed'}" class="wrapper-order col-md-12 my-5">
+                                <h1>Payment Section</h1>
+                                <div class="bottom-note">
+                                    <div class="note my-3">
+                                        <p>This is the information about last payment!</p>
+                                        <p>If you are pleased with the product, please process to check out the last
+                                            amount.
+                                            You can check out by choosing COD or bankstranfer
+                                        </p>
+                                        <p>Thank you for choosing our service!</p>
+                                    </div>
+                                </div>
                                 <h2 class="my-3">Choose Payment Method</h2>
                                 <div class="payment-option">
-                                    <a th:href="@{/CODInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                    <a
+                                        th:href="@{/CODInfoForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">
                                         Pay COD</a>
                                     <a
-                                        th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                        th:href="@{/bankTransferHandleForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">Pay
                                         through Bank Transfer</a>
-                                    <a href="#">Pay through Paypal</a>
+                                    <a th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                                        through Paypal</a>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row justify-content-md-center mx-auto my-5">
+                            <div th:if="${productionOrder.status == 'Customized'}" class="wrapper-order col-md-12 my-5">
+                                <h1>Payment Section</h1>
+                                <div class="bottom-note">
+                                    <div class="note my-3">
+                                        <p>Note</p>
+                                        <p>This is the information about your ordered jewelry!</p>
+                                        <p>We expect you to help us by deposit 50% of the total price. This
+                                            will ensure that you are serious with your product
+                                            and we will ake sure to deliver you the best product!
+                                        </p>
+                                        <p>Thank you for choosing our service!</p>
+                                    </div>
+                                </div>
+                                <div class="payment-option">
+                                    <a
+                                        th:href="@{/bankTransferInfo(productionOrderId=${productionOrder.production_Order_Id})}">Deposit
+                                        50%
+                                        through Bank Transfer</a>
+                                    <a th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Deposit
+                                        50%
+                                        through Paypal</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mx-auto justify-content-md-center">
                             <div class="order-one col-md-6">
                                 <div th:if="${productionOrder.status=='Delivering'}">
@@ -501,6 +568,8 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             const urlParams = new URLSearchParams(window.location.search);
             const successMessage = document.getElementById('update_delivered-message');
+            const successPaypalMessage = document.getElementById('successPaypal-message');
+            const cancelPaypalMessage = document.getElementById('cancelPaypal-message');
             const awaitMessage = document.getElementById('await-message');
             const CODsuccessMessage = document.getElementById('CODsuccess-message');
             const deleteSuccessMessage = document.getElementById('deleteSuccess-message');
@@ -534,7 +603,22 @@
                     deleteSuccessMessage.classList.remove('open');
                     deleteSuccessMessage.classList.add('close');
                 }, 2000);
+            } else if (urlParams.has('successPaypal')) {
+                successPaypalMessage.classList.remove('close');
+                successPaypalMessage.classList.add('open');
+                setTimeout(() => {
+                    successPaypalMessage.classList.remove('open');
+                    successPaypalMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('cancelPaypal')) {
+                cancelPaypalMessage.classList.remove('close');
+                cancelPaypalMessage.classList.add('open');
+                setTimeout(() => {
+                    cancelPaypalMessage.classList.remove('open');
+                    cancelPaypalMessage.classList.add('close');
+                }, 2000);
             }
+
         });
     </script>
 

@@ -83,7 +83,7 @@
             <ul>
                 <li><a th:href="@{/}">Home</a></li>
                 <li>
-                    <a th:href="@{/}">Blogs</a>
+                    <a th:href="@{/BlogList}">Blogs</a>
                 </li>
                 <li>
                     <a th:href="@{/}">Collections</a>
@@ -145,7 +145,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#education">Education</a></li>
+                <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
     </header>
@@ -194,11 +194,11 @@
                             <span>Only confirm if you have made transfer</span>
                         </i>
 
-                        <form th:if="${productionOrder.status == 'Customized'}" th:action="@{/bankTransferHandle}" method="post">
+                        <form th:if="${productionOrder.status == 'Customized'}" th:action="@{/bankTransferHandleForCustomizeDeposit}" method="post">
                             <input type="hidden" name="productionOrderId"
                                 th:value="${productionOrder.production_Order_Id}" />
                             <button type="submit" class="w-100 btn btn-danger">Confirm payment
-                                <span th:text="${#numbers.formatDecimal(productionOrder.o_Total_Amount, 1, 2)}"></span>
+                                <span th:text="${#numbers.formatDecimal(depositAmount, 1, 2)}"></span>
                             </button>
                         </form>
                         <form th:if="${productionOrder.status == 'Ordered(WP)'}" th:action="@{/bankTransferHandleForDeposit}" method="post">

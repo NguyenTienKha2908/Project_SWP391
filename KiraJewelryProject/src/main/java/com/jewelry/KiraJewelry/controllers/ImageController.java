@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.jewelry.KiraJewelry.repository.ProductionOrderRepository;
 import com.jewelry.KiraJewelry.service.FilesStorageService;
 import com.jewelry.KiraJewelry.service.ImageService;
 
@@ -18,8 +17,8 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class ImageController {
 
-	@Autowired
-	private ProductionOrderRepository productionOrderRepository;
+	// @Autowired
+	// private ProductionOrderRepository productionOrderRepository;
 
 	private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
 

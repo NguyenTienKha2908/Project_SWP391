@@ -1,14 +1,11 @@
 package com.jewelry.KiraJewelry.models;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +35,9 @@ public class Material {
     @Size(max = 100, message = "Material name must be less than 100 characters")
     @Column(name = "material_name", nullable = false)
     private String material_Name;
+
+    @Column(name = "img_url", nullable = true)
+    private String img_Url;
 
     @Column(name = "status", nullable = false)
     private int status; // 1 for active, 0 for inactive

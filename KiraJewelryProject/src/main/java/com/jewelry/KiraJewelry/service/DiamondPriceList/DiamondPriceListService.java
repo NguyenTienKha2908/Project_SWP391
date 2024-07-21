@@ -80,4 +80,28 @@ public class DiamondPriceListService {
             String cut, String origin) {
         return diaPriceListRepository.findPriceListByCriteria(caratWeight, color, clarity, cut, origin);
     }
+
+    public List<String> getColorsByOriginAndCaratWeightRange(String origin, double caratWeightFrom,
+            double caratWeightTo) {
+        return diaPriceListRepository.findDistinctColorsByOriginAndCaratWeightRange(origin, caratWeightFrom,
+                caratWeightTo);
+    }
+
+    public List<String> getClaritiesByOriginCaratWeightRangeAndColor(String origin, double caratWeightFrom,
+            double caratWeightTo, String color) {
+        return diaPriceListRepository.findDistinctClaritiesByOriginCaratWeightRangeAndColor(origin, caratWeightFrom,
+                caratWeightTo, color);
+    }
+
+    public List<String> getCutsByOriginCaratWeightRangeColorAndClarity(String origin, double caratWeightFrom,
+            double caratWeightTo, String color, String clarity) {
+        return diaPriceListRepository.findDistinctCutsByOriginCaratWeightRangeColorAndClarity(origin, caratWeightFrom,
+                caratWeightTo, color, clarity);
+    }
+
+    public DiamondPriceList getPriceByDetails(String origin, double caratWeightFrom, double caratWeightTo, String color,
+            String clarity, String cut) {
+        return diaPriceListRepository.findByOriginCaratWeightRangeColorClarityAndCut(origin, caratWeightFrom,
+                caratWeightTo, color, clarity, cut);
+    }
 }

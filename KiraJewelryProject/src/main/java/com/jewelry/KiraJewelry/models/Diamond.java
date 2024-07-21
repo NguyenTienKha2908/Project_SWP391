@@ -83,6 +83,9 @@ public class Diamond {
     @Column(name = "o_price", nullable = false)
     private double o_Price;
 
+    @Column(name = "img_url", nullable = true)
+    private String img_Url;
+
     @OneToOne
     @JoinColumn(name = "product_Id", nullable = true)
     private Product product;

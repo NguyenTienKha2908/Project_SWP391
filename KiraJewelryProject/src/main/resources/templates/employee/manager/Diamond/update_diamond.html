@@ -164,13 +164,13 @@
                                 </div>
                                 <form th:action="@{/updateDiamond}" th:object="${diamond}" method="post"
                                     enctype="multipart/form-data">
-                                    <input type="hidden" th:field="*{diaId}" />
+                                    <input type="hidden" th:field="*{dia_Id}" />
                                     <div class="form-row">
                                         <div class="form-group col-md-12 my-3">
                                             <label>Diamond Code: </label>
-                                            <input type="text" th:field="*{diaCode}" class=" my-2 form-control"
+                                            <input type="text" th:field="*{dia_Code}" class=" my-2 form-control"
                                                 readonly="readonly" />
-                                            <div th:if="${#fields.hasErrors('diaCode')}" th:errors="*{diaCode}"
+                                            <div th:if="${#fields.hasErrors('dia_Code')}" th:errors="*{dia_Code}"
                                                 class="error-tooltip">Error message
                                             </div>
                                         </div>
@@ -179,9 +179,9 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-12 my-3">
                                             <label>Diamond Name: </label>
-                                            <input type="text" class="form-control my-2" th:field="*{diaName}"
+                                            <input type="text" class="form-control my-2" th:field="*{dia_Name}"
                                                 placeholder="Enter Diamond Name" />
-                                            <div th:if="${#fields.hasErrors('diaName')}" th:errors="*{diaName}"
+                                            <div th:if="${#fields.hasErrors('dia_Name')}" th:errors="*{dia_Name}"
                                                 class="error-tooltip">Error message
                                             </div>
                                         </div>
@@ -205,11 +205,11 @@
                                     <div class="form-row row">
                                         <div class="form-group col-md-6 my-2">
                                             <label>Carat Weight: </label>
-                                            <input class="form-control my-1" type="text" th:field="*{caratWeight}"
+                                            <input class="form-control my-1" type="text" th:field="*{carat_Weight}"
                                                 id="carat_weight" onchange="fetchColorOptions()"
                                                 placeholder="Enter Carat Weight" />
-                                            <div th:if="${#fields.hasErrors('caratWeight')}" th:errors="*{caratWeight}"
-                                                class="error-tooltip">Error
+                                            <div th:if="${#fields.hasErrors('carat_Weight')}"
+                                                th:errors="*{carat_Weight}" class="error-tooltip">Error
                                                 message</div>
                                         </div>
                                         <div class="form-group col-md-6 my-2">
@@ -253,9 +253,9 @@
                                         </div>
                                         <div class="form-group col-md-8 my-2">
                                             <label>Q Price: </label>
-                                            <input class="form-control" type="text" th:field="*{q_price}"
+                                            <input class="form-control" type="text" th:field="*{q_Price}"
                                                 readonly="readonly" />
-                                            <input class="form-control" type="hidden" th:field="*{o_price}"
+                                            <input class="form-control" type="hidden" th:field="*{o_Price}"
                                                 value="0.0" />
 
                                             <div th:if="${#fields.hasErrors('clarity')}" th:errors="*{clarity}"
@@ -328,17 +328,17 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12 my-3">
-                                            <label>Upload Image:</label>
-                                            <input class="form-control my-2" type="file" name="imgFile" />
+                                    <div class="form-row row">
+                                        <div class="col-md-6">
+                                            <img class="w-100" th:src="@{${diamond.img_Url}}" alt="Diamond Image">
+                                        </div>
 
-                                            <div th:if="${#fields.hasErrors('img_Url')}" th:errors="*{img_Url}"
-                                                class="error-tooltip">Error message
-                                            </div>
+                                        <div class="form-group col-md-6 my-3">
+                                            <label>Upload Image:</label>
+                                            <input class="form-control my-2" type="file" name="file" id="file" />
                                         </div>
                                     </div>
-                                    <div class="btnform-group my-3">
+                                    <div class="btnform-group my-4">
                                         <input type="submit" class="btn btn-secondary" value="Update Diamond" />
                                     </div>
                                 </form>
@@ -425,13 +425,13 @@
             const clarity = document.getElementById("clarity").value;
             const cut = document.getElementById("cut").value;
             if (!origin || isNaN(carat_weight) || !color || !clarity || !cut) {
-                document.querySelector('input[name="q_price"]').value = "";
+                document.querySelector('input[name="q_Price"]').value = "";
                 return;
             }
             fetch(`/getPriceListByDetails?origin=${origin}&carat_weight=${carat_weight}&color=${color}&clarity=${clarity}&cut=${cut}`)
                 .then(response => response.json())
                 .then(data => {
-                    const qPriceInput = document.querySelector('input[name="q_price"]');
+                    const qPriceInput = document.querySelector('input[name="q_Price"]');
                     if (data) {
                         qPriceInput.value = data.price;
                     } else {

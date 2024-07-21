@@ -34,28 +34,7 @@ public class Category {
     @Column(name = "status", nullable = false)
     private boolean status;
 
-    // Getters and setters
-    public int getCategory_Id() {
-        return category_Id;
-    }
+    @Column(name = "img_url", nullable = true)
+    private String img_Url;
 
-    public void setCategory_Id(int category_Id) {
-        this.category_Id = category_Id;
-    }
-
-    public String getCategory_Name() {
-        return category_Name;
-    }
-
-    public void setCategory_Name(String category_Name) {
-        this.category_Name = category_Name;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
 }

@@ -17,7 +17,7 @@
                 <div class="sidebar-logo">
                     <a th:href="@{#}">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
-                        alt="logo">                        <span>KIRA JEWELRY</span>
+                            alt="logo"> <span>KIRA JEWELRY</span>
                     </a>
                 </div>
             </div>
@@ -47,8 +47,8 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewOrdersforSalesStaff}'|"
-                        class="sidebar-link">
+                    <a th:if="${session.employeeName != null}"
+                        th:onclick="|location.href='@{/viewOrdersforSalesStaff}'|" class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fproducts.svg?alt=media&token=3681d0ad-eeb7-4398-b1b2-17854b69fd5c}"
                             alt="materialAndGem">
                         <span>Orders</span>
@@ -79,7 +79,7 @@
                 <hr>
                 <div class="top-content">
                     <p>View and manage your personal details and contact information</p>
-                    <a class="text-white" th:href="@{edit-profile.html}">Edit Your Profile</a>
+                    <a th:href="@{/employee/editProfile(employee_Id=${session.employeeId})}">Edit Your Profile</a>
                 </div>
                 <div class="bottom-content">
                     <div class="element">

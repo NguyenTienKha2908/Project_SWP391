@@ -237,11 +237,13 @@ public class OrderController {
         List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized");
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
+        List<ProductionOrder> completeOrders = productionOrderService.getProductionOrderByStatus("Completed");
 
         List<ProductionOrder> allOrders = new ArrayList<>();
         allOrders.addAll(customizedOrders);
         allOrders.addAll(paymentOrders);
         allOrders.addAll(deliveringOrders);
+        allOrders.addAll(completeOrders);
 
         List<ProductionOrder> customerOrders = allOrders.stream()
                 .filter(porder -> customerId.equalsIgnoreCase(porder.getCustomer().getCustomer_Id()))
@@ -268,11 +270,6 @@ public class OrderController {
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
         Product product = productService.getProductById(productMaterial.getId().getProduct_Id());
-        String cateUrl = imageService
-                .getImgByCateogryID(String.valueOf(productionOrder.getCategory().getCategory_Id()));
-        String materialUrl = imageService
-                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
-        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
         model.addAttribute("customer", customer);
         model.addAttribute("productionOrder", productionOrder);
@@ -280,9 +277,6 @@ public class OrderController {
         model.addAttribute("product", product);
         model.addAttribute("productMaterial", productMaterial);
         model.addAttribute("material", material);
-        model.addAttribute("cateUrl", cateUrl);
-        model.addAttribute("materialUrl", materialUrl);
-        model.addAttribute("diamondUrl", diamondUrl);
 
         return "customer/customizeJewelry/orderSummary";
     }
@@ -309,20 +303,14 @@ public class OrderController {
         List<Material> materials = new ArrayList<>();
         // Iterate through each material to get its image URL
         for (ProductionOrder order : customerOrders) {
-            try {
-                String imageUrl = imageService.getImgByCateogryID(String.valueOf(order.getCategory().getCategory_Id()));
-                imagesByCategory.add(imageUrl);
-                ProductMaterial productMaterial = productMaterialService
-                        .getProductMaterialByProductId(order.getProduct().getProduct_Id());
-                Diamond diamond = diamondService.getDiamondByProductId(productMaterial.getId().getProduct_Id());
-                Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
-                System.out.println(imageUrl);
-                diamonds.add(diamond);
-                proMaterialList.add(productMaterial);
-                materials.add(material);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+
+            ProductMaterial productMaterial = productMaterialService
+                    .getProductMaterialByProductId(order.getProduct().getProduct_Id());
+            Diamond diamond = diamondService.getDiamondByProductId(productMaterial.getId().getProduct_Id());
+            Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+            diamonds.add(diamond);
+            proMaterialList.add(productMaterial);
+            materials.add(material);
 
         }
         model.addAttribute("materials", materials);

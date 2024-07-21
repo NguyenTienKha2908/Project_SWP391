@@ -182,8 +182,8 @@
                                     <th>Polish</th>
                                     <th>Symmetry</th>
                                     <th>Fluorescence</th>
-                                    <th>Q_Price</th> <!-- Added Q Price -->
-                                    <th>O_Price</th> <!-- Added O Price -->
+                                    <th>Q_Price</th>
+                                    <th>O_Price</th> 
                                     <th>Status</th>
                                     <th>Image</th>
                                     <th>Actions</th>
@@ -204,16 +204,16 @@
                                     <td th:text="${diamond.polish}"></td>
                                     <td th:text="${diamond.symmetry}"></td>
                                     <td th:text="${diamond.fluorescence}"></td>
-                                    <td th:text="${diamond.q_Price}"></td> <!-- Display Q Price -->
-                                    <td th:text="${diamond.o_Price}"></td> <!-- Display O Price -->
-                                    <td th:text="${diamond.status == 1 ? 'Active' : 'Inactive'}"></td>
-                                    <!-- <td><img th:src="@{${diamond.img_Url}}" alt="Diamond Image"
-                                            style="width:100px;height:100px;" />
-                                    </td> -->
-                                    <td>
-                                        <img th:src="@{${imagesByDiamond[index.index]}}" alt="Diamond Image"
+                                    <td th:text="${diamond.q_Price}"></td>
+                                    <td th:text="${diamond.o_Price}"></td> 
+                                    <td th:text="${diamond.status == true ? 'Active' : 'Inactive'}"></td>
+                                    <td><img th:src="@{${diamond.img_Url}}" alt="Diamond Image"
                                             style="width:100px;height:100px;" />
                                     </td>
+                                    <!-- <td>
+                                        <img th:src="@{${imagesByDiamond[index.index]}}" alt="Diamond Image"
+                                            style="width:100px;height:100px;" />
+                                    </td> -->
                                     <!-- Changed field name -->
                                     <td>
                                         <a th:href="@{/showFormForUpdateDiamond/{id}(id=${diamond.dia_Id})}"

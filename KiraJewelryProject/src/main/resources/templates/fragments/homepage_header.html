@@ -1,0 +1,121 @@
+<!--Page header-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kira Jewelry</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+    <header th:fragment="homepage_header_comp" id="myHeader">
+        <link rel="stylesheet" th:href="@{/css/component/general/homepage_header.css}">
+        <script th:src="@{/js/component/general/homepage_header.js}"></script>
+
+        <div class="top_header">
+            <h1 class="header_logo">
+                <a th:href="@{/}"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_logo.svg?alt=media&token=b672998d-28c9-4188-b286-6af5bb795cb3" />Kira
+                    Jewelry</a>
+            </h1>
+            <div class="tools_header">
+                <div>
+                    <span th:if="${session.customerName != null}">
+                        <a th:href="@{/userRequests}"> Welcome, <span th:text="${session.customerName}"></span></a>
+                        |
+                        <a th:href="@{/logout}">Log out</a>
+                    </span>
+                    <span th:if="${session.customerName == null}">
+                        <a th:href="@{/login}">
+                            Log in</a>
+                    </span>
+                </div>
+
+                <a th:href="@{/currentOrder}" class="cart"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_cart.svg?alt=media&token=b79e4ef7-a49e-4416-85b3-eb38590289d7" /></a>
+                <a th:href="@{/}" class="search"><img
+                        src="https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fblack_search.svg?alt=media&token=71222c1c-6604-40cb-baa6-2fb70903709b" /></a>
+            </div>
+        </div>
+        <nav class="home_categories">
+            <ul>
+                <li>
+                    <a th:href="@{/}" th:classappend="${requestURI == '/' ? 'active-link' : ''}">Home</a>
+                <li>
+                    <a th:href="@{/BlogList}"
+                        th:classappend="${requestURI == '/BlogList' ? 'active-link' : ''}">Blogs</a>
+                </li>
+                <li>
+                    <a th:href="@{/customerViewCollection}"
+                        th:classappend="${requestURI == '/customerViewCollection' ? 'active-link' : ''}">Collections</a>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Jewelry</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/request}" class="sidebar-link">
+                                Order Jewelry Now
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/customizeJewelry}" class="sidebar-link">
+                                Customize Your Jewelry
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Diamonds</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/customerDiamondsPage}" class="sidebar-link">
+                                All Diamonds
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerDiaPriceListPage}" class="sidebar-link">
+                                Diamonds Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a th:href="@{/}" class="navbar-link collapsed has-dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span>Materials</span>
+                    </a>
+                    <ul class="dropdown-menu list-unstyled collapse" id="menu-items">
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialsPage}" class="sidebar-link">
+                                All Materials
+                            </a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a th:href="@{/viewCustomerMaterialPriceListPage}" class="sidebar-link">
+                                Materials Price List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a th:href="@{/education}"
+                        th:classappend="${requestURI == '/education' ? 'active-link' : ''}">Education</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

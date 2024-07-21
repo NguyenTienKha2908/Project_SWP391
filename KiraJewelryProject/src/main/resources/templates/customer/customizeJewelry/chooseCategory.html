@@ -19,12 +19,12 @@
                 <input type="hidden" name="productOrderId" value="${productOrderId}">
                 <input type="hidden" name="productId" th:value="${productId}" />
                 <div class="img-container">
-                    <div th:each="category, index : ${categories}" class="category">
+                    <div th:each="category : ${categories}" class="category">
                         <div class="img-content">
                             <input type="radio" th:id="'category-' + ${category.category_Id}" name="categoryId"
                                 th:value="${category.category_Id}" th:data-name="${category.category_Name}" />
                             <label th:for="'category-' + ${category.category_Id}">
-                                <img th:src="@{${imagesByCategory[index.index]}}" alt="Category Image"
+                                <img th:src="@{${category.img_Url}}" alt="Category Image"
                                     class="w-100" />
                                 <div th:text="${category.category_Name}" class="my-3"></div>
                             </label>
