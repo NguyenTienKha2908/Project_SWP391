@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -259,34 +258,6 @@ public class ProductionOrderController {
     //     return response;
     // }
 
-    // @PostMapping("/updateSize")
-    // public String updateSize(@RequestParam("production_Order_Id") String productionOrderId,
-    //         @RequestParam("productSize") int productSize,
-    //         Model model) {
-
-    //     ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-    //     productionOrder.setProduct_Size(productSize);
-    //     productionOrderService.saveProductionOrder(productionOrder);
-    //     List<Diamond> listDiamonds = diamondService.getAllActiveDiamonds();
-
-    //     // Extract unique values for dropdowns
-    //     Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
-    //     Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
-    //     Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
-    //     Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
-
-    //     model.addAttribute("listDiamonds", listDiamonds);
-    //     model.addAttribute("origins", origins);
-    //     model.addAttribute("colors", colors);
-    //     model.addAttribute("clarities", clarities);
-    //     model.addAttribute("cuts", cuts);
-
-    //     model.addAttribute("productionOrder", productionOrder);
-    //     model.addAttribute("product", productionOrder.getProduct());
-
-    //     return "employee/sales_staff/findIngredientsPage";
-
-    // }
 
     @PostMapping("/updateSize")
     @ResponseBody
