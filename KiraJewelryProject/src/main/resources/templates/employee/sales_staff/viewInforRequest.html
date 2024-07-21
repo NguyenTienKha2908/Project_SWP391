@@ -8,10 +8,20 @@
     <title>Sales Staff Page</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
+    <link rel="stylesheet" th:href="@{/css/spinner.css}">
 </head>
 
 <body>
-
+    <div class="lds-roller" id="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -33,7 +43,7 @@
                 </li>
                 <li class="sidebar-item">
                     <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforSS}'|"
-                        class="active sidebar-link">
+                        class="active-link sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
                             alt="request">
                         <span>Requests</span>
@@ -81,93 +91,131 @@
                 <h1 class="my-0" style="text-align: center;">All Customer Requests</h1>
                 <hr>
 
-                <div th:each="productionOrder : ${listRequests}">
-                    <div class="container-fluid container-fluid-one-request mb-5">
-                        <h1>General Information</h1>
-                        <div class="row mx-auto">
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Production Order ID</h2>
-                                    <p th:text="${productionOrder.production_Order_Id}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Customer ID</h2>
-                                    <p th:text="${productionOrder.customer.customer_Id}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Date</h2>
-                                    <p th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></p>
-                                </div>
-                                <div class="information">
-                                    <h2>Category ID</h2>
-                                    <p th:text="${productionOrder.category.category_Id}"></p>
-                                </div>
-                            </div>
-                        </div>
+                <div id="content-container">
+                </div>
+</body>
 
-                        <hr>
-                        <h1>Product Information</h1>
+<script>
+    const url = window.location.href;
 
-                        <div class="row mx-auto">
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Description</h2>
-                                    <p th:text="${productionOrder.description}"></p>
-                                </div>
-                            </div>
-                            <div class="order-one col-md-6">
-                                <div class="information">
-                                    <h2>Product Size</h2>
-                                    <p th:text="${productionOrder.product_Size}"></p>
-                                </div>
-                            </div>
-                        </div>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 
-                        <hr>
-                        <h1>Image</h1>
-                        <div class="row mx-auto">
-                            <div class="order-one col-md-6">
-                                <div class="information mx-3">
-                                    <div class="information">
-                                        <div th:each="imageUrl : ${imagesByCustomerId}">
-                                            <img th:src="${imageUrl}" alt="Production Order Image"
-                                                style="max-width: 100%; height: auto;" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    async function fetchData(productionOrderId, url) {
+        fetch(`/getInfoRequestForSS?productionOrderId=${encodeURIComponent(productionOrderId)}`)
+            .then(response => response.json())
+            .then(data => renderPage(data))
+            .catch(error => console.error('Error fetching data:', error));
+
+    }
+
+    function renderPage(data) {
+        const container = document.getElementById('content-container');
+
+        const { listRequests, imagesByCustomerId, employee, customer } = data;
+
+        const html = `
+            <div class="container-fluid container-fluid-one-request mb-5">
+                <h1>General Information</h1>
+                <div class="row mx-auto">
+                    <div class="order-one col-md-6">
+                        <div class="information">
+                            <h2>Production Order ID</h2>
+                            <p>${listRequests.production_Order_Id}</p>
                         </div>
-                        <hr>
-                        <div class="row mx-auto">
-                            <h1>Staff Assignment</h1>
-                            <div class="row mx-auto">
-                                <div class="order-one col-md-6">
-                                    <div class="information">
-                                        <h2>Sales Staff</h2>
-                                        <p th:text="${employee.full_Name}"></p>
-                                    </div>
-                                </div>
-                                <div class="order-one col-md-6">
-                                    <div class="information">
-                                        <h2>Status</h2>
-                                        <p th:text="${productionOrder.status}"></p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="information">
+                            <h2>Customer Name</h2>
+                            <p>${listRequests.customer.full_Name}</p>
                         </div>
-                        <form th:action="@{/viewIngredientsPage}" method="get">
-                            <div class="b-group">
-                                <input type="hidden" name="productionOrderId"
-                                    th:value="${productionOrder.production_Order_Id}" />
-                                <input class="bg-dark text-white p-2 ps-4 pe-4 me-5" type="submit" value="Next">
-                            </div>
-                        </form>
+                        <div class="information">
+                            <h2>Date</h2>
+                            <p>${new Date(listRequests.date).toISOString().split('T')[0]}</p>
+                        </div>
+                        <div class="information">
+                            <h2>Category ID</h2>
+                            <p>${listRequests.category.category_Id}</p>
+                        </div>
                     </div>
                 </div>
 
+                <hr>
+                <h1>Product Information</h1>
 
+                <div class="row mx-auto">
+                    <div class="order-one col-md-6">
+                        <div class="information">
+                            <h2>Description</h2>
+                            <p>${listRequests.description}</p>
+                        </div>
+                    </div>
+                    <div class="order-one col-md-6">
+                        <div class="information">
+                            <h2>Product Size</h2>
+                            <p>${listRequests.product_Size}</p>
+                        </div>
+                    </div>
+                </div>
 
+                <hr>
+                <h1>Image</h1>
+                <div class="row mx-auto">
+                    <div class="order-one col-md-6">
+                        <div class="information mx-3">
+                            <div class="information">
+                                ${imagesByCustomerId.map(imageUrl => `
+                                    <img src="${imageUrl}" alt="Production Order Image" style="max-width: 100%; height: auto;" />
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mx-auto">
+                    <h1>Staff Assignment</h1>
+                    <div class="row mx-auto">
+                        <div class="order-one col-md-6">
+                            <div class="information">
+                                <h2>Sales Staff</h2>
+                                <p>${employee.full_Name}</p>
+                            </div>
+                        </div>
+                        <div class="order-one col-md-6">
+                            <div class="information">
+                                <h2>Status</h2>
+                                <p>${listRequests.status}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="/viewIngredientsPage" method="get">
+                    <div class="b-group">
+                        <input type="hidden" name="productionOrderId" value="${listRequests.production_Order_Id}" />
+                        <input class="bg-dark text-white p-2 ps-4 pe-4 me-5" type="submit" value="Next">
+                    </div>
+                </form>
+            </div>
+        `;
 
-</body>
+        container.innerHTML = html;
+        hideSpinner();
+    }
+
+    // Fetch the productionOrderId from the URL and load the data
+    const productionOrderId = getQueryParam('productionOrderId');
+    if (productionOrderId) {
+        fetchData(productionOrderId, url);
+    } else {
+        console.error('No productionOrderId found in the URL');
+    }
+
+    function hideSpinner() {
+        const spinner = document.getElementById('spinner');
+        if (spinner) {
+            spinner.style.display = 'none';
+        }
+    }
+</script>
 
 </html>
