@@ -391,6 +391,7 @@ public class ProductionOrderController {
 
                 Map<String, DiamondPriceList> uniqueDiamondPriceMap = new HashMap<>();
                 for (Diamond d : dia) {
+                    System.out.println(d.getDia_Id());
                     List<DiamondPriceList> dplList = diamondPriceListService.findPriceListByCriteria(
                             d.getCarat_Weight(),
                             d.getColor(),
@@ -794,7 +795,6 @@ public class ProductionOrderController {
         return "employee/manager/viewRequest";
     }
 
-    
     @PostMapping("/deleteProductionOrder")
     public String deleteProductionOrder(@RequestParam("productionOrderId") String productionOrderId,
             HttpSession session) {
@@ -818,7 +818,8 @@ public class ProductionOrderController {
         } else {
             productionOrderService.deleteProductionOrderById(productionOrderId);
             productService.deleteProductById(productId);
-            deleteImages(productionOrder.getCustomer().getCustomer_Id(), productionOrderId);
+            deleteImages(productionOrder.getCustomer().getCustomer_Id(),
+                    productionOrderId);
         }
 
         // Điều hướng lại trang dựa trên role của user
@@ -862,15 +863,15 @@ public class ProductionOrderController {
         if (roleId == 1) {
             if ("Created".equals(status) || "Requested".equals(status)) {
                 return "redirect:/userRequests";
-            } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
-                    || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
+            } else if ("Quoted(WC)".equals(status)
+                    || "Quoted(CRJ)".equals(status)) {
                 return "redirect:/userQuotes";
             }
             return "redirect:/userOrders";
         } else {
             if ("Created".equals(status) || "Requested".equals(status)) {
                 return "redirect:/viewRequestsforManager";
-            } else if ("Quoted(NA)".equals(status) || "Quoted".equals(status) || "Quoted(WC)".equals(status)
+            } else if ("Quoted(NA)".equals(status) || "Quoted(WC)".equals(status)
                     || "Quoted(RJ)".equals(status) || "Quoted(CRJ)".equals(status)) {
                 return "redirect:/viewQuotesforManager";
             }
@@ -988,6 +989,12 @@ public class ProductionOrderController {
         List<ProductionOrder> listOrder6 = productionOrderService.getProductionOrderByStatus("Completed");
         List<ProductionOrder> listOrder7 = productionOrderService
                 .getProductionOrderByStatus("Last Payment In Confirm");
+        List<ProductionOrder> listOrder8 = productionOrderService.getProductionOrderByStatus("Deposit In Confirm");
+        List<ProductionOrder> listOrder9 = productionOrderService.getProductionOrderByStatus("C in Category");
+        List<ProductionOrder> listOrder10 = productionOrderService.getProductionOrderByStatus("C in Material");
+        List<ProductionOrder> listOrder11 = productionOrderService
+                .getProductionOrderByStatus("C in Diamond");
+        List<ProductionOrder> listOrder12 = productionOrderService.getProductionOrderByStatus("C In Final Note");
         List<ProductionOrder> lists = new ArrayList<>();
         lists.addAll(listOrders);
         lists.addAll(listOrder2);
@@ -996,6 +1003,11 @@ public class ProductionOrderController {
         lists.addAll(listOrder5);
         lists.addAll(listOrder6);
         lists.addAll(listOrder7);
+        lists.addAll(listOrder8);
+        lists.addAll(listOrder9);
+        lists.addAll(listOrder10);
+        lists.addAll(listOrder11);
+        lists.addAll(listOrder12);
 
         model.addAttribute("listOrders", lists);
         return "employee/manager/viewOrder";

@@ -159,40 +159,7 @@
                                             th:value="${productionOrder.production_Order_Id}" />
                                         <button class="text-decoration-none btn btn-primary" type="submit">View</button>
                                     </form>
-
                                 </td>
-                                <td>
-                                    <a href="#" class="btn btn-danger my-5" data-bs-toggle="modal"
-                                        data-bs-target="#Reject">Delete</a>
-                                </td>
-                                <div class="modal fade" id="Reject">
-                                    <div class="modal-dialog modal-xl">
-                                        <div class="modal-content">
-
-                                            <!-- Modal Header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">This is just a confirm message</h4>
-                                                <button type="button" class="btn-close"
-                                                    data-bs-dismiss="modal"></button>
-                                            </div>
-
-                                            <!-- Modal body -->
-                                            <div class="modal-body">
-                                                <p>Are you sure?</p>
-                                            </div>
-
-                                            <!-- Modal footer -->
-                                            <div class="modal-footer">
-                                                <form th:action="@{/deleteProductionOrder}" method="post">
-                                                    <input type="hidden" name="productionOrderId"
-                                                        th:value="${productionOrder.production_Order_Id}" />
-                                                    <button class="btn btn-danger" type="submit">Yes</button>
-                                                    <a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </tr>
                         </tbody>
                     </table>
