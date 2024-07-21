@@ -73,4 +73,9 @@ public class DiamondService {
 
         return diamondRepository.findByListDiamondsLackWeight(name, color, clarity, cut, origin);
     }
+
+    //Add by TUI
+    public void deleteDiamond(Diamond diamond) {
+        diamondRepository.delete(diamond);
+    }
 }
