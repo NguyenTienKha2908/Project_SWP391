@@ -237,7 +237,10 @@ public class OrderController {
         String customerId = (String) session.getAttribute("customerId");
         Customer customer = customerService.getCustomerByCustomerId(customerId);
 
-        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized");
+        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized")
+                .stream()
+                .filter(order -> order.getCustomer() != null)
+                .collect(Collectors.toList());
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
         List<ProductionOrder> completeOrders = productionOrderService.getProductionOrderByStatus("Completed");
@@ -282,48 +285,6 @@ public class OrderController {
         model.addAttribute("material", material);
 
         return "customer/customizeJewelry/orderSummary";
-    }
-
-    @GetMapping("/userHistoryOrders2")
-    public String userHistoryOrders2(HttpSession session, Model model) {
-        String customerId = (String) session.getAttribute("customerId");
-        Customer customer = customerService.getCustomerByCustomerId(customerId);
-
-        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Delivered");
-        List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Canceled");
-
-        List<ProductionOrder> allOrders = new ArrayList<>();
-        allOrders.addAll(customizedOrders);
-        allOrders.addAll(paymentOrders);
-
-        List<ProductionOrder> customerOrders = allOrders.stream()
-                .filter(porder -> customerId.equalsIgnoreCase(porder.getCustomer().getCustomer_Id()))
-                .collect(Collectors.toList());
-
-        List<ProductMaterial> proMaterialList = new ArrayList<>();
-        List<String> imagesByCategory = new ArrayList<>();
-        List<Diamond> diamonds = new ArrayList<>();
-        List<Material> materials = new ArrayList<>();
-        // Iterate through each material to get its image URL
-        for (ProductionOrder order : customerOrders) {
-
-            ProductMaterial productMaterial = productMaterialService
-                    .getProductMaterialByProductId(order.getProduct().getProduct_Id());
-            Diamond diamond = diamondService.getDiamondByProductId(productMaterial.getId().getProduct_Id());
-            Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
-            diamonds.add(diamond);
-            proMaterialList.add(productMaterial);
-            materials.add(material);
-
-        }
-
-        model.addAttribute("materials", materials);
-        model.addAttribute("diamonds", diamonds);
-        model.addAttribute("productMaterials", proMaterialList);
-        model.addAttribute("imagesByCategory", imagesByCategory);
-        model.addAttribute("customerOrders", customerOrders);
-        model.addAttribute("customer", customer);
-        return "customer/userHistoryOrders";
     }
 
     @GetMapping("/userHistoryOrders")

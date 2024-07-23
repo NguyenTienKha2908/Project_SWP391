@@ -84,28 +84,6 @@ public class ProductionOrderController {
 
     // Sales Staff
 
-    @GetMapping("/viewRequestsforSS1")
-    public String getAllRequests1(Model model, HttpSession session) {
-        String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Requested",
-                employeeID);
-
-        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(RJ)",
-                employeeID);
-        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId(
-                "Quoted(CRJ)",
-                employeeID);
-        List<ProductionOrder> listRequests = new ArrayList<>();
-        listRequests.addAll(productionOrders);
-        listRequests.addAll(productionOrders2);
-        listRequests.addAll(productionOrders3);
-
-        model.addAttribute("pageOrders", listRequests);
-
-        model.addAttribute("pageOrders", productionOrders);
-        return "employee/sales_staff/viewRequest";
-    }
-
     @GetMapping("/viewRequestsforSS")
     public String getAllRequests(
             @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
@@ -846,21 +824,6 @@ public class ProductionOrderController {
         return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
     }
 
-    @GetMapping("/viewRequestsforManager1")
-    public String getAllRequestsForManager1(Model model, HttpSession session) {
-
-        List<ProductionOrder> combinedList = new ArrayList<>();
-
-        List<ProductionOrder> requestProductionOrders = productionOrderService.getProductionOrderByStatus("Requested");
-        List<ProductionOrder> createdProductionOrders = productionOrderService.getProductionOrderByStatus("Created");
-
-        List<ProductionOrder> allProductionOrders = new ArrayList<>(requestProductionOrders);
-        allProductionOrders.addAll(createdProductionOrders);
-
-        model.addAttribute("listRequests", allProductionOrders);
-        return "employee/manager/viewRequest";
-    }
-
     @GetMapping("/viewRequestsforManager")
     public String getAllRequestsForManager(
             @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
@@ -961,30 +924,6 @@ public class ProductionOrderController {
             return "redirect:/viewOrdersforManager";
         }
 
-    }
-
-    @GetMapping("/viewQuotesforManager1")
-    public String getAllQuotesForManager1(Model model, HttpSession session) {
-
-        List<ProductionOrder> combinedList = new ArrayList<>();
-
-        List<ProductionOrder> listQuotes = productionOrderService.getProductionOrderByStatus("Quoted");
-        List<ProductionOrder> listQuotes2 = productionOrderService.getProductionOrderByStatus("Quoted(NA)");
-        List<ProductionOrder> listQuotes3 = productionOrderService.getProductionOrderByStatus("Quoted(WC)");
-        List<ProductionOrder> listQuotes4 = productionOrderService
-                .getProductionOrderByStatus("Quoted(RJ)");
-        List<ProductionOrder> listQuotes5 = productionOrderService
-                .getProductionOrderByStatus("Quoted(CRJ)");
-
-        List<ProductionOrder> lists = new ArrayList<>();
-
-        lists.addAll(listQuotes);
-        lists.addAll(listQuotes2);
-        lists.addAll(listQuotes3);
-        lists.addAll(listQuotes4);
-        lists.addAll(listQuotes5);
-        model.addAttribute("listQuotes", lists);
-        return "employee/manager/viewQuote";
     }
 
     @GetMapping("/viewQuotesforManager")
@@ -1357,24 +1296,6 @@ public class ProductionOrderController {
         return "employee/sales_staff/materialAndGem";
     }
 
-    @GetMapping("/viewRequestsforDE1")
-    public String getAllRequestsForDE1(Model model, HttpSession session) {
-        String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Ordered");
-        List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Ordered(NP)");
-
-        List<ProductionOrder> allOrders = new ArrayList<>();
-        allOrders.addAll(createdOrders);
-        allOrders.addAll(requestedOrders);
-
-        List<ProductionOrder> employeeOrders = allOrders.stream()
-                .filter(porder -> employeeID.equalsIgnoreCase(porder.getDesign_Staff()))
-                .collect(Collectors.toList());
-
-        model.addAttribute("listRequests", employeeOrders);
-        return "employee/design_staff/viewRequest";
-    }
-
     @GetMapping("/viewRequestsforDE")
     public String getAllRequestsForDE(
             @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
@@ -1494,29 +1415,6 @@ public class ProductionOrderController {
         return "redirect:/viewInformationRequestForDE?productionOrderId=" + productionOrderId + "&success";
     }
 
-    @GetMapping("/viewAllDesign1")
-    public String viewAllDesign1(
-            HttpSession session,
-            Model model) {
-
-        Map<String, List<String>> imagesByStaffId = new HashMap<>();
-
-        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndDEId("Ordered",
-                employee.getEmployee_Id());
-        try {
-            imagesByStaffId = imageService.getImgOrderedByStaffId(employee.getEmployee_Id());
-            System.out.println(imagesByStaffId);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("listRequests", productionOrders);
-        model.addAttribute("employee", employee);
-        return "employee/design_staff/viewAllDesign";
-    }
-
     @GetMapping("/viewAllDesign")
     public String viewAllDesign(
             @RequestParam(defaultValue = "0") int page,
@@ -1620,24 +1518,6 @@ public class ProductionOrderController {
         return "employee/production_staff/viewRequest";
     }
 
-    @GetMapping("/viewRequestsforPR1")
-    public String getAllRequestsForPR1(Model model, HttpSession session) {
-        String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Confirmed");
-        List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Completed");
-
-        List<ProductionOrder> allOrders = new ArrayList<>();
-        allOrders.addAll(createdOrders);
-        allOrders.addAll(requestedOrders);
-
-        List<ProductionOrder> employeeOrders = allOrders.stream()
-                .filter(porder -> employeeID.equalsIgnoreCase(porder.getProduction_Staff()))
-                .collect(Collectors.toList());
-
-        model.addAttribute("listRequests", employeeOrders);
-        return "employee/production_staff/viewRequest";
-    }
-
     @GetMapping("/viewInformationRequestForPR")
     public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId, Model model)
             throws IOException {
@@ -1705,70 +1585,6 @@ public class ProductionOrderController {
             return "redirect:/viewInformationRequestForPR?productionOrderId=" + productionOrderId + "&error";
         }
         return "redirect:/viewInformationRequestForPR?productionOrderId=" + productionOrderId + "&success";
-    }
-
-    @GetMapping("/viewAllPhotos1")
-    public String viewAllPhotos1(
-            HttpSession session,
-            Model model) {
-
-        Map<String, List<String>> imagesByStaffId = new HashMap<>();
-
-        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndDEId("Ordered",
-                employee.getEmployee_Id());
-        try {
-            imagesByStaffId = imageService.getImgOrderedByPRStaffId(employee.getEmployee_Id());
-            System.out.println(imagesByStaffId);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("listRequests", productionOrders);
-        model.addAttribute("employee", employee);
-        return "employee/production_staff/viewAllProgressPhoto";
-    }
-
-    @GetMapping("/viewAllPhotos2")
-    public String viewAllPhotos2(
-            @RequestParam(defaultValue = "0") int page,
-            HttpSession session,
-            Model model) {
-
-        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByPREmployeeId(
-                employee.getEmployee_Id());
-
-        // Paginate the production orders list
-        int pageSize = 2;
-        int start = Math.min(page * pageSize, productionOrders.size());
-        int end = Math.min(start + pageSize, productionOrders.size());
-
-        Map<String, List<String>> imagesByStaffId = new HashMap<>();
-        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
-        try {
-            imagesByStaffId = imageService.getImgOrderedByPRStaffId(employee.getEmployee_Id());
-            System.out.println(imagesByStaffId);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
-        for (ProductionOrder order : paginatedList) {
-            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
-                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
-                        imagesByStaffId.get(order.getProduction_Order_Id()));
-            }
-        }
-
-        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
-                productionOrders.size());
-
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("pageOrders", productionOrdersPage);
-        model.addAttribute("employee", employee);
-        return "employee/production_staff/viewAllProgressPhoto";
     }
 
     @GetMapping("/viewAllPhotos")
