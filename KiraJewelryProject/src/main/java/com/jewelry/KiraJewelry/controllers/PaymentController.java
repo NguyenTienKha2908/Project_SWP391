@@ -60,7 +60,7 @@ public class PaymentController {
     public String bankTransferHandleForCustomizeDeposit(@RequestParam("productionOrderId") String productionOrderId,
             Model model) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        productionOrder.setStatus("Deposit In Confirm For Customized Order");
+        productionOrder.setStatus("Deposit In Confirm");
 
         productionOrderService.saveProductionOrder(productionOrder);
 

@@ -9,11 +9,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -81,11 +83,16 @@ public class ProductionOrderController {
     // Sales Staff
 
     @GetMapping("/viewRequestsforSS")
-    public String getAllRequests(Model model, HttpSession session) {
+    public String getAllRequestsForSS(Model model, HttpSession session) {
+        return "employee/sales_staff/viewRequest";
+    }
+
+    @GetMapping("/getRequest")
+    @ResponseBody
+    public List<ProductionOrder> getAllRequests(HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Requested",
                 employeeID);
-
         List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(RJ)",
                 employeeID);
         List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId(
@@ -96,14 +103,18 @@ public class ProductionOrderController {
         listRequests.addAll(productionOrders2);
         listRequests.addAll(productionOrders3);
 
-        model.addAttribute("listRequests", listRequests);
-
-        model.addAttribute("listRequests", productionOrders);
-        return "employee/sales_staff/viewRequest";
+        return listRequests;
     }
 
     @GetMapping("/viewInformationRequestForSS")
     public String getRequestsForSS(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+        return "employee/sales_staff/viewInforRequest";
+    }
+
+    @GetMapping("/getInfoRequestForSS")
+    @ResponseBody
+    public Map<String, Object> getJSonQuotesForSS(@RequestParam("productionOrderId") String productionOrderId,
+            Model model) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         List<String> imagesByCustomerId = null;
 
@@ -116,11 +127,14 @@ public class ProductionOrderController {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        model.addAttribute("customer", customer);
-        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
-        model.addAttribute("listRequests", productionOrder);
-        model.addAttribute("employee", employee);
-        return "employee/sales_staff/viewInforRequest";
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("customer", customer);
+        response.put("imagesByCustomerId", imagesByCustomerId);
+        response.put("listRequests", productionOrder);
+        response.put("employee", employee);
+
+        return response;
     }
 
     @GetMapping("/viewIngredientsPage")
@@ -183,8 +197,81 @@ public class ProductionOrderController {
         return "employee/sales_staff/findIngredientsPage";
     }
 
+    // @GetMapping("/viewIngredientsJSonPage")
+    // @ResponseBody
+    // public Map<String, Object> getIngredientsJSon(
+    // @RequestParam("productionOrderId") String productionOrderId,
+    // HttpSession session,
+    // @RequestParam(value = "message", required = false) String message,
+    // @RequestParam(value = "materialName", required = false) String materialName,
+    // @RequestParam(value = "material", required = false) Material material,
+    // @RequestParam(value = "materialPriceList", required = false)
+    // List<MaterialPriceList> materialPriceList,
+    // @RequestParam(value = "materials", required = false) List<Material>
+    // materials,
+    // @RequestParam(value = "messageDiamond", required = false) String
+    // messageDiamond,
+    // @RequestParam(value = "diamondName", required = false) String diamondName,
+    // @RequestParam(value = "diamondPriceList", required = false)
+    // List<DiamondPriceList> diamondPriceList,
+    // @RequestParam(value = "diamonds", required = false) List<Diamond> diamonds) {
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
+    // Product product = productionOrder.getProduct();
+    // ProductMaterial oldProductMaterial = productMaterialService
+    // .getProductMaterialByProductId(product.getProduct_Id());
+    // if (oldProductMaterial != null) {
+    // Material oldMaterial =
+    // materialService.getMaterialById(oldProductMaterial.getId().getMaterial_Id());
+    // session.setAttribute("material", oldMaterial);
+
+    // }
+    // Diamond oldDiamond =
+    // diamondService.getDiamondByProductId(product.getProduct_Id());
+    // List<Diamond> listDiamonds = diamondService.getAllDiamonds();
+
+    // // Extract unique values for dropdowns
+    // Set<String> origins =
+    // listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
+    // Set<String> colors =
+    // listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
+    // Set<String> clarities =
+    // listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
+    // Set<String> cuts =
+    // listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
+
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("listDiamonds", listDiamonds);
+    // response.put("origins", origins);
+    // response.put("colors", colors);
+    // response.put("clarities", clarities);
+    // response.put("cuts", cuts);
+
+    // session.setAttribute("productionOrder", productionOrder);
+    // session.setAttribute("product", product);
+    // response.put("product", product);
+    // response.put("productionOrder", productionOrder);
+    // response.put("productionOrderId", productionOrderId);
+
+    // session.setAttribute("oldDiamond", oldDiamond);
+    // session.setAttribute("productMaterial", oldProductMaterial);
+
+    // response.put("message", message);
+    // response.put("materialName", materialName);
+    // response.put("materialPriceList", materialPriceList);
+    // response.put("materials", materials);
+    // response.put("messageDiamond", messageDiamond);
+    // response.put("diamondName", diamondName);
+    // response.put("materialPriceList", diamondPriceList);
+    // response.put("diamonds", diamonds);
+    // response.put("material", material);
+
+    // return response;
+    // }
+
     @PostMapping("/updateSize")
-    public String updateSize(@RequestParam("production_Order_Id") String productionOrderId,
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateSize(@RequestParam("production_Order_Id") String productionOrderId,
             @RequestParam("productSize") int productSize,
             Model model) {
 
@@ -199,17 +286,17 @@ public class ProductionOrderController {
         Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
         Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
 
-        model.addAttribute("listDiamonds", listDiamonds);
-        model.addAttribute("origins", origins);
-        model.addAttribute("colors", colors);
-        model.addAttribute("clarities", clarities);
-        model.addAttribute("cuts", cuts);
+        Map<String, Object> response = new HashMap<>();
+        response.put("listDiamonds", listDiamonds);
+        response.put("origins", origins);
+        response.put("colors", colors);
+        response.put("clarities", clarities);
+        response.put("cuts", cuts);
 
-        model.addAttribute("productionOrder", productionOrder);
-        model.addAttribute("product", productionOrder.getProduct());
+        response.put("productionOrder", productionOrder);
+        response.put("product", productionOrder.getProduct());
 
-        return "employee/sales_staff/findIngredientsPage";
-
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/searchMaterial")
@@ -619,7 +706,13 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewQuotesforSS")
-    public String getAllQuotes(Model model, HttpSession session) {
+    public String getAllQuotes(HttpSession session) {
+        return "employee/sales_staff/viewQuote";
+    }
+
+    @GetMapping("/getAllQuotesJSonForSS")
+    @ResponseBody
+    public List<ProductionOrder> getAllQuotesJSonForSS(HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         System.out.println("employeeId : " + employeeID);
         List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Quoted",
@@ -638,15 +731,18 @@ public class ProductionOrderController {
         listRequests.addAll(productionOrders3);
         listRequests.addAll(productionOrders4);
         listRequests.addAll(productionOrders5);
-        model.addAttribute("listRequests", listRequests);
-        return "employee/sales_staff/viewQuote";
+        return listRequests;
     }
 
     @GetMapping("/viewInformationQuoteForSS")
-    public String getInforQuotesForSS(@RequestParam("production_Order_Id") String productionOrderId, Model model) {
-        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        Customer customer = customerService.getCustomerByCustomerId(productionOrder.getCustomer().getCustomer_Id());
+    public String getInforQuotesForSS() {
+        return "employee/sales_staff/viewInforQuote";
+    }
 
+    @GetMapping("/getInfoQuoteJSonForSS")
+    @ResponseBody
+    public Map<String, Object> getJsonQuoteForSS(@RequestParam("productionOrderId") String productionOrderId) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         ProductMaterial pm = productMaterialService
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
@@ -662,23 +758,29 @@ public class ProductionOrderController {
             dpl = d;
         }
 
-        model.addAttribute("diamondPriceList", dpl);
+        Map<String, Object> response = new HashMap<>();
 
-        model.addAttribute("diamond", diamond);
+        response.put("diamondPriceList", dpl);
 
-        model.addAttribute("materialPriceList", mpl);
-        model.addAttribute("productMaterial", pm);
-        model.addAttribute("material", material);
-        model.addAttribute("customer", customer);
-        model.addAttribute("user", customer.getUser());
-        model.addAttribute("productionOrder", productionOrder);
-        model.addAttribute("product", productionOrder.getProduct());
-        return "employee/sales_staff/viewInforQuote";
+        response.put("diamond", diamond);
+
+        response.put("materialPriceList", mpl);
+        response.put("productMaterial", pm);
+        response.put("material", material);
+        response.put("productionOrder", productionOrder);
+        response.put("product", productionOrder.getProduct());
+
+        return response;
     }
 
     @GetMapping("/viewOrdersforSalesStaff")
     public String getAllOrdersForSalesStaff(Model model, HttpSession session) {
-        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
+        return "employee/sales_staff/viewOrder";
+    }
+
+    @GetMapping("/getAllJSonOrdersForSalesStaff")
+    @ResponseBody
+    public List<ProductionOrder> getAllJSonOrdersForSalesStaff(Model model, HttpSession session) {
         String employeeId = (String) session.getAttribute("employeeId");
 
         List<ProductionOrder> completedOrders = productionOrderService.getProductionOrderByStatus("Completed");
@@ -697,21 +799,22 @@ public class ProductionOrderController {
         allOrders.addAll(deliveredgOrders);
         allOrders.addAll(deliveredgOrders2);
         allOrders.addAll(lastdepositOrders);
-        List<ProductionOrder> customerOrders = allOrders.stream()
+        List<ProductionOrder> listRequests = allOrders.stream()
                 .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
                 .collect(Collectors.toList());
 
-        model.addAttribute("listRequests", customerOrders);
-        return "employee/sales_staff/viewOrder";
+        return listRequests;
     }
 
     @GetMapping("/viewInOrderForSS")
-    public String viewInOrderForSS(@RequestParam("orderId") String orderId, Model model) throws IOException {
+    public String viewInOrderForSS(@RequestParam("productionOrderId") String orderId, Model model) throws IOException {
+        return "employee/sales_staff/viewInForOrder";
+    }
+
+    @GetMapping("/viewInJSonOrderForSS")
+    public Map<String, Object> viewInJSonOrderForSS(@RequestParam("productionOrderId") String orderId)
+            throws IOException {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
-        if (productionOrder == null) {
-            // Handle the case where the production order is not found
-            return "error";
-        }
 
         String customerName = productionOrder.getCustomer().getFull_Name();
         Customer customer = customerService.getCustomerIdByCustomerName(customerName);
@@ -727,17 +830,18 @@ public class ProductionOrderController {
                 .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
         String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
-        model.addAttribute("customer", customer);
-        model.addAttribute("productionOrder", productionOrder);
-        model.addAttribute("diamond", diamond);
-        model.addAttribute("product", product);
-        model.addAttribute("productMaterial", productMaterial);
-        model.addAttribute("material", material);
-        model.addAttribute("cateUrl", cateUrl);
-        model.addAttribute("materialUrl", materialUrl);
-        model.addAttribute("diamondUrl", diamondUrl);
+        Map<String, Object> response = new HashMap<>();
+        response.put("customer", customer);
+        response.put("productionOrder", productionOrder);
+        response.put("diamond", diamond);
+        response.put("product", product);
+        response.put("productMaterial", productMaterial);
+        response.put("material", material);
+        response.put("cateUrl", cateUrl);
+        response.put("materialUrl", materialUrl);
+        response.put("diamondUrl", diamondUrl);
 
-        return "employee/sales_staff/viewInForOrder";
+        return response;
     }
 
     @PostMapping("/confirmPaymentBySS")
@@ -767,7 +871,6 @@ public class ProductionOrderController {
         String message = "Update Status Successfully";
         return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
     }
-
 
     @PostMapping("/confirmCustomizedDepositBySS")
     public String confirmCustomizedDepositBySS(
@@ -1273,7 +1376,13 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewRequestsforPR")
-    public String getAllRequestsForPR(Model model, HttpSession session) {
+    public String getAllRequestsForPR() {
+        return "employee/production_staff/viewRequest";
+    }
+
+    @GetMapping("/viewJSonRequestForPR")
+    @ResponseBody
+    public List<ProductionOrder> viewJSonRequestForPR(HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Confirmed");
         List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Completed");
@@ -1282,17 +1391,21 @@ public class ProductionOrderController {
         allOrders.addAll(createdOrders);
         allOrders.addAll(requestedOrders);
 
-        List<ProductionOrder> employeeOrders = allOrders.stream()
+        List<ProductionOrder> listRequests = allOrders.stream()
                 .filter(porder -> employeeID.equalsIgnoreCase(porder.getProduction_Staff()))
                 .collect(Collectors.toList());
 
-        model.addAttribute("listRequests", employeeOrders);
-        return "employee/production_staff/viewRequest";
+        return listRequests;
     }
 
     @GetMapping("/viewInformationRequestForPR")
-    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId, Model model)
-            throws IOException {
+    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId) {
+        return "employee/production_staff/viewInforRequest";
+    }
+
+    @GetMapping("/viewInformationRequestJSForPR")
+    @ResponseBody
+    public Map<String, Object> viewInformationRequestJSForPR(@RequestParam("productionOrderId") String productionOrderId) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         List<String> imagesByCustomerId = null;
         Map<String, List<String>> imagesByStaffId = new HashMap<>();
@@ -1304,7 +1417,9 @@ public class ProductionOrderController {
         try {
             imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
                     productionOrder.getProduction_Order_Id());
-            imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
+            if (employeeDE != null && !employeeDE.getFull_Name().equals("None")) {
+                imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
+            }
             imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1317,27 +1432,17 @@ public class ProductionOrderController {
         Diamond diamond = diamondService.getDiamondByProductId(product.getProduct_Id());
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
-        String cateUrl = imageService
-                .getImgByCateogryID(String.valueOf(product.getCategory().getCategory_Id()));
-        String materialUrl = imageService
-                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
-        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+        Map<String, Object> response = new HashMap<>();
+        response.put("productMaterial", productMaterial);
+        response.put("material", material);
+        response.put("diamond", diamond);
 
-        model.addAttribute("productMaterial", productMaterial);
-        model.addAttribute("material", material);
-        model.addAttribute("diamond", diamond);
-        model.addAttribute("cateUrl", cateUrl);
-        model.addAttribute("materialUrl", materialUrl);
-        model.addAttribute("diamondUrl", diamondUrl);
-
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("imagesByPRId", imagesByPRId);
-        model.addAttribute("customer", customer);
-        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("listRequests", productionOrder);
-        model.addAttribute("employee", employeePR);
-        return "employee/production_staff/viewInforRequest";
+        response.put("imagesByStaffId", imagesByStaffId);
+        response.put("imagesByPRId", imagesByPRId);
+        response.put("imagesByCustomerId", imagesByCustomerId);
+        response.put("listRequests", productionOrder);
+        response.put("employee", employeePR);
+        return response;
     }
 
     @PostMapping("/uploadPhotoForPR")

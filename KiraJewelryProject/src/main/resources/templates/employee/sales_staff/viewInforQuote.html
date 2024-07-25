@@ -8,57 +8,20 @@
     <title>Sales Staff Page</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
-    <style>
-        label {
-            font-weight: bold;
-            margin-block: 0.8em;
-            width: 150px;
-        }
-
-        th {
-            background-color: black;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: rgb(240, 240, 240);
-        }
-
-        .wrapper-order {
-            padding: 3% 6%;
-            margin: 3% 8%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        }
-
-        .mess-container {
-            .mess-content {
-                position: fixed;
-                top: 20px;
-                right: 35px;
-                z-index: 999;
-                background-color: #FFFFFF;
-                width: 30%;
-                padding: 5px 20px;
-                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
-                border-radius: 4px;
-                transition: transform 0.75s ease-in-out;
-            }
-        }
-
-        .close {
-            transform: translateX(120%);
-        }
-
-        .open {
-            transform: translateX(-20%);
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/spinner.css}">
 </head>
 
 <body>
-
+    <div class="lds-roller" id="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -88,7 +51,7 @@
                 </li>
                 <li class="sidebar-item">
                     <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
-                        class="active sidebar-link">
+                        class="active-link sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
                             alt="quote">
                         <span>Quotes</span>
@@ -125,30 +88,65 @@
             <a class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-secondary"
                 th:href="@{/viewQuotesforSS}">Back to Quote
                 list</a>
-            <div class="content">
-                <h1 class="text-center">View Quotes</h1>
+            <div id="content-container">
+            </div>
+        </div>
+    </div>
+    <script>
+        const url = window.location.href;
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        async function fetchData(productionOrderId, url) {
+            fetch(`/getInfoQuoteJSonForSS?productionOrderId=${encodeURIComponent(productionOrderId)}`)
+                .then(response => response.json())
+                .then(data => renderPage(data))
+                .catch(error => console.error('Error fetching data:', error));
+
+        }
+
+        function renderPage(data) {
+            const container = document.getElementById('content-container');
+
+            const {
+                diamondPriceList,
+                diamond,
+                materialPriceList,
+                productMaterial,
+                material,
+                user,
+                productionOrder,
+                product } = data;
+
+            console.log(data);
+
+            const html = `
+            <h1 class="text-center">View Quotes</h1>
                 <div class="wrapper-order">
                     <h3>General Information</h3>
                     <table class="border-0">
                         <tr>
                             <td><label for="">Customer ID</label></td>
-                            <td><span th:text="${customer.customer_Id}"></span></td>
+                            <td><span>${productionOrder.customer.customer_Id}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Full Name</label></td>
-                            <td><span th:text="${customer.full_Name}"></span></td>
+                            <td><span>${productionOrder.customer.full_Name}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Phone Number</label></td>
-                            <td><span th:text="${customer.phoneNumber}"></span></td>
+                            <td><span>${productionOrder.customer.phoneNumber}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Address</label></td>
-                            <td><span th:text="${customer.address}"></span></td>
+                            <td><span>${productionOrder.customer.address}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Email</label></td>
-                            <td><span th:text="${customer.user.email}"></span></td>
+                            <td><span>${productionOrder.customer.user.email}</span></td>
                         </tr>
                     </table>
 
@@ -158,24 +156,24 @@
                     <table class="border-0">
                         <tr>
                             <td><label for="">Material Code</label></td>
-                            <td><span th:text="${material.material_Code}"></span></td>
+                            <td><span>${material.material_Code}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Material Name</label></td>
-                            <td><span th:text="${material.material_Name}"></span></td>
+                            <td><span>${material.material_Name}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Weight</label></td>
-                            <td><span th:text="${productMaterial.material_Weight}"></span></td>
+                            <td><span>${productMaterial.material_Weight}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Price</label></td>
-                            <td><span th:text="${productMaterial.q_Price}"></span> - (<span
-                                    th:text="${materialPriceList.price}"></span>/mace)</td>
+                            <td><span>${productMaterial.q_Price}</span> - (<span
+                                    >${materialPriceList.price}</span>/mace)</td>
                         </tr>
                         <tr>
                             <td><label for="">Eff Date</label></td>
-                            <td><span th:text="${materialPriceList.eff_Date}"></span></td>
+                            <td><span>${materialPriceList.eff_Date}</span></td>
                         </tr>
 
                     </table>
@@ -186,58 +184,58 @@
                     <table class="border-0">
                         <tr>
                             <td><label for="">Diamond Code</label></td>
-                            <td><span th:text="${diamond.dia_Code}"></span></td>
+                            <td><span>${diamond.dia_Code}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Diamond Name</label></td>
-                            <td><span th:text="${diamond.dia_Name}"></span></td>
+                            <td><span>${diamond.dia_Name}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Origin</label></td>
-                            <td><span th:text="${diamond.origin}"></span></td>
+                            <td><span>${diamond.origin}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Carat Weight</label></td>
-                            <td><span th:text="${diamond.carat_Weight}"></span> </td>
+                            <td><span>${diamond.carat_Weight}</span> </td>
                         </tr>
                         <tr>
                             <td><label for="">Color</label></td>
-                            <td><span th:text="${diamond.color}"></span></td>
+                            <td><span>${diamond.color}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Clarity</label></td>
-                            <td><span th:text="${diamond.clarity}"></span></td>
+                            <td><span>${diamond.clarity}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Cut</label></td>
-                            <td><span th:text="${diamond.cut}"></span></td>
+                            <td><span>${diamond.cut}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Proportions</label></td>
-                            <td><span th:text="${diamond.proportions}"></span></td>
+                            <td><span>${diamond.proportions}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Polish</label></td>
-                            <td><span th:text="${diamond.polish}"></span></td>
+                            <td><span>${diamond.polish}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Symmetry</label></td>
-                            <td><span th:text="${diamond.symmetry}"></span></td>
+                            <td><span>${diamond.symmetry}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Fluorescence</label></td>
-                            <td><span th:text="${diamond.fluorescence}"></span></td>
+                            <td><span>${diamond.fluorescence}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Price</label></td>
-                            <td><span th:text="${diamond.q_Price}"></span>- (<span
-                                    th:text="${diamondPriceList.carat_Weight_From}"></span> - <span
-                                    th:text="${diamondPriceList.carat_Weight_To}"></span> => <span
-                                    th:text="${diamondPriceList.price}"></span> )</td>
+                            <td><span>${diamond.q_Price}</span>- (
+                                <span>${diamondPriceList.carat_Weight_From}</span> - 
+                                <span>${diamondPriceList.carat_Weight_To}</span> => 
+                                <span>${diamondPriceList.price}</span> )</td>
                         </tr>
                         <tr>
                             <td><label for="">Eff Date</label></td>
-                            <td><span th:text="${diamondPriceList.eff_Date}"></span></td>
+                            <td><span>${diamondPriceList.eff_Date}</span></td>
                         </tr>
                     </table>
                 </div>
@@ -247,49 +245,65 @@
                     <table class="border-0">
                         <tr>
                             <td><label for="">Production Price</label></td>
-                            <td><span th:text="${productionOrder.q_Production_Amount}"></span></td>
+                            <td><span>${productionOrder.q_Production_Amount}</span></td>
                         </tr>
                         <tr>
                             <td><label for="">Total price</label></td>
-                            <td><span th:text="${productionOrder.q_Total_Amount}"></span></td>
+                            <td><span>${productionOrder.q_Total_Amount}</span></td>
                         </tr>
 
                     </table>
                 </div>
+        `;
 
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', (event) => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const successMessage = document.getElementById('success-message');
-                    const errorMessage = document.getElementById('error-message');
-                    const logoutMessage = document.getElementById('logout-message');
+            container.innerHTML = html;
+            hideSpinner();
+        }
 
-                    if (urlParams.has('success')) {
-                        successMessage.classList.remove('close');
-                        successMessage.classList.add('open');
-                        setTimeout(() => {
-                            successMessage.classList.remove('open');
-                            successMessage.classList.add('close');
-                        }, 2000);
-                    } else if (urlParams.has('error')) {
-                        errorMessage.classList.remove('close');
-                        errorMessage.classList.add('open');
-                        setTimeout(() => {
-                            errorMessage.classList.remove('open');
-                            errorMessage.classList.add('close');
-                        }, 2000);
-                    } else if (urlParams.has('logout')) {
-                        logoutMessage.classList.remove('close');
-                        logoutMessage.classList.add('open');
-                        setTimeout(() => {
-                            logoutMessage.classList.remove('open');
-                            logoutMessage.classList.add('close');
-                        }, 2000);
-                    }
-                });
-            </script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        const productionOrderId = getQueryParam('productionOrderId');
+        if (productionOrderId) {
+            fetchData(productionOrderId, url);
+        } else {
+            console.error('No productionOrderId found in the URL');
+        }
+        function hideSpinner() {
+            const spinner = document.getElementById('spinner');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const logoutMessage = document.getElementById('logout-message');
+
+            if (urlParams.has('success')) {
+                successMessage.classList.remove('close');
+                successMessage.classList.add('open');
+                setTimeout(() => {
+                    successMessage.classList.remove('open');
+                    successMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('error')) {
+                errorMessage.classList.remove('close');
+                errorMessage.classList.add('open');
+                setTimeout(() => {
+                    errorMessage.classList.remove('open');
+                    errorMessage.classList.add('close');
+                }, 2000);
+            } else if (urlParams.has('logout')) {
+                logoutMessage.classList.remove('close');
+                logoutMessage.classList.add('open');
+                setTimeout(() => {
+                    logoutMessage.classList.remove('open');
+                    logoutMessage.classList.add('close');
+                }, 2000);
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

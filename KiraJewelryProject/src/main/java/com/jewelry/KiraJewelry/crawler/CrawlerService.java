@@ -2,6 +2,7 @@ package com.jewelry.KiraJewelry.crawler;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -36,12 +37,12 @@ public class CrawlerService {
     @Autowired
     private MaterialPriceListService materialPriceListService;
 
-    //@PostConstruct // This method will be called after dependency injection
+    @PostConstruct // This method will be called after dependency injection
     public void initialCrawl() {
         crawlAndSaveData();
     }
 
-    @Scheduled(fixedRate = 3600000) // Run every hour
+    @Scheduled(fixedRate = 1000*60*60) // Run every hour
     public void crawlAndSaveData() {
         String url = "https://www.pnj.com.vn/blog/gia-vang/";
 
@@ -59,24 +60,28 @@ public class CrawlerService {
                 Elements prices = row.select("span");
 
                 if (prices.size() >= 2) {
-                    // CrawlerData crawlerData = new CrawlerData();
-                    MaterialPriceList materialPriceList = new MaterialPriceList();
-                    Material material = materialService.getMaterialById(mId);
                     String priceString = prices.get(1).text();
                     String priceWithoutComma = priceString.replace(",", ""); // Remove comma before parsing
                     double price = Double.parseDouble(priceWithoutComma); // VND Million
                     DecimalFormat df = new DecimalFormat("#.00");
                     double USPrice = (price * 1000) / 25455;
                     String formattedUSPrice = df.format(USPrice);
-                    materialPriceList.setPrice(Double.parseDouble(formattedUSPrice));
-                    materialPriceList.setMaterial(material);
-                    materialPriceList.setEff_Date(new Date());
-                    System.out.println("id: " + materialPriceList.getId());
-                    System.out.println("price: " + materialPriceList.getPrice());
-                    System.out.println("date: " + materialPriceList.getEff_Date());
-                    System.out.println("material: " + materialPriceList.getMaterial().getMaterial_Name());
-                    // CrawlerRepository.save(crawlerData);
-                    materialPriceListService.saveMaterialPriceList(materialPriceList);
+
+                    MaterialPriceList materialPriceList = materialPriceListService.getLatestPriceByMaterialId(mId);
+                    if (materialPriceList != null) {
+                        materialPriceList.setPrice(Double.parseDouble(formattedUSPrice));
+                        materialPriceList.setEff_Date(LocalDateTime.now());
+                        materialPriceListService.saveMaterialPriceList(materialPriceList);
+                    } else {
+                        MaterialPriceList newMaterialPriceList = new MaterialPriceList();
+                        Material material = materialService.getMaterialById(mId);
+                        newMaterialPriceList.setPrice(Double.parseDouble(formattedUSPrice));
+                        newMaterialPriceList.setMaterial(material);
+                        newMaterialPriceList.setEff_Date(LocalDateTime.now());
+                        materialPriceListService.saveMaterialPriceList(newMaterialPriceList);
+                    }
+                    
+                    
                     mId++;
                     System.out.println("Title: " + title + " - Second Price: " + price);
                 } else {
@@ -86,9 +91,5 @@ public class CrawlerService {
         } catch (IOException ex) {
             LOGGER.error("Error fetching data from website:", ex);
         }
-    }
-
-    public List<CrawlerData> getAllData() {
-        return CrawlerRepository.findAll();
     }
 }

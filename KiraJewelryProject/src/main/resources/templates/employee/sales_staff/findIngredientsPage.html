@@ -8,63 +8,20 @@
     <title>Select Ingredients</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
-    <style>
-        label {
-            font-weight: bold;
-            margin-block: 0.8em;
-        }
-
-        table,
-        tr,
-        th,
-        td {
-            border: 1px solid rgb(230, 230, 230);
-            border-spacing: 0;
-        }
-
-        th {
-            background-color: black;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: rgb(240, 240, 240);
-        }
-
-        .wrapper-order {
-            padding: 3% 6%;
-            margin: 3% 8%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        }
-
-        .mess-container {
-            .mess-content {
-                position: fixed;
-                top: 20px;
-                right: 35px;
-                z-index: 999;
-                background-color: #FFFFFF;
-                width: 30%;
-                padding: 5px 20px;
-                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
-                border-radius: 4px;
-                transition: transform 0.75s ease-in-out;
-            }
-        }
-
-        .close {
-            transform: translateX(120%);
-        }
-
-        .open {
-            transform: translateX(-20%);
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/spinner.css}">
 </head>
 
 <body>
+    <div class="lds-roller" id="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -94,7 +51,7 @@
                 </li>
                 <li class="sidebar-item">
                     <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewQuotesforSS}'|"
-                        class="active sidebar-link">
+                        class="active-link sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fquote.svg?alt=media&token=33e7730e-7518-45c3-b27d-61d03118c2db}"
                             alt="quote">
                         <span>Quotes</span>
@@ -143,15 +100,7 @@
             </div>
 
             <div class="content">
-
                 <h1 class="text-center">Find ingredients for customer's jewelry</h1>
-
-                <a class="mx-0 border-0 "
-                    th:href="@{/viewInformationRequestForSS(productionOrderId=${productionOrder.production_Order_Id})}">
-                    <button class="text-decoration-none text-white bg-dark ms-5 me-5 p-2 pt-1 pb-1"
-                        type="button">Back</button>
-                </a>
-
                 <div class="wrapper-order">
                     <div class="d-flex">
                         <b class="me-3">
@@ -171,13 +120,14 @@
                         <b class="me-3 d-flex align-items-center">
                             Size:
                         </b>
+
                         <div id="sizeDisplay">
-                            <span th:text="${productionOrder.product_Size}"></span>
+                            <span id="currentSize" th:text="${productionOrder.product_Size}"></span>
                             <button type="button" class="btn btn-link text-decoration-none"
                                 onclick="showEditForm()">Edit</button>
                         </div>
-                        <!-- Phần hiển thị biểu mẫu cập nhật kích thước -->
-                        <form th:action="@{/updateSize}" method="POST" id="sizeEditForm" style="display: none;">
+
+                        <form method="POST" style="display: none;" id="sizeEditForm">
                             <input type="number" min="0" name="productSize" th:value="${productionOrder.product_Size}"
                                 id="productSize">
                             <input type="hidden" id="production_Order_Id" name="production_Order_Id"
@@ -188,7 +138,6 @@
                         </form>
                     </div>
                 </div>
-
                 <div class="wrapper-order">
                     <h3 class="fw-bold text-center" style="color: rgb(226, 187, 13)">Material</h3>
 
@@ -207,10 +156,9 @@
                                             onclick="showMaterialEditForm()">Edit</button>
                                     </div>
 
-                                    <div id="materialDisplay"
+                                    <div id="materialDisplay" class="d-flex align-items-center"
                                         th:if="${session.material != null && session.material.material_Name != ''}">
-                                        <span class="d-flex align-items-center text-secondary"
-                                            th:text="${session.material.material_Name}"></span>
+                                        <span class="text-secondary" th:text="${session.material.material_Name}"></span>
 
                                         <button type="button" class="btn btn-link text-decoration-none"
                                             onclick="showMaterialEditForm()">Edit</button>
@@ -320,7 +268,7 @@
 
                 <div class="wrapper-order">
                     <h3 class="fw-bold text-center" style="color: rgb(179, 174, 185)">Diamond</h3>
-                    <div th:if="${session.oldDiamond != null}" class="form-control w-100 my-3  border-0" disabled>
+                    <div th:if="${session.oldDiamond != null}" class="form-control w-100 border-0" disabled>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -428,9 +376,9 @@
                                 </div>
                             </div>
 
-                            <div class="col-4 m-auto">
-                                <button type="submit" class="btn btn-secondary w-100 my-4">Search Diamond</button>
-                                <button type="button" class="btn btn-link text-decoration-none bg-danger text-white"
+                            <div class="col-4 d-flex align-items-center w-100 justify-content-center">
+                                <button type="submit" class="btn btn-secondary my-4">Search Diamond</button>
+                                <button type="button" class="btn btn-danger text-decoration-none mx-3"
                                     onclick="hideDiamondEditForm()">Cancel</button>
                             </div>
                         </form>
@@ -501,15 +449,11 @@
                             </table>
                         </div>
                     </div>
-
-
-
-
                 </div>
 
             </div>
 
-            <div class="wrapper-order">
+            <div class="wrapper-order my-3">
                 <h3 class="fw-bold text-center" style="color: rgb(21, 131, 58)">Production Price</h3>
 
                 <div class="d-flex">
@@ -542,11 +486,7 @@
             </div>
             <div th:if="${productionOrder.q_Diamond_Amount != 0 && productionOrder.q_Material_Amount != 0 && productionOrder.q_Production_Amount !=0}"
                 class="my-5" style="margin: 0 auto; width: 85%">
-                <!-- <form th:action="@{/previewQuotePage}" method="GET" class="text-end">
-                    <input type="hidden" id="production_Order_Id" name="production_Order_Id"
-                        th:value="${productionOrder.production_Order_Id}">
-                    <button class="text-decoration-none btn btn-primary w-25 rounded my-4">Next</button>
-                </form> -->
+                
                 <div class="container text-center">
                     <a href="#" data-bs-toggle="modal" style="border-radius: 10px;"
                         class="btn btn-danger w-50 py-3 px-5" data-bs-target="#Next">Next</a>
@@ -585,7 +525,46 @@
     </div>
 
     <script>
+        const url = window.location.href;
+
+        async function getapi(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                hideSpinner();
+
+
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        }
+
+
+        document.getElementById("sizeEditForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById("sizeEditForm"));
+            const queryString = new URLSearchParams(formData).toString();
+
+
+            fetch(`/updateSize?${queryString}`, {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        hideEditForm();
+                        document.getElementById("currentSize").innerText = data.productionOrder.product_Size;
+                    } else {
+                        console.error("Error updating size: ", error);
+                    }
+
+                });
+        });
+
         document.addEventListener('DOMContentLoaded', (event) => {
+            getapi(url);
             const urlParams = new URLSearchParams(window.location.search);
             const successMessage = document.getElementById('success-message');
             const errorMessage = document.getElementById('error-message');
@@ -672,9 +651,14 @@
                 elem.style.display = 'flex';
             });
         }
+        function hideSpinner() {
+            const spinner = document.getElementById('spinner');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

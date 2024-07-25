@@ -1,6 +1,8 @@
 package com.jewelry.KiraJewelry.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,8 +35,9 @@ public class MaterialPriceList {
     private double price;
 
     // @PastOrPresentDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "eff_date", nullable = false)
-    private Date eff_Date;
+    private LocalDateTime eff_Date;
 
     @ManyToOne
     @JoinColumn(name = "material_id", nullable = false)
