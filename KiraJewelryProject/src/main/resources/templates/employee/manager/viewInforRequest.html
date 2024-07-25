@@ -11,6 +11,17 @@
 </head>
 
 <body>
+    <div class="mess-container" th:if="${param.success}">
+        <div class="mess-content open" id="success-message">
+            <div class="toast-header">
+                <strong class="me-auto" style="color: #155724">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" onclick="handleButtonClick()"></button>
+            </div>
+            <div class="toast-body" style="color: #01b12a">
+                <p th:text="${message}"></p>
+            </div>
+        </div>
+    </div>
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -183,8 +194,10 @@
                                 <tr>
                                     <td class="fw-bold">Sales Staff Name</td>
                                     <td>
-                                        <span th:if="${productionOrder.sales_Staff != null}"
-                                            th:text="${productionOrder.sales_Staff}"></span>
+                                        <!-- <span th:if="${productionOrder.sales_Staff != null}"
+                                            th:text="${productionOrder.sales_Staff}"></span> -->
+                                        <span th:if="${savedEmployee != null}"
+                                            th:text="${savedEmployee.full_Name}"></span>
                                         <select class="form-control-sm" th:if="${productionOrder.sales_Staff == null}"
                                             name="staff" id="staff" required>
                                             <option class="text-center" disabled selected>Select Sales Staff</option>
@@ -198,7 +211,6 @@
                                     <td><span th:text="${productionOrder.status}"></span></td>
                                 </tr>
                                 <tr>
-
                                     <td align="center" colspan="3">
                                         <input type="hidden" name="productionOrderId"
                                             th:value="${productionOrder.production_Order_Id}" />
@@ -238,13 +250,10 @@
                                     </div>
                                 </div>
                             </div>
-
                             </td>
                             </tr>
                         </table>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -255,6 +264,37 @@
             if (salesStaff === "Select Sales Staff" || salesStaff === "") {
                 event.preventDefault();
                 alert("Please select a sales staff!");
+            }
+        });
+        function handleButtonClick() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("success")) {
+                document.getElementById('success-message').classList.remove("open");
+                document.getElementById('success-message').classList.add("close");
+                setTimeout(() => {
+                    document.getElementById('success-message').classList.remove("close");
+                    document.getElementById('success-message').classList.add("open");
+                }, 2000);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const successMessage = document.getElementById("success-message");
+            const errorMessage = document.getElementById("error-message");
+            if (urlParams.has("success")) {
+                successMessage.classList.remove("close");
+                successMessage.classList.add("open");
+                setTimeout(() => {
+                    successMessage.classList.remove("open");
+                    successMessage.classList.add("close");
+                }, 2000);
+            } else if (urlParams.has("error")) {
+                errorMessage.classList.remove("close");
+                errorMessage.classList.add("open");
+                setTimeout(() => {
+                    errorMessage.classList.remove("open");
+                    errorMessage.classList.add("close");
+                }, 2000);
             }
         });
     </script>

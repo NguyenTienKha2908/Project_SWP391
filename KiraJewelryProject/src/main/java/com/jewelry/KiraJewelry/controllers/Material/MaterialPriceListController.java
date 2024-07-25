@@ -36,6 +36,10 @@ public class MaterialPriceListController {
         List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
                 .filter(mpl -> mpl.getMaterial().getStatus() == 1)
                 .collect(Collectors.toList());
+        LocalDateTime effDateTime = activeMaterialPriceLists.get(0).getEff_Date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
+        String formattedDate = effDateTime.format(formatter);
+        model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
         model.addAttribute("materialPriceList", new MaterialPriceList());
         return "employee/manager/MaterialPriceList/material_price_lists";

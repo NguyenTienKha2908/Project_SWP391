@@ -79,7 +79,7 @@
                 <hr>
                 <div class="container">
                     <table class="table">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>Order ID</th>
                                 <th>Date</th>
@@ -99,9 +99,6 @@
                                         <a class="mx-0"
                                             th:href="@{/viewInformationRequestForDE(productionOrderId=${productionOrder.production_Order_Id})}">
                                             <button type="button">View</button>
-                                        </a>
-                                        <a
-                                            th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
                                         </a>
                                     </div>
 

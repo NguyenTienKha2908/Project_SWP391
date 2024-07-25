@@ -161,9 +161,10 @@
                     <div th:if="${message}" th:text="${message}"></div>
                 </div>
                 <div class="container my-3">
+                    <h3 th:text="'The Diamond Price is Updated To ' + ${formattedDate}" class="text-center my-3"></h3>
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Id</th>
                                     <th>Origin</th>
@@ -173,7 +174,6 @@
                                     <th>Clarity</th>
                                     <th>Cut</th>
                                     <th>Price</th>
-                                    <th>Effective Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -187,7 +187,6 @@
                                     <td th:text="${diamondPriceList.clarity}"></td>
                                     <td th:text="${diamondPriceList.cut}"></td>
                                     <td th:text="${diamondPriceList.price}"></td>
-                                    <td th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
                                     <td>
                                         <a
                                             th:href="@{/showFormForUpdateDiaPriceList/{id}(id=${diamondPriceList.id})}">Edit</a>

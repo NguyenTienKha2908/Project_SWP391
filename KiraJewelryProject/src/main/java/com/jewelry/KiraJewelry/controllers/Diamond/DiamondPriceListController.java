@@ -37,6 +37,10 @@ public class DiamondPriceListController {
     public String viewDiaPriceListPage(Model model, @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 20);
         Page<DiamondPriceList> diaPriceListPage = diaPriceListService.getAllDiaPriceLists(pageable);
+        LocalDateTime effDateTime = diaPriceListPage.getContent().get(0).getEff_Date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
+        String formattedDate = effDateTime.format(formatter);
+        model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("diaPriceListPage", diaPriceListPage);
         return "employee/manager/DiamondPriceList/dia_price_lists";
     }

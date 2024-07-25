@@ -597,12 +597,13 @@ public class ProductionOrderController {
             productionOrder.setSales_Staff(employee.getEmployee_Id());
             productionOrder.setStatus("Requested");
             productionOrderService.saveProductionOrder(productionOrder);
-            message = "true";
+            message = "Successfully Saved Sales Staff";
+            redirectAttributes.addAttribute("savedEmployee", employee);
         } else if (employeeId == null || employeeId.isEmpty()) {
-            message = "false";
+            message = "Can not save sales staff!";
         }
         redirectAttributes.addFlashAttribute("message", message);
-        return "redirect:/viewInformationRequestForManager?productionOrderId=" + productionOrderId;
+        return "redirect:/viewInformationRequestForManager?productionOrderId=" + productionOrderId + "&success";
     }
 
     @GetMapping("/saveProductionPrice")
@@ -808,10 +809,36 @@ public class ProductionOrderController {
 
     @GetMapping("/viewInOrderForSS")
     public String viewInOrderForSS(@RequestParam("productionOrderId") String orderId, Model model) throws IOException {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
+
+        String customerName = productionOrder.getCustomer().getFull_Name();
+        Customer customer = customerService.getCustomerIdByCustomerName(customerName);
+
+        ProductMaterial productMaterial = productMaterialService
+                .getProductMaterialByProduct_id(productionOrder.getProduct().getProduct_Id());
+        Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
+        Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+        Product product = productService.getProductById(productMaterial.getId().getProduct_Id());
+        String cateUrl = imageService
+                .getImgByCateogryID(String.valueOf(productionOrder.getCategory().getCategory_Id()));
+        String materialUrl = imageService
+                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
+        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+
+        model.addAttribute("customer", customer);
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("diamond", diamond);
+        model.addAttribute("product", product);
+        model.addAttribute("productMaterial", productMaterial);
+        model.addAttribute("material", material);
+        model.addAttribute("cateUrl", cateUrl);
+        model.addAttribute("materialUrl", materialUrl);
+        model.addAttribute("diamondUrl", diamondUrl);
         return "employee/sales_staff/viewInForOrder";
     }
 
     @GetMapping("/viewInJSonOrderForSS")
+    @ResponseBody
     public Map<String, Object> viewInJSonOrderForSS(@RequestParam("productionOrderId") String orderId)
             throws IOException {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
@@ -1025,6 +1052,10 @@ public class ProductionOrderController {
                 employees.add(employee);
             }
         }
+        if (productionOrder.getSales_Staff() != null) {
+            Employee savedEmployee = employeeService.getEmployeeById(productionOrder.getSales_Staff());
+            model.addAttribute("savedEmployee", savedEmployee);
+        }
         List<String> imagesByCustomerId = null;
         try {
             imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
@@ -1048,7 +1079,7 @@ public class ProductionOrderController {
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
         Material material = materialService.getMaterialById(pm.getId().getMaterial_Id());
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListById(material.getMaterial_Id());
+        MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(material.getMaterial_Id());
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
 
         List<DiamondPriceList> dpls = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),
@@ -1409,13 +1440,8 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewInformationRequestForPR")
-    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId) {
-        return "employee/production_staff/viewInforRequest";
-    }
-
-    @GetMapping("/viewInformationRequestJSForPR")
-    @ResponseBody
-    public Map<String, Object> viewInformationRequestJSForPR(@RequestParam("productionOrderId") String productionOrderId) {
+    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId, Model model)
+            throws IOException {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         List<String> imagesByCustomerId = null;
         Map<String, List<String>> imagesByStaffId = new HashMap<>();
@@ -1427,10 +1453,12 @@ public class ProductionOrderController {
         try {
             imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
                     productionOrder.getProduction_Order_Id());
-            if (employeeDE != null && !employeeDE.getFull_Name().equals("None")) {
+            if (employeeDE != null) {
                 imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
             }
-            imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
+            if (employeePR != null) {
+                imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -1442,17 +1470,27 @@ public class ProductionOrderController {
         Diamond diamond = diamondService.getDiamondByProductId(product.getProduct_Id());
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("productMaterial", productMaterial);
-        response.put("material", material);
-        response.put("diamond", diamond);
+        String cateUrl = imageService
+                .getImgByCateogryID(String.valueOf(product.getCategory().getCategory_Id()));
+        String materialUrl = imageService
+                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
+        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
-        response.put("imagesByStaffId", imagesByStaffId);
-        response.put("imagesByPRId", imagesByPRId);
-        response.put("imagesByCustomerId", imagesByCustomerId);
-        response.put("listRequests", productionOrder);
-        response.put("employee", employeePR);
-        return response;
+        model.addAttribute("productMaterial", productMaterial);
+        model.addAttribute("material", material);
+        model.addAttribute("diamond", diamond);
+        model.addAttribute("cateUrl", cateUrl);
+        model.addAttribute("materialUrl", materialUrl);
+        model.addAttribute("diamondUrl", diamondUrl);
+
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
+        model.addAttribute("imagesByPRId", imagesByPRId);
+        model.addAttribute("customer", customer);
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
+        model.addAttribute("listRequests", productionOrder);
+        model.addAttribute("employee", employeePR);
+        return "employee/production_staff/viewInforRequest";
     }
 
     @PostMapping("/uploadPhotoForPR")
@@ -1533,7 +1571,7 @@ public class ProductionOrderController {
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
         Material material = materialService.getMaterialById(pm.getId().getMaterial_Id());
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListById(material.getMaterial_Id());
+        MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(material.getMaterial_Id());
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
 
         List<DiamondPriceList> dpls = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),

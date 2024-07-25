@@ -160,13 +160,13 @@
                     </div>
                 </nav>
                 <div class="container my-3">
+                    <h3 th:text="'The Material Price is Updated To ' + ${formattedDate}" class="text-center my-3"></h3>
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Material</th>
                                     <th>Price</th>
-                                    <th>Effective Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -174,7 +174,6 @@
                                 <tr th:each="materialPriceList : ${listMaterialPriceLists}">
                                     <td th:text="${materialPriceList.material.material_Name}"></td>
                                     <td th:text="${materialPriceList.price}"></td>
-                                    <td th:text="${#dates.format(materialPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
                                     <td>
                                         <a
                                             th:href="@{/showFormForUpdateMaterialPriceList/{id}(id=${materialPriceList.id})}">Edit</a>
