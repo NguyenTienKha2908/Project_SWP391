@@ -12,6 +12,7 @@
 </head>
 
 <body>
+
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -142,6 +143,9 @@
                 <div class="top-content">
                     <p>View and manage your personal details and contact information</p>
                     <a th:href="@{/employee/editProfile(employee_Id=${session.employeeId})}">Edit Your Profile</a>
+                </div>
+                <div th:if="${message}" class="alert alert-success" role="alert">
+                    <span th:text="${message}"></span>
                 </div>
                 <div class="bottom-content">
                     <div class="element">

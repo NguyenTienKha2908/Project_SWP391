@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<!--    Thong bao Thanh COng-->
     <div class="mess-container" th:if="${param.success}">
         <div class="mess-content open" id="success-message">
             <div class="toast-header">
@@ -26,18 +27,7 @@
         </div>
     </div>
 
-    <div class="mess-container" th:if="${param.error}">
-        <div class="mess-content close" id="error-message">
-            <div class="toast-header">
-                <strong class="me-auto" style="color:#721c24">Notification</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
 
-            </div>
-            <div class="toast-body" style="color:#b10101">
-                <p th:text="${error}"></p>
-            </div>
-        </div>
-    </div>
     <!--Page header-->
     <header>
         <div class="top_header">
@@ -103,6 +93,8 @@
 
     <!--Page information-->
     <div class="container-fluid px-5">
+
+
         <div class="row">
             <div class="col-md-3">
                 <aside id="sidebar">
@@ -160,7 +152,6 @@
                                     Password</a>
                             </div>
                         </div>
-<!--                        Messager Thanh Cong-->
 
                         <div class="col-md-6">
                             <div class="information">
