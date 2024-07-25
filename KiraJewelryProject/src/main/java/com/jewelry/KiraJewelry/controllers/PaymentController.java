@@ -60,7 +60,7 @@ public class PaymentController {
     public String bankTransferHandleForCustomizeDeposit(@RequestParam("productionOrderId") String productionOrderId,
             Model model) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-        productionOrder.setStatus("Deposit In Confirm");
+        productionOrder.setStatus("Deposit In Confirm For Customized Order");
 
         productionOrderService.saveProductionOrder(productionOrder);
 
@@ -69,6 +69,17 @@ public class PaymentController {
 
     @PostMapping("/bankTransferHandleForLastPayment")
     public String bankTransferHandleForLastPayment(@RequestParam("productionOrderId") String productionOrderId,
+            Model model) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Last Payment In Confirm");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+
+        return "redirect:/userOrder?orderId=" + productionOrderId + "&await";
+    }
+
+    @GetMapping("/bankTransferHandleForLastPaymentGet")
+    public String bankTransferHandleForLastPaymentGet(@RequestParam("productionOrderId") String productionOrderId,
             Model model) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         productionOrder.setStatus("Last Payment In Confirm");

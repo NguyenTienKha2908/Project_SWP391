@@ -197,7 +197,7 @@
                                         <button type="submit" class="btn btn-secondary mx-4">Confirm</button>
                                     </form>
                                     <form th:if="${productionOrder.status == 'Deposit In Confirm For Customized Order'}"
-                                        th:action="@{/confirmCustomizedDepositBySS}" method="post">
+                                        th:action="@{/confirmDepositCustomizedBySS}" method="post">
                                         <input type="hidden" name="productionOrderId"
                                             th:value="${productionOrder.production_Order_Id}" />
                                         <button type="submit" class="btn btn-secondary mx-4">Confirm</button>

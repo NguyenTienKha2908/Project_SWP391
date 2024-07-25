@@ -203,7 +203,7 @@ public class OrderController {
         String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
         if (employee == null) {
-            if (designStaffId.equalsIgnoreCase("None")) {
+            if (designStaffId != null && designStaffId.equalsIgnoreCase("None")) {
                 try {
                     imagesByPRId = imageService.getImgOrderedByPRStaffId(productionOrder.getProduction_Staff());
                 } catch (IOException ex) {

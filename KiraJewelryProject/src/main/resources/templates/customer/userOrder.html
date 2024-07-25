@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kira Jewelry</title>
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/mainUp.css}">
-    <link rel="stylesheet" th:href="@{/css/home.css}">
+  <link rel="stylesheet" th:href="@{/css/mainUp.css}">
+  <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 
 <body>
-  
+
 
   <div th:replace="~{fragments/notifications/customerNotification :: notification}" class="mess-container"
     th:if="${param.reject}">
@@ -200,7 +200,8 @@
                 <div class="product-content">
                   <div class="row">
                     <div class="col-md-4">
-                      <img th:if="${imagesByStaffId == null or imagesByStaffId.isEmpty}" th:src="@{${cateUrl}}" alt="Category Image" style="width: 100%" />
+                      <img th:if="${imagesByStaffId == null or imagesByStaffId.isEmpty}" th:src="@{${cateUrl}}"
+                        alt="Category Image" style="width: 100%" />
                       <div th:if="${imagesByStaffId != null and !imagesByStaffId.isEmpty}">
                         <div th:each="entry : ${imagesByStaffId}">
                           <div th:if="${entry.key == productionOrder.production_Order_Id}"
@@ -471,7 +472,7 @@
                     <a th:href="@{/CODInfoForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">
                       Pay COD</a>
                     <a
-                      th:href="@{/bankTransferHandleForLastPayment(productionOrderId=${productionOrder.production_Order_Id})}">Pay
+                      th:href="@{/bankTransferHandleForLastPaymentGet(productionOrderId=${productionOrder.production_Order_Id})}">Pay
                       through Bank Transfer</a>
                     <a th:href="@{/paypal(productionOrderId=${productionOrder.production_Order_Id})}">Pay through
                       Paypal</a>

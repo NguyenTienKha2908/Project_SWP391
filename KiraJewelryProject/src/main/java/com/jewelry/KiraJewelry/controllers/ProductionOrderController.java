@@ -90,7 +90,7 @@ public class ProductionOrderController {
             @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(defaultValue = "0") int page,
             Model model, HttpSession session) {
-                
+
         List<ProductionOrder> combinedList = new ArrayList<>();
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Requested", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
@@ -780,6 +780,7 @@ public class ProductionOrderController {
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Completed", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Payment In Confirm", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Deposit In Confirm", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Deposit In Confirm For Customized Order", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Last Payment In Confirm", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Delivering", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Delivered", sortDirection));
@@ -820,6 +821,7 @@ public class ProductionOrderController {
         List<ProductionOrder> completedOrders = productionOrderService.getProductionOrderByStatus("Completed");
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> depositOrders = productionOrderService.getProductionOrderByStatus("Deposit In Confirm");
+        List<ProductionOrder> customizedDepositOrders = productionOrderService.getProductionOrderByStatus("Deposit In Confirm For Customized Order");
         List<ProductionOrder> lastdepositOrders = productionOrderService
                 .getProductionOrderByStatus("Last Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
@@ -833,6 +835,8 @@ public class ProductionOrderController {
         allOrders.addAll(deliveredgOrders);
         allOrders.addAll(deliveredgOrders2);
         allOrders.addAll(lastdepositOrders);
+        allOrders.addAll(depositOrders);
+        allOrders.addAll(customizedDepositOrders);
         List<ProductionOrder> listRequests = allOrders.stream()
                 .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
                 .collect(Collectors.toList());
@@ -915,7 +919,7 @@ public class ProductionOrderController {
 
         productionOrderService.saveProductionOrder(productionOrder);
         String message = "Update Status Successfully";
-        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+        return "redirect:/viewInOrderForSS?productionOrderId=" + productionOrderId + "&update_success";
     }
 
     @PostMapping("/confirmDepositBySS")
@@ -929,7 +933,20 @@ public class ProductionOrderController {
 
         productionOrderService.saveProductionOrder(productionOrder);
         String message = "Update Status Successfully";
-        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+        return "redirect:/viewInOrderForSS?productionOrderId=" + productionOrderId + "&update_success";
+    }
+
+    @PostMapping("/confirmDepositCustomizedBySS")
+    public String confirmDepositCustomizedBySS(
+            @RequestParam("productionOrderId") String productionOrderId,
+            Model model,
+            HttpSession session) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Confirmed");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+        String message = "Update Status Successfully";
+        return "redirect:/viewInOrderForSS?productionOrderId=" + productionOrderId + "&update_success";
     }
 
     @PostMapping("/confirmCustomizedDepositBySS")
