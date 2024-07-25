@@ -11,7 +11,8 @@
 <body>
 
     <!--Page header-->
-    <header id="myHeader">
+    <div th:replace="fragments/homepage_header :: homepage_header_comp"></div>
+    <!-- <header id="myHeader">
         <div class="top_header">
             <h1 class="header_logo">
                 <a th:href="@{/}"><img
@@ -107,13 +108,13 @@
                 <li><a th:href="@{/education}">Education</a></li>
             </ul>
         </nav>
-    </header>
+    </header> -->
 
     <!--Page information-->
     <div class="container-fluid px-5">
         <div class="row">
-            <div class="col-md-3">
-                <aside id="sidebar">
+            <div th:replace="~{fragments/customerSideNavbar/sideNavbar :: side-Navbar}" class="col-md-3">
+                <!-- <aside id="sidebar">
                     <ul class="sidebar-nav">
                         <li class="sidebar-item">
                             <a th:href="@{/profile(CustomerId=${session.customerId})}" class="sidebar-link mainUp">
@@ -147,7 +148,7 @@
                             </ul>
                         </li>
                     </ul>
-                </aside>
+                </aside> -->
             </div>
             <div class="col-md-9">
                 <div class="container my-3">
