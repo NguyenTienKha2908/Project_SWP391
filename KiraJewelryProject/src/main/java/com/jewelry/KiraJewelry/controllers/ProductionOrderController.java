@@ -641,7 +641,7 @@ public class ProductionOrderController {
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
         Material material = materialService.getMaterialById(pm.getId().getMaterial_Id());
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListById(material.getMaterial_Id());
+        MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(material.getMaterial_Id());
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
 
         List<DiamondPriceList> dpls = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),
