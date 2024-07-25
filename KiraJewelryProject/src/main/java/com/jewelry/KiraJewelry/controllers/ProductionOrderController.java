@@ -768,7 +768,6 @@ public class ProductionOrderController {
         return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
     }
 
-
     @PostMapping("/confirmCustomizedDepositBySS")
     public String confirmCustomizedDepositBySS(
             @RequestParam("productionOrderId") String productionOrderId,
@@ -816,6 +815,16 @@ public class ProductionOrderController {
             productService.deleteProductById(productId);
             deleteImages(productionOrder.getCustomer().getCustomer_Id(), productionOrderId);
         } else {
+            Diamond diamond = diamondService.getDiamondByProductId(productId);
+            ProductMaterial productMaterial = productMaterialService.getProductMaterialByProduct_id(productId);
+            if (diamond == null && productMaterial != null) {
+                deleteRelatedEntities(productId);
+            } else if (diamond != null && productMaterial == null) {
+                resetDiamondProductId(productId);
+            } else if (diamond != null && productMaterial != null) {
+                resetDiamondProductId(productId);
+                deleteRelatedEntities(productId);
+            }
             productionOrderService.deleteProductionOrderById(productionOrderId);
             productService.deleteProductById(productId);
             deleteImages(productionOrder.getCustomer().getCustomer_Id(),
