@@ -2,13 +2,15 @@ package com.jewelry.KiraJewelry.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -284,8 +286,12 @@ public class OrderController {
         return "customer/customizeJewelry/orderSummary";
     }
 
+    
     @GetMapping("/userHistoryOrders")
-    public String userHistoryOrders(HttpSession session, Model model) {
+    public String userHistoryOrders(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
         String customerId = (String) session.getAttribute("customerId");
         Customer customer = customerService.getCustomerByCustomerId(customerId);
 
@@ -299,6 +305,23 @@ public class OrderController {
         List<ProductionOrder> customerOrders = allOrders.stream()
                 .filter(porder -> customerId.equalsIgnoreCase(porder.getCustomer().getCustomer_Id()))
                 .collect(Collectors.toList());
+
+        // Sort the combined list
+        customerOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, customerOrders.size());
+        int end = Math.min((start + 2), customerOrders.size());
+        List<ProductionOrder> paginatedList = customerOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                customerOrders.size());
 
         List<ProductMaterial> proMaterialList = new ArrayList<>();
         List<String> imagesByCategory = new ArrayList<>();
@@ -316,12 +339,15 @@ public class OrderController {
             materials.add(material);
 
         }
+
         model.addAttribute("materials", materials);
         model.addAttribute("diamonds", diamonds);
         model.addAttribute("productMaterials", proMaterialList);
         model.addAttribute("imagesByCategory", imagesByCategory);
         model.addAttribute("customerOrders", customerOrders);
         model.addAttribute("customer", customer);
+        model.addAttribute("customerOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
         return "customer/userHistoryOrders";
     }
 

@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.jewelry.KiraJewelry.models.MaterialPriceList;
@@ -23,11 +25,6 @@ public class MaterialPriceListService {
         Optional<MaterialPriceList> optional = materialPriceListRepository.findById(id);
         return optional.orElse(null);
     }
-
-    // public List<MaterialPriceList> getListMaterialPriceListByMaterialId(int material_Id) {
-    //     List<MaterialPriceList> listPrices = materialPriceListRepository.getByMaterialId(material_Id);
-    //     return listPrices;
-    // }
 
     public void saveMaterialPriceList(MaterialPriceList materialPriceList) {
         materialPriceListRepository.save(materialPriceList);
@@ -49,6 +46,12 @@ public class MaterialPriceListService {
         List<MaterialPriceList> priceList = materialPriceListRepository.findAllByMaterialId(materialId);
         return priceList.stream()
                 .max(Comparator.comparing(MaterialPriceList::getEff_Date))
-                .orElse(null); // or throw an exception if no entries are found
+                .orElse(null);
     }
+
+    public Page<MaterialPriceList> getMaterialPriceListPaginated(int page, int size) {
+        return materialPriceListRepository.findAll(PageRequest.of(page, size));
+    }
+
+
 }

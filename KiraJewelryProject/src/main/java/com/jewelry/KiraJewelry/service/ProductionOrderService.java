@@ -1,6 +1,8 @@
 package com.jewelry.KiraJewelry.service;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +13,6 @@ import com.jewelry.KiraJewelry.repository.ProductionOrderRepository;
 
 @Service
 public class ProductionOrderService {
-
   @Autowired
   private ProductionOrderRepository productionOrderRepository;
 
@@ -46,6 +47,26 @@ public class ProductionOrderService {
   public List<ProductionOrder> getProductionOrderByStatus(String status) {
     return productionOrderRepository.findProductionOrderByStatus(status);
   }
+
+  public ProductionOrderService(ProductionOrderRepository productionOrderRepository) {
+    this.productionOrderRepository = productionOrderRepository;
+  }
+
+  public List<ProductionOrder> getAllOrdersByStatus(String status, String sortDirection) {
+    if ("ASC".equalsIgnoreCase(sortDirection)) {
+      return productionOrderRepository.findProductionOrderByStatusASC(status);
+    } else {
+      return productionOrderRepository.findProductionOrderByStatusDESC(status);
+    }
+  }
+
+  // public Page<ProductionOrder> getAllOrdersByStatus(String status, Pageable
+  // pageable) {
+
+  // return productionOrderRepository.findProductionOrderByStatusPage(status,
+  // pageable);
+
+  // }
 
   public List<ProductionOrder> getProductionOrderByCustomerId(String customer_Id) {
     return productionOrderRepository.findProductionOrderByCustomerId(customer_Id);
@@ -89,5 +110,13 @@ public class ProductionOrderService {
     }
 
     return ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+  }
+
+  public List<ProductionOrder> getProductionOrderByDEEmployeeId(String design_Staff_Id) {
+    return productionOrderRepository.getProductionOrderByDEId(design_Staff_Id);
+  }
+
+  public List<ProductionOrder> getProductionOrderByPREmployeeId(String production_Staff_Id) {
+    return productionOrderRepository.getProductionOrderByPRId(production_Staff_Id);
   }
 }

@@ -36,13 +36,17 @@ public class ProfileController {
         return "customer/profile/editProfile";
     }
     @PostMapping("/profile/edit")
-    public String editProfile(@RequestParam("CustomerId") String CustomerId, @RequestParam("full_Name") String Full_Name, @RequestParam("address") String Address, @RequestParam("phoneNumber") String PhoneNumber, Model model) {
+    public String editProfile(@RequestParam("CustomerId") String CustomerId,
+                              @RequestParam("full_Name") String Full_Name,
+                              @RequestParam("address") String Address,
+                              @RequestParam("phoneNumber") String PhoneNumber,
+                              RedirectAttributes redirectAttributes,Model model) {
         Customer customer = customerService.getCustomerByCustomerId(CustomerId);
         customer.setFull_Name(Full_Name);
         customer.setAddress(Address);
         customer.setPhoneNumber(PhoneNumber);
         customerService.saveCustomer(customer);
-        model.addAttribute("message", "Successfully updated!");
+        redirectAttributes.addFlashAttribute("message", "Profile updated successfully.");
         return "redirect:/profile?CustomerId=" + CustomerId + "&success";
     }
     @GetMapping("/profile/changePassword")

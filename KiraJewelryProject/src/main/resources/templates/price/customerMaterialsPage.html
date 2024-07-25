@@ -29,14 +29,31 @@
                 style="width: 100%; object-fit: cover" />
             </div>
             <div class="card-body col-md-8">
-              <h5 class="card-title" th:text="${material.material_Name}"></h5>
+              <h5 class="card-title" th:text="${material.material_Code}"></h5>
               <p class="card-text">
-                <em>Status: 
-                  <span th:text="${material.status == 1 ? 'Active' : 'Inactive'}"></span> </em><br />
+                <em>Status
+                  <span th:text="${material.status == true ? 'Active' : 'Inactive'}"></span> </em><br />
               </p>
             </div>
           </div>
         </div>
+      </div>
+      <!-- Pagination -->
+      <div>
+        <ul class="pagination">
+          <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{/viewCustomerMaterialsPage(page=${currentPage - 1}, size=${size})}"
+              class="page-link">Previous</a>
+          </li>
+          <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+            th:class="${i-1 == currentPage} ? 'page-item active' : 'page-item'">
+            <a th:href="@{/viewCustomerMaterialsPage(page=${i - 1}, size=${size})}" class="page-link"
+              th:text="${i}"></a>
+          </li>
+          <li th:class="${currentPage + 1 >= totalPages} ? 'page-item disabled' : 'page-item'">
+            <a th:href="@{/viewCustomerMaterialsPage(page=${currentPage + 1}, size=${size})}" class="page-link">Next</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

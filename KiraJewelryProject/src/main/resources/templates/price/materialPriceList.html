@@ -35,6 +35,23 @@
         </tbody>
       </table>
     </div>
+    <div>
+      <ul class="pagination">
+        <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+          <a th:href="@{/viewCustomerMaterialPriceListPage(page=${currentPage - 1}, size=${size})}"
+            class="page-link">Previous</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+          th:class="${i-1 == currentPage} ? 'page-item active' : 'page-item'">
+          <a th:href="@{/viewCustomerMaterialPriceListPage(page=${i - 1}, size=${size})}" class="page-link"
+            th:text="${i}"></a>
+        </li>
+        <li th:class="${currentPage + 1 >= totalPages} ? 'page-item disabled' : 'page-item'">
+          <a th:href="@{/viewCustomerMaterialPriceListPage(page=${currentPage + 1}, size=${size})}"
+            class="page-link">Next</a>
+        </li>
+      </ul>
+    </div>
 
   </div>
   <!--Page footer-->

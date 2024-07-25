@@ -44,7 +44,7 @@
         <hr>
 
         <h1 class="mb-4">Change Password</h1>
-        <form action="/employee/changePassword" method="post">
+        <form action="/employee/editProfile" method="post">
             <input type="hidden" name="employee_Id" th:value="${employee.employee_Id}" />
             <div class="form-group">
                 <label for="OldPassword">Old Password:</label>
@@ -62,6 +62,11 @@
                 <button type="submit" class="btn btn-secondary w-100">Update Password</button>
             </div>
         </form>
+    </div>
+    <div >
+        <a th:href="@{/homePages}" type="button">
+            Back to Home Page
+        </a>
     </div>
     <!-- Thêm liên kết đến Bootstrap JS và các thư viện phụ thuộc -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
