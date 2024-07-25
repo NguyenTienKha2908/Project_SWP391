@@ -199,22 +199,20 @@
                                 </tr>
                                 <tr>
 
-                                    <td class="text-center">
-                                        <span>
-                                            <input type="hidden" name="productionOrderId"
-                                                th:value="${productionOrder.production_Order_Id}" />
-                                            <button th:if="${productionOrder.sales_Staff == null}"
-                                                class="text-decoration-none btn btn-success" type="submit"
-                                                id="saveButton">Save</button>
-                                            <a href="#" class="btn btn-danger my-5" data-bs-toggle="modal"
-                                                data-bs-target="#Reject">Delete</a>
-                                        </span>
+                                    <td align="center" colspan="3">
+                                        <input type="hidden" name="productionOrderId"
+                                            th:value="${productionOrder.production_Order_Id}" />
+                                        <button th:if="${productionOrder.sales_Staff == null}"
+                                            class="text-decoration-none btn btn-success" type="submit"
+                                            id="saveButton">Save</button>
+                                        <a href="#" class="btn btn-danger my-5" data-bs-toggle="modal"
+                                            data-bs-target="#Reject">Delete</a>
                                     </td>
                                 </tr>
                             </form>
 
                             <div class="modal fade" id="Reject">
-                                <div class="modal-dialog modal-xl">
+                                <div class="modal-dialog modal-md">
                                     <div class="modal-content">
 
                                         <!-- Modal Header -->

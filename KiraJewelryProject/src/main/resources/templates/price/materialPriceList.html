@@ -19,19 +19,18 @@
   <!-- Main contents -->
   <div class="container my-5" style="width:80%;">
     <div class="table-responsive">
+      <h3 th:text="'The Material Price is Updated To ' + ${formattedDate}" class="text-center my-3"></h3>
       <table class="table table-hover">
         <thead>
           <tr>
             <th>Material</th>
             <th>Price</th>
-            <th>Effective Date</th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="materialPriceList : ${listMaterialPriceLists}">
             <td th:text="${materialPriceList.material.material_Name}"></td>
             <td th:text="${materialPriceList.price}"></td>
-            <td th:text="${#dates.format(materialPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
           </tr>
         </tbody>
       </table>

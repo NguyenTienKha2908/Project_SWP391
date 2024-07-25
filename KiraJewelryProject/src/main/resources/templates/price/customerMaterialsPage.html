@@ -29,10 +29,10 @@
                 style="width: 100%; object-fit: cover" />
             </div>
             <div class="card-body col-md-8">
-              <h5 class="card-title" th:text="${material.material_Code}"></h5>
+              <h5 class="card-title" th:text="${material.material_Name}"></h5>
               <p class="card-text">
-                <em>Status
-                  <span th:text="${material.status == true ? 'Active' : 'Inactive'}"></span> </em><br />
+                <em>Status: 
+                  <span th:text="${material.status == 1 ? 'Active' : 'Inactive'}"></span> </em><br />
               </p>
             </div>
           </div>

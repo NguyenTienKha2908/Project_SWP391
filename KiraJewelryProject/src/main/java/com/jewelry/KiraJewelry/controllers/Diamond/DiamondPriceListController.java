@@ -18,6 +18,8 @@ import com.jewelry.KiraJewelry.service.Diamond.DiamondService;
 import com.jewelry.KiraJewelry.service.DiamondPriceList.DiamondPriceListService;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -156,6 +158,10 @@ public class DiamondPriceListController {
         Pageable pageable = PageRequest.of(page, 20);
         Page<DiamondPriceList> diaPriceListPage = diaPriceListService.getAllDiaPriceLists(pageable);
         model.addAttribute("diaPriceListPage", diaPriceListPage);
+        LocalDateTime effDateTime = diaPriceListPage.getContent().get(0).getEff_Date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
+        String formattedDate = effDateTime.format(formatter);
+        model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("requestURI", request.getRequestURI());
 
         return "price/diamondPriceList";
