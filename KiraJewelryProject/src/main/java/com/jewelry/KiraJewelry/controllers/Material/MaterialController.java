@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry.controllers.Material;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jewelry.KiraJewelry.crawler.CrawlerService;
 import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialService;
@@ -15,6 +17,7 @@ import com.jewelry.KiraJewelry.service.MaterialService;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -27,12 +30,16 @@ public class MaterialController {
     private MaterialService materialService;
 
     @GetMapping("/materials")
-    public String viewMaterialsPage(Model model) {
-        // Get all materials
-        List<Material> allMaterials = materialService.getAllMaterials();
+    public String viewMaterialsPage(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
+            ,Model model) {
 
-        // Add lists to the model
-        model.addAttribute("listMaterials", allMaterials);
+        Page<Material> allMaterials = materialService.getMaterialsPaginated(page, size);
+
+        model.addAttribute("currentPage", allMaterials.getNumber());
+        model.addAttribute("totalPages", allMaterials.getTotalPages());
+        model.addAttribute("listMaterials", allMaterials.getContent());
         return "employee/manager/Material/materials";
     }
 
@@ -182,10 +189,16 @@ public class MaterialController {
         return false;
     }
 
+
     @GetMapping("/viewCustomerMaterialsPage")
-    public String viewCustomerMaterialsPage(Model model) {
-        List<Material> allMaterials = materialService.getAllMaterials();
-        model.addAttribute("listMaterials", allMaterials);
+    public String viewCustomerMaterialsPage(
+             @RequestParam(name = "page", defaultValue = "0") int page,
+             @RequestParam(name = "size", defaultValue = "10") int size,
+             Model model){
+        Page<Material> materialPage = materialService.getMaterialsPaginated(page, size);
+        model.addAttribute("listMaterials", materialPage.getContent());
+        model.addAttribute("currentPage", materialPage.getNumber());
+        model.addAttribute("totalPages", materialPage.getTotalPages());
         return "price/customerMaterialsPage";
     }
 }

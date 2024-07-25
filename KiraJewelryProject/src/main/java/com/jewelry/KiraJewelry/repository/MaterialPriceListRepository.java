@@ -21,4 +21,7 @@ public interface MaterialPriceListRepository extends JpaRepository<MaterialPrice
     
     @Query("SELECT mpl FROM MaterialPriceList mpl WHERE mpl.material.material_Id = :materialId ORDER BY mpl.eff_Date DESC")
     MaterialPriceList findTopByMaterialId(@Param("materialId") int materialId);
+
+
+
 }

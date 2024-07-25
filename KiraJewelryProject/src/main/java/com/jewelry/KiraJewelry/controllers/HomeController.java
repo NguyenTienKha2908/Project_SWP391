@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.models.User;
+import com.jewelry.KiraJewelry.service.CustomerService;
 import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.UserService;
 
@@ -18,8 +19,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class HomeController {
 
-    // @Autowired
-    // private CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -65,13 +66,15 @@ public class HomeController {
     }
 
     @PostMapping("/renameEmployee")
-    public String rename(@RequestParam("employee_Id") String employee_Id, @RequestParam("newName") String newName,
-            Model model, HttpSession httpSession) {
+    public String rename(@RequestParam("employee_Id") String employee_Id,
+                         @RequestParam("newName") String newName,
+            Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
         Employee employee = employeeService.getEmployeeById(employee_Id);
         employee.setFull_Name(newName);
         employeeService.saveEmployee(employee);
         httpSession.setAttribute("employeeName", newName);
         User user = employee.getUser();
+        redirectAttributes.addFlashAttribute("message", "Name successfully changed.");
         if (user.getRole_Id() == 3)
             return "redirect:/homeManager";
         if (user.getRole_Id() == 4)
@@ -106,8 +109,8 @@ public class HomeController {
         if (!NewPassword.equals(NewPasswordConfirm)) {
             redirectAttributes.addFlashAttribute("error", "The new password and confirmation do not match.");
             return "redirect:/employee/editProfile?employee_Id=" + employee_Id;
-        }
 
+        }
         user.setPassword(NewPassword);
         userService.saveUsers(user);
 

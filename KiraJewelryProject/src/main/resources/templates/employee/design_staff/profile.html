@@ -40,6 +40,7 @@
                         <span>Orders</span>
                     </a>
                 </li>
+
                 <li class="sidebar-item">
                     <a th:href="@{/viewAllDesign}" class="sidebar-link">
                         <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fdashboard.svg?alt=media&token=63cd9703-6839-4fa4-81e9-ae34f1806023}"
@@ -80,6 +81,9 @@
                 <div class="top-content">
                     <p>View and manage your personal details and contact information</p>
                     <a th:href="@{/employee/editProfile(employee_Id=${session.employeeId})}">Edit Your Profile</a>
+                </div>
+                <div th:if="${message}" class="alert alert-success" role="alert">
+                    <span th:text="${message}"></span>
                 </div>
                 <div class="bottom-content">
                     <div class="element">

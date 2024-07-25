@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.jewelry.KiraJewelry.models.Material;
@@ -49,4 +51,9 @@ public class MaterialService {
     public List<Material> findByName(String name) {
         return materialRepository.findByNameContaining(name);
     }
+
+    public Page<Material> getMaterialsPaginated(int page, int size) {
+        return materialRepository.findAll(PageRequest.of(page, size));
+    }
+
 }

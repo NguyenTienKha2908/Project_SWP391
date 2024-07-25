@@ -3,6 +3,7 @@ package com.jewelry.KiraJewelry.controllers.Material;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +30,16 @@ public class MaterialPriceListController {
     private MaterialService materialService;
 
     @GetMapping("/materialPriceLists")
-    public String viewMaterialPriceListPage(Model model) {
-        List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
-                .filter(mpl -> mpl.getMaterial().getStatus() == 1)
-                .collect(Collectors.toList());
-        model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
-        model.addAttribute("materialPriceList", new MaterialPriceList());
+    public String viewMaterialPriceListPage(
+                    @RequestParam(name = "page", defaultValue = "0") int page,
+                    @RequestParam(name = "size", defaultValue = "10") int size,
+                    Model model) {
+
+        Page<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getMaterialPriceListPaginated(page, size);
+
+        model.addAttribute("currentPage", activeMaterialPriceLists.getNumber());
+        model.addAttribute("totalPages", activeMaterialPriceLists.getTotalPages());
+        model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists.getContent());
         return "employee/manager/MaterialPriceList/material_price_lists";
     }
 
@@ -78,6 +83,10 @@ public class MaterialPriceListController {
             @RequestParam("price") double price,
             @RequestParam("id") int id,
             Model model) {
+        // if (result.hasErrors()) {
+        // model.addAttribute("materials", materialService.getAllActiveMaterials());
+        // return "MaterialPriceList/update_material_price_list";
+        // }
 
         MaterialPriceList materialPriceList = materialPriceListService.getMaterialPriceListById(id);
         materialPriceList.setPrice(price);
@@ -98,13 +107,16 @@ public class MaterialPriceListController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
-    @GetMapping("/viewCustomerMaterialPriceListPage")
-    public String viewCustomerMaterialPriceListPage(Model model) {
-        List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
-                .filter(mpl -> mpl.getMaterial().getStatus() == 1)
-                .collect(Collectors.toList());
-        model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
-        model.addAttribute("materialPriceList", new MaterialPriceList());
+
+        @GetMapping("/viewCustomerMaterialPriceListPage")
+    public String viewCustomerMaterialPriceListPage(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                    @RequestParam(name = "size", defaultValue = "10") int size,
+                                                    Model model) {
+        Page<MaterialPriceList> materialPriceListPage = materialPriceListService.getMaterialPriceListPaginated(page, size);
+
+        model.addAttribute("currentPage", materialPriceListPage.getNumber());
+        model.addAttribute("totalPages", materialPriceListPage.getTotalPages());
+        model.addAttribute("listMaterialPriceLists", materialPriceListPage.getContent());
         return "price/materialPriceList";
     }
 }

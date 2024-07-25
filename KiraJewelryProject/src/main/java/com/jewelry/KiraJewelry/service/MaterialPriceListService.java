@@ -5,10 +5,15 @@ import java.util.Optional;
 import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.repository.MaterialPriceListRepository;
+
+import javax.swing.plaf.PanelUI;
 
 @Service
 public class MaterialPriceListService {
@@ -51,4 +56,10 @@ public class MaterialPriceListService {
                 .max(Comparator.comparing(MaterialPriceList::getEff_Date))
                 .orElse(null); // or throw an exception if no entries are found
     }
+
+    public Page<MaterialPriceList> getMaterialPriceListPaginated(int page, int size) {
+        return materialPriceListRepository.findAll(PageRequest.of(page, size));
+    }
+
+
 }

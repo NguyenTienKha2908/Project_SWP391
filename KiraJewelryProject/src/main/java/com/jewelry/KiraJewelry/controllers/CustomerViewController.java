@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jewelry.KiraJewelry.dto.DiamondResponse;
 import com.jewelry.KiraJewelry.models.Category;
 import com.jewelry.KiraJewelry.models.Customer;
 import com.jewelry.KiraJewelry.models.Diamond;
+import com.jewelry.KiraJewelry.models.Employee;
 import com.jewelry.KiraJewelry.models.Material;
 import com.jewelry.KiraJewelry.models.MaterialPriceList;
 import com.jewelry.KiraJewelry.models.Product;
@@ -25,6 +28,7 @@ import com.jewelry.KiraJewelry.models.ProductionOrder;
 import com.jewelry.KiraJewelry.repository.MaterialRepository;
 import com.jewelry.KiraJewelry.service.CategoryService;
 import com.jewelry.KiraJewelry.service.CustomerService;
+import com.jewelry.KiraJewelry.service.EmployeeService;
 import com.jewelry.KiraJewelry.service.ImageService;
 import com.jewelry.KiraJewelry.service.MaterialPriceListService;
 import com.jewelry.KiraJewelry.service.MaterialService;
@@ -40,9 +44,11 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class CustomerViewController {
@@ -80,8 +86,8 @@ public class CustomerViewController {
     @Autowired
     private CustomerService customerService;
 
-    // @Autowired
-    // private EmployeeService employeeService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @Autowired
     ImageService imageService;
