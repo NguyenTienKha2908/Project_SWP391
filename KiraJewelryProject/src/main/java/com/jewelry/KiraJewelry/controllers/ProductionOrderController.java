@@ -200,64 +200,74 @@ public class ProductionOrderController {
     // @GetMapping("/viewIngredientsJSonPage")
     // @ResponseBody
     // public Map<String, Object> getIngredientsJSon(
-    //         @RequestParam("productionOrderId") String productionOrderId,
-    //         HttpSession session,
-    //         @RequestParam(value = "message", required = false) String message,
-    //         @RequestParam(value = "materialName", required = false) String materialName,
-    //         @RequestParam(value = "material", required = false) Material material,
-    //         @RequestParam(value = "materialPriceList", required = false) List<MaterialPriceList> materialPriceList,
-    //         @RequestParam(value = "materials", required = false) List<Material> materials,
-    //         @RequestParam(value = "messageDiamond", required = false) String messageDiamond,
-    //         @RequestParam(value = "diamondName", required = false) String diamondName,
-    //         @RequestParam(value = "diamondPriceList", required = false) List<DiamondPriceList> diamondPriceList,
-    //         @RequestParam(value = "diamonds", required = false) List<Diamond> diamonds) {
-    //     ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-    //     Product product = productionOrder.getProduct();
-    //     ProductMaterial oldProductMaterial = productMaterialService
-    //             .getProductMaterialByProductId(product.getProduct_Id());
-    //     if (oldProductMaterial != null) {
-    //         Material oldMaterial = materialService.getMaterialById(oldProductMaterial.getId().getMaterial_Id());
-    //         session.setAttribute("material", oldMaterial);
+    // @RequestParam("productionOrderId") String productionOrderId,
+    // HttpSession session,
+    // @RequestParam(value = "message", required = false) String message,
+    // @RequestParam(value = "materialName", required = false) String materialName,
+    // @RequestParam(value = "material", required = false) Material material,
+    // @RequestParam(value = "materialPriceList", required = false)
+    // List<MaterialPriceList> materialPriceList,
+    // @RequestParam(value = "materials", required = false) List<Material>
+    // materials,
+    // @RequestParam(value = "messageDiamond", required = false) String
+    // messageDiamond,
+    // @RequestParam(value = "diamondName", required = false) String diamondName,
+    // @RequestParam(value = "diamondPriceList", required = false)
+    // List<DiamondPriceList> diamondPriceList,
+    // @RequestParam(value = "diamonds", required = false) List<Diamond> diamonds) {
+    // ProductionOrder productionOrder =
+    // productionOrderService.getProductionOrderById(productionOrderId);
+    // Product product = productionOrder.getProduct();
+    // ProductMaterial oldProductMaterial = productMaterialService
+    // .getProductMaterialByProductId(product.getProduct_Id());
+    // if (oldProductMaterial != null) {
+    // Material oldMaterial =
+    // materialService.getMaterialById(oldProductMaterial.getId().getMaterial_Id());
+    // session.setAttribute("material", oldMaterial);
 
-    //     }
-    //     Diamond oldDiamond = diamondService.getDiamondByProductId(product.getProduct_Id());
-    //     List<Diamond> listDiamonds = diamondService.getAllDiamonds();
-
-    //     // Extract unique values for dropdowns
-    //     Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
-    //     Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
-    //     Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
-    //     Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
-
-    //     Map<String, Object> response = new HashMap<>();
-    //     response.put("listDiamonds", listDiamonds);
-    //     response.put("origins", origins);
-    //     response.put("colors", colors);
-    //     response.put("clarities", clarities);
-    //     response.put("cuts", cuts);
-
-    //     session.setAttribute("productionOrder", productionOrder);
-    //     session.setAttribute("product", product);
-    //     response.put("product", product);
-    //     response.put("productionOrder", productionOrder);
-    //     response.put("productionOrderId", productionOrderId);
-
-    //     session.setAttribute("oldDiamond", oldDiamond);
-    //     session.setAttribute("productMaterial", oldProductMaterial);
-
-    //     response.put("message", message);
-    //     response.put("materialName", materialName);
-    //     response.put("materialPriceList", materialPriceList);
-    //     response.put("materials", materials);
-    //     response.put("messageDiamond", messageDiamond);
-    //     response.put("diamondName", diamondName);
-    //     response.put("materialPriceList", diamondPriceList);
-    //     response.put("diamonds", diamonds);
-    //     response.put("material", material);
-
-    //     return response;
     // }
+    // Diamond oldDiamond =
+    // diamondService.getDiamondByProductId(product.getProduct_Id());
+    // List<Diamond> listDiamonds = diamondService.getAllDiamonds();
 
+    // // Extract unique values for dropdowns
+    // Set<String> origins =
+    // listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
+    // Set<String> colors =
+    // listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
+    // Set<String> clarities =
+    // listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
+    // Set<String> cuts =
+    // listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
+
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("listDiamonds", listDiamonds);
+    // response.put("origins", origins);
+    // response.put("colors", colors);
+    // response.put("clarities", clarities);
+    // response.put("cuts", cuts);
+
+    // session.setAttribute("productionOrder", productionOrder);
+    // session.setAttribute("product", product);
+    // response.put("product", product);
+    // response.put("productionOrder", productionOrder);
+    // response.put("productionOrderId", productionOrderId);
+
+    // session.setAttribute("oldDiamond", oldDiamond);
+    // session.setAttribute("productMaterial", oldProductMaterial);
+
+    // response.put("message", message);
+    // response.put("materialName", materialName);
+    // response.put("materialPriceList", materialPriceList);
+    // response.put("materials", materials);
+    // response.put("messageDiamond", messageDiamond);
+    // response.put("diamondName", diamondName);
+    // response.put("materialPriceList", diamondPriceList);
+    // response.put("diamonds", diamonds);
+    // response.put("material", material);
+
+    // return response;
+    // }
 
     @PostMapping("/updateSize")
     @ResponseBody
@@ -1366,7 +1376,13 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewRequestsforPR")
-    public String getAllRequestsForPR(Model model, HttpSession session) {
+    public String getAllRequestsForPR() {
+        return "employee/production_staff/viewRequest";
+    }
+
+    @GetMapping("/viewJSonRequestForPR")
+    @ResponseBody
+    public List<ProductionOrder> viewJSonRequestForPR(HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
         List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Confirmed");
         List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Completed");
@@ -1375,17 +1391,21 @@ public class ProductionOrderController {
         allOrders.addAll(createdOrders);
         allOrders.addAll(requestedOrders);
 
-        List<ProductionOrder> employeeOrders = allOrders.stream()
+        List<ProductionOrder> listRequests = allOrders.stream()
                 .filter(porder -> employeeID.equalsIgnoreCase(porder.getProduction_Staff()))
                 .collect(Collectors.toList());
 
-        model.addAttribute("listRequests", employeeOrders);
-        return "employee/production_staff/viewRequest";
+        return listRequests;
     }
 
     @GetMapping("/viewInformationRequestForPR")
-    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId, Model model)
-            throws IOException {
+    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId) {
+        return "employee/production_staff/viewInforRequest";
+    }
+
+    @GetMapping("/viewInformationRequestJSForPR")
+    @ResponseBody
+    public Map<String, Object> viewInformationRequestJSForPR(@RequestParam("productionOrderId") String productionOrderId) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         List<String> imagesByCustomerId = null;
         Map<String, List<String>> imagesByStaffId = new HashMap<>();
@@ -1397,7 +1417,9 @@ public class ProductionOrderController {
         try {
             imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
                     productionOrder.getProduction_Order_Id());
-            imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
+            if (employeeDE != null && !employeeDE.getFull_Name().equals("None")) {
+                imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
+            }
             imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1410,27 +1432,17 @@ public class ProductionOrderController {
         Diamond diamond = diamondService.getDiamondByProductId(product.getProduct_Id());
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
-        String cateUrl = imageService
-                .getImgByCateogryID(String.valueOf(product.getCategory().getCategory_Id()));
-        String materialUrl = imageService
-                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
-        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+        Map<String, Object> response = new HashMap<>();
+        response.put("productMaterial", productMaterial);
+        response.put("material", material);
+        response.put("diamond", diamond);
 
-        model.addAttribute("productMaterial", productMaterial);
-        model.addAttribute("material", material);
-        model.addAttribute("diamond", diamond);
-        model.addAttribute("cateUrl", cateUrl);
-        model.addAttribute("materialUrl", materialUrl);
-        model.addAttribute("diamondUrl", diamondUrl);
-
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("imagesByPRId", imagesByPRId);
-        model.addAttribute("customer", customer);
-        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("listRequests", productionOrder);
-        model.addAttribute("employee", employeePR);
-        return "employee/production_staff/viewInforRequest";
+        response.put("imagesByStaffId", imagesByStaffId);
+        response.put("imagesByPRId", imagesByPRId);
+        response.put("imagesByCustomerId", imagesByCustomerId);
+        response.put("listRequests", productionOrder);
+        response.put("employee", employeePR);
+        return response;
     }
 
     @PostMapping("/uploadPhotoForPR")

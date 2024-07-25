@@ -234,7 +234,10 @@ public class OrderController {
         String customerId = (String) session.getAttribute("customerId");
         Customer customer = customerService.getCustomerByCustomerId(customerId);
 
-        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized");
+        List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized")
+            .stream()
+            .filter(order -> order.getCustomer() != null)
+            .collect(Collectors.toList());
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
         List<ProductionOrder> completeOrders = productionOrderService.getProductionOrderByStatus("Completed");
