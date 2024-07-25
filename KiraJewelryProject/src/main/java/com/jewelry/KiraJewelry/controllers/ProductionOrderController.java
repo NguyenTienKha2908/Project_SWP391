@@ -1532,8 +1532,12 @@ public class ProductionOrderController {
         try {
             imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
                     productionOrder.getProduction_Order_Id());
-            imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
-            imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
+            if (employeeDE != null) {
+                imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
+            }
+            if (employeePR != null) {
+                imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }

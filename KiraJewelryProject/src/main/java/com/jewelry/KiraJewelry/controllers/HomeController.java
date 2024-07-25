@@ -125,4 +125,17 @@ public class HomeController {
         } else
             return "redirect:/homeProductionStaff";
     }
+    @GetMapping("/homePages")
+    public String home(HttpSession session, Model model) {
+        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
+        User user = employee.getUser();
+        if (user.getRole_Id() == 3)
+            return "redirect:/homeManager";
+        if (user.getRole_Id() == 4)
+            return "redirect:/homeSalesStaff";
+        if (user.getRole_Id() == 5) {
+            return "redirect:/homeDesignStaff";
+        } else
+            return "redirect:/homeProductionStaff";
+    }
 }
