@@ -188,7 +188,8 @@ public class OrderController {
         Map<String, List<String>> imagesByPRId = new HashMap<>();
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
         Product product = productService.getProductById(productionOrder.getProduct().getProduct_Id());
-        Employee employee = employeeService.getEmployeeById(productionOrder.getDesign_Staff());
+        String designStaffId = productionOrder.getDesign_Staff();
+        Employee employee = employeeService.getEmployeeById(designStaffId);
 
         ProductMaterial productMaterial = productMaterialService
                 .getProductMaterialByProduct_id(product.getProduct_Id());
@@ -201,10 +202,17 @@ public class OrderController {
                 .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
         String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
-        if (employee != null) {
+        if (employee == null) {
+            if (designStaffId.equalsIgnoreCase("None")) {
+                try {
+                    imagesByPRId = imageService.getImgOrderedByPRStaffId(productionOrder.getProduction_Staff());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } else {
             try {
                 imagesByStaffId = imageService.getImgOrderedByStaffId(employee.getEmployee_Id());
-                imagesByPRId = imageService.getImgOrderedByPRStaffId(productionOrder.getProduction_Staff());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -237,9 +245,9 @@ public class OrderController {
         Customer customer = customerService.getCustomerByCustomerId(customerId);
 
         List<ProductionOrder> customizedOrders = productionOrderService.getProductionOrderByStatus("Customized")
-            .stream()
-            .filter(order -> order.getCustomer() != null)
-            .collect(Collectors.toList());
+                .stream()
+                .filter(order -> order.getCustomer() != null)
+                .collect(Collectors.toList());
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
         List<ProductionOrder> completeOrders = productionOrderService.getProductionOrderByStatus("Completed");
@@ -286,7 +294,6 @@ public class OrderController {
         return "customer/customizeJewelry/orderSummary";
     }
 
-    
     @GetMapping("/userHistoryOrders")
     public String userHistoryOrders(
             @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,

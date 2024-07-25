@@ -8,176 +8,6 @@
     <title>Production Staff Page</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
-    <link rel="stylesheet" th:href="@{/css/spinner.css}">
-</head>
-
-<body>
-    <div class="lds-roller" id="spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <div class="wrapper">
-        <aside id="sidebar">
-            <div class="d-flex">
-                <div class="sidebar-logo">
-                    <a href="#">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2FlogoWhite.svg?alt=media&token=dcc77916-b3e2-4375-a549-c8aa9cb1f706}"
-                            alt="logo">
-                        <span>KIRA JEWELRY</span>
-                    </a>
-                </div>
-            </div>
-            <ul class="sidebar-nav">
-                <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/homeProductionStaff}'|"
-                        class="sidebar-link">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fprofile.svg?alt=media&token=b7ae12eb-bbf2-4955-8fa4-d09e008098a5}"
-                            alt="profile">
-                        <span>Profile</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a th:if="${session.employeeName != null}" th:onclick="|location.href='@{/viewRequestsforPR}'|"
-                        class="active-link sidebar-link">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Frequest.svg?alt=media&token=8af8e599-1257-42da-9698-92dab621d2b6}"
-                            alt="orders">
-                        <span>Orders</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item">
-                    <a th:href="@{/viewAllPhotos}" class="sidebar-link">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fdashboard.svg?alt=media&token=63cd9703-6839-4fa4-81e9-ae34f1806023}"
-                            alt="dashboard">
-                        <span>All Photos</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Fmail.svg?alt=media&token=6acdd8ff-9718-4afa-97cc-019be10ed134}"
-                            alt="mail">
-                        <span>Mails</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <a th:href="@{/logout}" class="sidebar-link">
-                    <img th:src="@{https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/Header%2FIcon%2Flogout.svg?alt=media&token=a42d85ca-8e13-44a6-a054-a98137802c4e}"
-                        alt="Logout">
-                    <span>Logout</span>
-                </a>
-            </div>
-        </aside>
-        <div class="main">
-            <div class="out">
-                <div class="top-header">
-                    <div class="first-ele">
-                        <img th:src="@{/img/person/profile1.svg}" alt="person">
-                        <span th:if="${session.employeeName != null}">
-                            Welcome, <span th:text="${session.employeeName}"></span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="content">
-                <h1>All Customer Orders</h1>
-                <hr>
-                <div class="container">
-                    <table class="table" id="request-table">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Date</th>
-                                <th>Customer Name</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-
-<script>
-    const currentUrl = window.location.href;
-    console.log(currentUrl);
-
-    async function getapi(url) {
-        try {
-            const response = await fetch(url);
-            if (!response) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            fetch('/viewJSonRequestForPR')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    const tableBody = document.getElementById('request-table').getElementsByTagName('tbody')[0];
-                    tableBody.innerHTML = '';
-
-                    data.forEach(request => {
-                        const row = tableBody.insertRow();
-
-                        const cell1 = row.insertCell(0);
-                        cell1.textContent = request.production_Order_Id;
-
-                        const cell2 = row.insertCell(1);
-                        cell2.textContent = new Date(request.date).toLocaleDateString('en-CA');
-
-                        const cell3 = row.insertCell(2);
-                        cell3.textContent = request.customer.full_Name;
-
-                        const cell4 = row.insertCell(3);
-                        cell4.textContent = request.status;
-
-                        const cell5 = row.insertCell(4);
-                        const viewButton = document.createElement('a');
-                        viewButton.href = `/viewInformationRequestForPR?productionOrderId=${request.production_Order_Id}`;
-                        viewButton.innerHTML = '<button class="text-decoration-none" type="button">View</button>';
-                        cell5.appendChild(viewButton);
-
-                    });
-
-                    hideSpinner();
-                })
-                .catch(error => {
-                    console.log('Error fetching table ', error);
-                })
-
-        } catch (error) {
-            console.log('Error fetching table ', error);
-        }
-    }
-
-    getapi(currentUrl);
-    function hideSpinner() {
-        const spinner = document.getElementById('spinner');
-        if (spinner) {
-            spinner.style.display = 'none';
-        }
-    }
-</script>
-
-</html><!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production Staff Page</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
 </head>
 
 <body>
@@ -260,11 +90,11 @@
                         </div>
                     </div>
                     <table class="table">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>Order ID</th>
                                 <th>Date</th>
-                                <th>Customer ID</th>
+                                <th>Customer Name</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -273,16 +103,13 @@
                             <tr th:each="productionOrder : ${pageOrders.content}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
-                                <td th:text="${productionOrder.customer.customer_Id}"></td>
+                                <td th:text="${productionOrder.customer.full_Name}"></td>
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
                                         <a class="mx-0"
                                             th:href="@{/viewInformationRequestForPR(productionOrderId=${productionOrder.production_Order_Id})}">
                                             <button type="button">View</button>
-                                        </a>
-                                        <a
-                                            th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
                                         </a>
                                     </div>
 

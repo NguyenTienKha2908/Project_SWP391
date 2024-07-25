@@ -85,33 +85,12 @@ public class ProductionOrderController {
     private ProductService productService;
 
     // Sales Staff
-
-    @GetMapping("/getRequest")
-    @ResponseBody
-    public List<ProductionOrder> getAllRequests(HttpSession session) {
-        String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Requested",
-                employeeID);
-        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(RJ)",
-                employeeID);
-        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId(
-                "Quoted(CRJ)",
-                employeeID);
-        List<ProductionOrder> listRequests = new ArrayList<>();
-        listRequests.addAll(productionOrders);
-        listRequests.addAll(productionOrders2);
-        listRequests.addAll(productionOrders3);
-
-        return listRequests;
-    }
-
     @GetMapping("/viewRequestsforSS")
     public String getAllRequests(
             @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(defaultValue = "0") int page,
             Model model, HttpSession session) {
-        String employeeId = (String) session.getAttribute("employeeId");
-
+                
         List<ProductionOrder> combinedList = new ArrayList<>();
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Requested", sortDirection));
         combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
@@ -138,6 +117,27 @@ public class ProductionOrderController {
         model.addAttribute("sortDirection", sortDirection);
 
         return "employee/sales_staff/viewRequest";
+    }
+
+    @GetMapping("/viewInformationRequestForSS")
+    public String getRequestsForSS(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        List<String> imagesByCustomerId = null;
+
+        Employee employee = employeeService.getEmployeeById(productionOrder.getSales_Staff());
+        Customer customer = customerService.getCustomerByCustomerId(productionOrder.getCustomer().getCustomer_Id());
+        try {
+            imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
+                    productionOrder.getProduction_Order_Id());
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        model.addAttribute("customer", customer);
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
+        model.addAttribute("listRequests", productionOrder);
+        model.addAttribute("employee", employee);
+        return "employee/sales_staff/viewInforRequest";
     }
 
     @GetMapping("/getInfoRequestForSS")

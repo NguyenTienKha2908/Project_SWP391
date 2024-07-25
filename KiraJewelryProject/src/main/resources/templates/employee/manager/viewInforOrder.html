@@ -144,13 +144,12 @@
 
                 </div>
             </div>
-            <a class="text-decoration-none ms-4 me-4 text-dark " th:href="@{/viewordersforManager}">Back to Order
+            <a class="mx-5 my-4 btn btn-secondary" th:href="@{/viewordersforManager}">Back to Order
                 list</a>
-            <div class="content">
+            <div class="content mt-0">
                 <h1>View Information Orders</h1>
                 <hr>
                 <div class="container">
-
                     <div th:if="${productionOrder != null}">
                         <div class="wrapper-order row justify-content-md-center mx-auto my-5">
                             <div class="col-md-12">
@@ -224,9 +223,9 @@
                             </div>
                         </div>
 
-                        <div class="row justify-content-md-center mx-auto my-5">
+                        <div class="row justify-content-md-center mx-auto my-3">
                             <div class="wrapper-order col-md-12">
-                                <h3 class="my-3">Customer Information</h3>
+                                <h3>Customer Information</h3>
                                 <div class="information">
                                     <h2>Customer Name</h2>
                                     <p th:text="${productionOrder.customer.full_Name}"></p>

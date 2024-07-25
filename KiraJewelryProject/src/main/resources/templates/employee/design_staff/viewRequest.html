@@ -90,11 +90,11 @@
                         </div>
                     </div>
                     <table class="table">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>Order ID</th>
                                 <th>Date</th>
-                                <th>Customer ID</th>
+                                <th>Customer Name</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -103,16 +103,13 @@
                             <tr th:each="productionOrder : ${pageOrders}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
-                                <td th:text="${productionOrder.customer.customer_Id}"></td>
+                                <td th:text="${productionOrder.customer.full_Name}"></td>
                                 <td th:text="${productionOrder.status}"></td>
                                 <td>
                                     <div class="group-link d-flex align-content-center">
                                         <a class="mx-0"
                                             th:href="@{/viewInformationRequestForDE(productionOrderId=${productionOrder.production_Order_Id})}">
                                             <button type="button">View</button>
-                                        </a>
-                                        <a
-                                            th:href="@{/prepareQuotePage(productionOrderId=${productionOrder.production_Order_Id})}">
                                         </a>
                                     </div>
 

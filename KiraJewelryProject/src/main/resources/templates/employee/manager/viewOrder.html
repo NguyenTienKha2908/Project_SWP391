@@ -133,7 +133,6 @@
                             Welcome, <span th:text="${session.employeeName}"></span>
                         </span>
                     </div>
-                    <img th:src="@{/img/icon-fig/notification.svg}" alt="notification">
                 </div>
             </div>
             <div class="content">
@@ -152,7 +151,7 @@
                         </div>
                     </div>
                     <table class="table">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>Order ID</th>
                                 <th>Date</th>
@@ -176,7 +175,7 @@
                                     <a href="#" class="btn btn-danger my-5" data-bs-toggle="modal" data-bs-target="#Reject">Delete</a>
                                 </td>
                                 <div class="modal fade" id="Reject">
-                                    <div class="modal-dialog modal-xl">
+                                    <div class="modal-dialog modal-md">
                                         <div class="modal-content">
                                             <!-- Modal Header -->
                                             <div class="modal-header">
