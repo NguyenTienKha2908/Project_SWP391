@@ -140,7 +140,7 @@ public class CustomerViewController {
         newProductionOrder.setDate(new Date());
         newProductionOrder.setCustomer(customer);
         newProductionOrder.setSales_Staff("SS001"); // Default sales staff ID
-        newProductionOrder.setDesign_Staff(null); // Default design staff ID
+        newProductionOrder.setDesign_Staff("None"); // Default design staff ID
         newProductionOrder.setStatus("C in Category");
         newProductionOrder.setProduct(productService.getProductById(newProductId));
         productionOrderService.saveProductionOrder(newProductionOrder);

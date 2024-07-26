@@ -73,7 +73,7 @@ public class DiamondController {
     public String saveDiamond(@ModelAttribute("diamond") @Valid Diamond diamond,
             BindingResult result,
             Model model,
-            @RequestParam("img_Url") MultipartFile file,
+            @RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             List<String> origins = diamondPriceListService.getAllOrigins();
@@ -110,7 +110,7 @@ public class DiamondController {
         diamondService.saveDiamond(diamond);
         redirectAttributes.addAttribute("message",
                 "Diamond " + diamond.getDia_Code() + " has been added successfully.");
-        return "redirect:/diamonds?";
+        return "redirect:/diamonds?success";
     }
 
     @GetMapping("/showFormForUpdateDiamond/{id}")

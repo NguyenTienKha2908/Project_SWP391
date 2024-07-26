@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
 import java.util.List;
 import com.jewelry.KiraJewelry.models.ProductionOrder;
 
@@ -24,8 +25,14 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
         List<ProductionOrder> findProductionOrderByStatusAndDEId(@Param("status") String status,
                         @Param("design_Staff_Id") String design_Staff_Id);
 
-        @Query("SELECT p FROM ProductionOrder p WHERE p.status = :status ")
+        @Query("SELECT p FROM ProductionOrder p WHERE p.status = :status ORDER BY p.date DESC")
         List<ProductionOrder> findProductionOrderByStatus(@Param("status") String status);
+
+        @Query("SELECT p FROM ProductionOrder p WHERE p.status = :status ORDER BY p.date DESC")
+        List<ProductionOrder> findProductionOrderByStatusDESC(@Param("status") String status);
+
+        @Query("SELECT p FROM ProductionOrder p WHERE p.status = :status ORDER BY p.date ASC")
+        List<ProductionOrder> findProductionOrderByStatusASC(@Param("status") String status);
 
         @Query("SELECT p FROM ProductionOrder p ORDER BY p.production_Order_Id DESC")
         List<ProductionOrder> findTopByOrderByProduction_Order_IdDesc(Pageable pageable);
@@ -50,4 +57,13 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
         double sumTotalAmountByLastMonth();
 
         List<ProductionOrder> findAll();
+
+        @Query("SELECT p FROM ProductionOrder p WHERE p.design_Staff = :design_Staff_Id ORDER BY p.production_Order_Id")
+        List<ProductionOrder> getProductionOrderByDEId(
+                        @Param("design_Staff_Id") String design_Staff_Id);
+
+        @Query("SELECT p FROM ProductionOrder p WHERE p.production_Staff = :production_Staff_Id ORDER BY p.production_Order_Id")
+        List<ProductionOrder> getProductionOrderByPRId(
+                        @Param("production_Staff_Id") String production_Staff_Id);
+
 }

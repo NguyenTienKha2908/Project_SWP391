@@ -8,20 +8,9 @@
     <title>Sales Staff Page</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/staff/manager.css}">
-    <link rel="stylesheet" th:href="@{/css/spinner.css}">
 </head>
 
 <body>
-    <div class="lds-roller" id="spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
     <div class="wrapper">
         <aside id="sidebar">
             <div class="d-flex">
@@ -89,7 +78,18 @@
                 <h1>All Customer Orders</h1>
                 <hr>
                 <div class="container">
-                    <table class="table" id="order-table">
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort by Date
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#" onclick="sortOrders('ASC')">Ascending</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="sortOrders('DESC')">Descending</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <table class="table">
                         <thead class="table-dark">
                             <tr>
                                 <th>Order ID</th>
@@ -100,72 +100,63 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr th:each="productionOrder : ${pageOrders}">
+                                <td th:text="${productionOrder.production_Order_Id}"></td>
+                                <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${productionOrder.customer.full_Name}"></td>
+                                <td th:text="${productionOrder.status}"></td>
+                                <td>
+                                    <div class="group-link d-flex align-content-center">
+                                        <a class="border-0 mx-0"
+                                            th:href="@{/viewInOrderForSS(productionOrderId=${productionOrder.production_Order_Id})}">
+                                            <button class="text-decoration-none" type="button">View</button>
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
+                    <ul class="pagination" style="display: inline-flex;">
+                        <li th:classappend="${pageOrders.hasPrevious()} ? '' : 'disabled'">
+                            <a th:href="@{/viewOrdersforSalesStaff(sort=${sortDirection}, page=${pageOrders.number - 1})}">Previous</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, pageOrders.totalPages)}" th:classappend="${i == pageOrders.number + 1} ? 'active-pg'">
+                            <a th:href="@{/viewOrdersforSalesStaff(sort=${sortDirection}, page=${i - 1})}" th:text="${i}"></a>
+                        </li>
+                        <li th:classappend="${pageOrders.hasNext()} ? '' : 'disabled'">
+                            <a th:href="@{/viewOrdersforSalesStaff(sort=${sortDirection}, page=${pageOrders.number + 1})}">Next</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        function sortOrders(order) {
+            var form = document.createElement('form');
+            form.method = 'GET';
+            form.action = '/viewOrdersforSalesStaff';
+            
+            var sortInput = document.createElement('input');
+            sortInput.type = 'hidden';
+            sortInput.name = 'sort';
+            sortInput.value = order;
+            form.appendChild(sortInput);
+    
+            var pageInput = document.createElement('input');
+            pageInput.type = 'hidden';
+            pageInput.name = 'page';
+            pageInput.value = '0';
+            form.appendChild(pageInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+     <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js}"
+     integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+     crossorigin="anonymous"></script>
 </body>
-
-<script>
-    const currentUrl = window.location.href;
-    console.log(currentUrl);
-
-    async function getapi(url) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            fetch('/getAllJSonOrdersForSalesStaff')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    const tableBody = document.getElementById('order-table').getElementsByTagName('tbody')[0];
-                    tableBody.innerHTML = '';
-
-                    data.forEach(request => {
-                        const row = tableBody.insertRow();
-
-                        const cell1 = row.insertCell(0);
-                        cell1.textContent = request.production_Order_Id;
-
-                        const cell2 = row.insertCell(1);
-                        cell2.textContent = new Date(request.date).toLocaleDateString('en-CA');
-
-                        const cell3 = row.insertCell(2);
-                        cell3.textContent = request.customer.full_Name;
-
-                        const cell4 = row.insertCell(3);
-                        cell4.textContent = request.status;
-
-                        const cell5 = row.insertCell(4);
-                        const viewButton = document.createElement('a');
-                        viewButton.href = `/viewInOrderForSS?productionOrderId=${request.production_Order_Id}`;
-                        viewButton.innerHTML = '<button class="text-decoration-none" type="button">View</button>';
-                        cell5.appendChild(viewButton);
-                    });
-                    hideSpinner();
-                })
-                .catch(error => {
-                    console.error('Error fetching table', error);
-                });
-
-        } catch (error) {
-            console.error('Error fetching data', error);
-        }
-    }
-
-
-    getapi(currentUrl);
-    function hideSpinner() {
-        const spinner = document.getElementById('spinner');
-        if (spinner) {
-            spinner.style.display = 'none';
-        }
-    }
-</script>
 
 </html>

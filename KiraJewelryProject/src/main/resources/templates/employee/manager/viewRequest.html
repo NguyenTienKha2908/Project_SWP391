@@ -150,6 +150,17 @@
                 <hr>
 
                 <div class="container">
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sort by Date
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#" onclick="sortOrders('ASC')">Ascending</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="sortOrders('DESC')">Descending</a></li>
+                            </ul>
+                        </div>
+                    </div>
                     <table class="table">
                         <thead class="table-dark">
                             <tr>
@@ -160,7 +171,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="productionOrder : ${listRequests}">
+                            <tr th:each="productionOrder : ${pageOrders.content}">
                                 <td th:text="${productionOrder.production_Order_Id}"></td>
                                 <td th:text="${#dates.format(productionOrder.date, 'yyyy-MM-dd')}"></td>
                                 <td th:text="${productionOrder.status}"></td>
@@ -175,11 +186,43 @@
                             </tr>
                         </tbody>
                     </table>
+                    <ul class="pagination" style="display: inline-flex;">
+                        <li th:classappend="${pageOrders.hasPrevious()} ? '' : 'disabled'">
+                            <a th:href="@{/viewRequestsforManager(sort=${sortDirection}, page=${pageOrders.number - 1})}">Previous</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, pageOrders.totalPages)}" th:classappend="${i == pageOrders.number + 1} ? 'active-pg'">
+                            <a th:href="@{/viewRequestsforManager(sort=${sortDirection}, page=${i - 1})}" th:text="${i}"></a>
+                        </li>
+                        <li th:classappend="${pageOrders.hasNext()} ? '' : 'disabled'">
+                            <a th:href="@{/viewRequestsforManager(sort=${sortDirection}, page=${pageOrders.number + 1})}">Next</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-
+    <script th:inline="javascript">
+        function sortOrders(order) {
+            var form = document.createElement('form');
+            form.method = 'GET';
+            form.action = /*[[@{/viewRequestsforManager}]]*/ '/viewRequestsforManager';
+            
+            var sortInput = document.createElement('input');
+            sortInput.type = 'hidden';
+            sortInput.name = 'sort';
+            sortInput.value = order;
+            form.appendChild(sortInput);
+    
+            var pageInput = document.createElement('input');
+            pageInput.type = 'hidden';
+            pageInput.name = 'page';
+            pageInput.value = '0';
+            form.appendChild(pageInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const urlParams = new URLSearchParams(window.location.search);

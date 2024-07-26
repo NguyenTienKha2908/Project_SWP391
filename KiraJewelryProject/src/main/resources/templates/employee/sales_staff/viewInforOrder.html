@@ -83,8 +83,8 @@
                     </div>
                 </div>
             </div>
-            <a class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-secondary" th:href="@{/viewRequestsforSS}">
-                Back to request list</a>
+            <a class="text-decoration-none ms-4 me-4 my-3 text-white btn btn-secondary" th:href="@{/viewOrdersforSalesStaff}">
+                Back to order list</a>
             <div class="content">
                 <div class="container">
                     <div th:if="${productionOrder != null}">
@@ -197,7 +197,7 @@
                                         <button type="submit" class="btn btn-secondary mx-4">Confirm</button>
                                     </form>
                                     <form th:if="${productionOrder.status == 'Deposit In Confirm For Customized Order'}"
-                                        th:action="@{/confirmCustomizedDepositBySS}" method="post">
+                                        th:action="@{/confirmDepositCustomizedBySS}" method="post">
                                         <input type="hidden" name="productionOrderId"
                                             th:value="${productionOrder.production_Order_Id}" />
                                         <button type="submit" class="btn btn-secondary mx-4">Confirm</button>

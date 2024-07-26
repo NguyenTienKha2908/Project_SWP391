@@ -19,22 +19,38 @@
   <!-- Main contents -->
   <div class="container my-5" style="width:80%;">
     <div class="table-responsive">
+      <h3 th:text="'The Material Price is Updated To ' + ${formattedDate}" class="text-center my-3"></h3>
       <table class="table table-hover">
         <thead>
           <tr>
             <th>Material</th>
             <th>Price</th>
-            <th>Effective Date</th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="materialPriceList : ${listMaterialPriceLists}">
             <td th:text="${materialPriceList.material.material_Name}"></td>
             <td th:text="${materialPriceList.price}"></td>
-            <td th:text="${#dates.format(materialPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div>
+      <ul class="pagination">
+        <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+          <a th:href="@{/viewCustomerMaterialPriceListPage(page=${currentPage - 1}, size=${size})}"
+            class="page-link">Previous</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+          th:class="${i-1 == currentPage} ? 'page-item active' : 'page-item'">
+          <a th:href="@{/viewCustomerMaterialPriceListPage(page=${i - 1}, size=${size})}" class="page-link"
+            th:text="${i}"></a>
+        </li>
+        <li th:class="${currentPage + 1 >= totalPages} ? 'page-item disabled' : 'page-item'">
+          <a th:href="@{/viewCustomerMaterialPriceListPage(page=${currentPage + 1}, size=${size})}"
+            class="page-link">Next</a>
+        </li>
+      </ul>
     </div>
 
   </div>

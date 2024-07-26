@@ -29,7 +29,8 @@ public class BlogController {
 
     @Autowired
     private BlogService blogService;
-
+    
+    @GetMapping("/blogs")
     public String viewBlogsPage(Model model) {
         List<Blog> listBlogs = blogService.getAllBlogs();
         model.addAttribute("listBlogs", listBlogs);

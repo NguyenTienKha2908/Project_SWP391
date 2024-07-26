@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,8 @@ import com.jewelry.KiraJewelry.service.MaterialPriceListService;
 import com.jewelry.KiraJewelry.service.MaterialService;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -30,10 +33,21 @@ public class MaterialPriceListController {
     private MaterialService materialService;
 
     @GetMapping("/materialPriceLists")
-    public String viewMaterialPriceListPage(Model model) {
-        List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
-                .filter(mpl -> mpl.getMaterial().getStatus() == 1)
-                .collect(Collectors.toList());
+    public String viewMaterialPriceListPage(
+                    @RequestParam(name = "page", defaultValue = "0") int page,
+                    @RequestParam(name = "size", defaultValue = "10") int size,
+                    Model model) {
+
+        Page<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getMaterialPriceListPaginated(page, size);
+
+        model.addAttribute("currentPage", activeMaterialPriceLists.getNumber());
+        model.addAttribute("totalPages", activeMaterialPriceLists.getTotalPages());
+        model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists.getContent());
+        
+        LocalDateTime effDateTime = activeMaterialPriceLists.getContent().get(0).getEff_Date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
+        String formattedDate = effDateTime.format(formatter);
+        model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
         model.addAttribute("materialPriceList", new MaterialPriceList());
         return "employee/manager/MaterialPriceList/material_price_lists";
@@ -100,12 +114,18 @@ public class MaterialPriceListController {
     }
 
     @GetMapping("/viewCustomerMaterialPriceListPage")
-    public String viewCustomerMaterialPriceListPage(Model model, HttpServletRequest request) {
-        List<MaterialPriceList> activeMaterialPriceLists = materialPriceListService.getAllPriceLists().stream()
-                .filter(mpl -> mpl.getMaterial().getStatus() == 1)
-                .collect(Collectors.toList());
-        model.addAttribute("listMaterialPriceLists", activeMaterialPriceLists);
-        model.addAttribute("materialPriceList", new MaterialPriceList());
+    public String viewCustomerMaterialPriceListPage(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                    @RequestParam(name = "size", defaultValue = "10") int size,
+                                                    Model model, HttpServletRequest request) {
+        Page<MaterialPriceList> materialPriceListPage = materialPriceListService.getMaterialPriceListPaginated(page, size);
+
+        model.addAttribute("currentPage", materialPriceListPage.getNumber());
+        model.addAttribute("totalPages", materialPriceListPage.getTotalPages());
+        model.addAttribute("listMaterialPriceLists", materialPriceListPage.getContent());
+        LocalDateTime effDateTime = materialPriceListPage.getContent().get(0).getEff_Date();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm yyyy-MM-dd");
+        String formattedDate = effDateTime.format(formatter);
+        model.addAttribute("formattedDate", formattedDate);
         model.addAttribute("requestURI", request.getRequestURI());
         return "price/materialPriceList";
     }

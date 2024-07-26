@@ -9,6 +9,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,33 +85,58 @@ public class ProductionOrderController {
     private ProductService productService;
 
     // Sales Staff
-
     @GetMapping("/viewRequestsforSS")
-    public String getAllRequestsForSS(Model model, HttpSession session) {
+    public String getAllRequests(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+
+        List<ProductionOrder> combinedList = new ArrayList<>();
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Requested", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(CRJ)", sortDirection));
+
+        // Sort the combined list
+        combinedList.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, combinedList.size());
+        int end = Math.min((start + 2), combinedList.size());
+        List<ProductionOrder> paginatedList = combinedList.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                combinedList.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/sales_staff/viewRequest";
-    }
-
-    @GetMapping("/getRequest")
-    @ResponseBody
-    public List<ProductionOrder> getAllRequests(HttpSession session) {
-        String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndId("Requested",
-                employeeID);
-        List<ProductionOrder> productionOrders2 = productionOrderService.getProductionOrderByStatusAndId("Quoted(RJ)",
-                employeeID);
-        List<ProductionOrder> productionOrders3 = productionOrderService.getProductionOrderByStatusAndId(
-                "Quoted(CRJ)",
-                employeeID);
-        List<ProductionOrder> listRequests = new ArrayList<>();
-        listRequests.addAll(productionOrders);
-        listRequests.addAll(productionOrders2);
-        listRequests.addAll(productionOrders3);
-
-        return listRequests;
     }
 
     @GetMapping("/viewInformationRequestForSS")
     public String getRequestsForSS(@RequestParam("productionOrderId") String productionOrderId, Model model) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        List<String> imagesByCustomerId = null;
+
+        Employee employee = employeeService.getEmployeeById(productionOrder.getSales_Staff());
+        Customer customer = customerService.getCustomerByCustomerId(productionOrder.getCustomer().getCustomer_Id());
+        try {
+            imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
+                    productionOrder.getProduction_Order_Id());
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        model.addAttribute("customer", customer);
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
+        model.addAttribute("listRequests", productionOrder);
+        model.addAttribute("employee", employee);
         return "employee/sales_staff/viewInforRequest";
     }
 
@@ -196,78 +225,6 @@ public class ProductionOrderController {
 
         return "employee/sales_staff/findIngredientsPage";
     }
-
-    // @GetMapping("/viewIngredientsJSonPage")
-    // @ResponseBody
-    // public Map<String, Object> getIngredientsJSon(
-    // @RequestParam("productionOrderId") String productionOrderId,
-    // HttpSession session,
-    // @RequestParam(value = "message", required = false) String message,
-    // @RequestParam(value = "materialName", required = false) String materialName,
-    // @RequestParam(value = "material", required = false) Material material,
-    // @RequestParam(value = "materialPriceList", required = false)
-    // List<MaterialPriceList> materialPriceList,
-    // @RequestParam(value = "materials", required = false) List<Material>
-    // materials,
-    // @RequestParam(value = "messageDiamond", required = false) String
-    // messageDiamond,
-    // @RequestParam(value = "diamondName", required = false) String diamondName,
-    // @RequestParam(value = "diamondPriceList", required = false)
-    // List<DiamondPriceList> diamondPriceList,
-    // @RequestParam(value = "diamonds", required = false) List<Diamond> diamonds) {
-    // ProductionOrder productionOrder =
-    // productionOrderService.getProductionOrderById(productionOrderId);
-    // Product product = productionOrder.getProduct();
-    // ProductMaterial oldProductMaterial = productMaterialService
-    // .getProductMaterialByProductId(product.getProduct_Id());
-    // if (oldProductMaterial != null) {
-    // Material oldMaterial =
-    // materialService.getMaterialById(oldProductMaterial.getId().getMaterial_Id());
-    // session.setAttribute("material", oldMaterial);
-
-    // }
-    // Diamond oldDiamond =
-    // diamondService.getDiamondByProductId(product.getProduct_Id());
-    // List<Diamond> listDiamonds = diamondService.getAllDiamonds();
-
-    // // Extract unique values for dropdowns
-    // Set<String> origins =
-    // listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
-    // Set<String> colors =
-    // listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
-    // Set<String> clarities =
-    // listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
-    // Set<String> cuts =
-    // listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
-
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("listDiamonds", listDiamonds);
-    // response.put("origins", origins);
-    // response.put("colors", colors);
-    // response.put("clarities", clarities);
-    // response.put("cuts", cuts);
-
-    // session.setAttribute("productionOrder", productionOrder);
-    // session.setAttribute("product", product);
-    // response.put("product", product);
-    // response.put("productionOrder", productionOrder);
-    // response.put("productionOrderId", productionOrderId);
-
-    // session.setAttribute("oldDiamond", oldDiamond);
-    // session.setAttribute("productMaterial", oldProductMaterial);
-
-    // response.put("message", message);
-    // response.put("materialName", materialName);
-    // response.put("materialPriceList", materialPriceList);
-    // response.put("materials", materials);
-    // response.put("messageDiamond", messageDiamond);
-    // response.put("diamondName", diamondName);
-    // response.put("materialPriceList", diamondPriceList);
-    // response.put("diamonds", diamonds);
-    // response.put("material", material);
-
-    // return response;
-    // }
 
     @PostMapping("/updateSize")
     @ResponseBody
@@ -597,12 +554,13 @@ public class ProductionOrderController {
             productionOrder.setSales_Staff(employee.getEmployee_Id());
             productionOrder.setStatus("Requested");
             productionOrderService.saveProductionOrder(productionOrder);
-            message = "true";
+            message = "Successfully Saved Sales Staff";
+            redirectAttributes.addAttribute("savedEmployee", employee);
         } else if (employeeId == null || employeeId.isEmpty()) {
-            message = "false";
+            message = "Can not save sales staff!";
         }
         redirectAttributes.addFlashAttribute("message", message);
-        return "redirect:/viewInformationRequestForManager?productionOrderId=" + productionOrderId;
+        return "redirect:/viewInformationRequestForManager?productionOrderId=" + productionOrderId + "&success";
     }
 
     @GetMapping("/saveProductionPrice")
@@ -641,7 +599,7 @@ public class ProductionOrderController {
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
         Material material = materialService.getMaterialById(pm.getId().getMaterial_Id());
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListById(material.getMaterial_Id());
+        MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(material.getMaterial_Id());
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
 
         List<DiamondPriceList> dpls = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),
@@ -706,7 +664,44 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewQuotesforSS")
-    public String getAllQuotes(HttpSession session) {
+    public String getAllQuotes(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        String employeeId = (String) session.getAttribute("employeeId");
+
+        List<ProductionOrder> combinedList = new ArrayList<>();
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(NA)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(WC)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(CRJ)", sortDirection));
+
+        // Filter orders by sales staff
+        List<ProductionOrder> customerOrders = combinedList.stream()
+                .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
+                .collect(Collectors.toList());
+
+        // Sort the combined list
+        customerOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, customerOrders.size());
+        int end = Math.min((start + 2), customerOrders.size());
+        List<ProductionOrder> paginatedList = customerOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                customerOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/sales_staff/viewQuote";
     }
 
@@ -774,7 +769,47 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewOrdersforSalesStaff")
-    public String getAllOrdersForSalesStaff(Model model, HttpSession session) {
+    public String getAllOrdersForSalesStaff(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        Pageable pageable = PageRequest.of(page, 10); // 10 items per page
+        String employeeId = (String) session.getAttribute("employeeId");
+
+        List<ProductionOrder> combinedList = new ArrayList<>();
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Completed", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Payment In Confirm", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Deposit In Confirm", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Deposit In Confirm For Customized Order", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Last Payment In Confirm", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Delivering", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Delivered", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered", sortDirection));
+
+        // Filter orders by sales staff
+        List<ProductionOrder> customerOrders = combinedList.stream()
+                .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
+                .collect(Collectors.toList());
+
+        // Sort the combined list
+        customerOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, customerOrders.size());
+        int end = Math.min((start + 2), customerOrders.size());
+        List<ProductionOrder> paginatedList = customerOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                customerOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
         return "employee/sales_staff/viewOrder";
     }
 
@@ -786,6 +821,7 @@ public class ProductionOrderController {
         List<ProductionOrder> completedOrders = productionOrderService.getProductionOrderByStatus("Completed");
         List<ProductionOrder> paymentOrders = productionOrderService.getProductionOrderByStatus("Payment In Confirm");
         List<ProductionOrder> depositOrders = productionOrderService.getProductionOrderByStatus("Deposit In Confirm");
+        List<ProductionOrder> customizedDepositOrders = productionOrderService.getProductionOrderByStatus("Deposit In Confirm For Customized Order");
         List<ProductionOrder> lastdepositOrders = productionOrderService
                 .getProductionOrderByStatus("Last Payment In Confirm");
         List<ProductionOrder> deliveringOrders = productionOrderService.getProductionOrderByStatus("Delivering");
@@ -799,6 +835,8 @@ public class ProductionOrderController {
         allOrders.addAll(deliveredgOrders);
         allOrders.addAll(deliveredgOrders2);
         allOrders.addAll(lastdepositOrders);
+        allOrders.addAll(depositOrders);
+        allOrders.addAll(customizedDepositOrders);
         List<ProductionOrder> listRequests = allOrders.stream()
                 .filter(porder -> employeeId.equalsIgnoreCase(porder.getSales_Staff()))
                 .collect(Collectors.toList());
@@ -808,10 +846,36 @@ public class ProductionOrderController {
 
     @GetMapping("/viewInOrderForSS")
     public String viewInOrderForSS(@RequestParam("productionOrderId") String orderId, Model model) throws IOException {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
+
+        String customerName = productionOrder.getCustomer().getFull_Name();
+        Customer customer = customerService.getCustomerIdByCustomerName(customerName);
+
+        ProductMaterial productMaterial = productMaterialService
+                .getProductMaterialByProduct_id(productionOrder.getProduct().getProduct_Id());
+        Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
+        Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+        Product product = productService.getProductById(productMaterial.getId().getProduct_Id());
+        String cateUrl = imageService
+                .getImgByCateogryID(String.valueOf(productionOrder.getCategory().getCategory_Id()));
+        String materialUrl = imageService
+                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
+        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+
+        model.addAttribute("customer", customer);
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("diamond", diamond);
+        model.addAttribute("product", product);
+        model.addAttribute("productMaterial", productMaterial);
+        model.addAttribute("material", material);
+        model.addAttribute("cateUrl", cateUrl);
+        model.addAttribute("materialUrl", materialUrl);
+        model.addAttribute("diamondUrl", diamondUrl);
         return "employee/sales_staff/viewInForOrder";
     }
 
     @GetMapping("/viewInJSonOrderForSS")
+    @ResponseBody
     public Map<String, Object> viewInJSonOrderForSS(@RequestParam("productionOrderId") String orderId)
             throws IOException {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
@@ -855,7 +919,7 @@ public class ProductionOrderController {
 
         productionOrderService.saveProductionOrder(productionOrder);
         String message = "Update Status Successfully";
-        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+        return "redirect:/viewInOrderForSS?productionOrderId=" + productionOrderId + "&update_success";
     }
 
     @PostMapping("/confirmDepositBySS")
@@ -869,7 +933,20 @@ public class ProductionOrderController {
 
         productionOrderService.saveProductionOrder(productionOrder);
         String message = "Update Status Successfully";
-        return "redirect:/viewInOrderForSS?orderId=" + productionOrderId + "&update_success";
+        return "redirect:/viewInOrderForSS?productionOrderId=" + productionOrderId + "&update_success";
+    }
+
+    @PostMapping("/confirmDepositCustomizedBySS")
+    public String confirmDepositCustomizedBySS(
+            @RequestParam("productionOrderId") String productionOrderId,
+            Model model,
+            HttpSession session) {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
+        productionOrder.setStatus("Confirmed");
+
+        productionOrderService.saveProductionOrder(productionOrder);
+        String message = "Update Status Successfully";
+        return "redirect:/viewInOrderForSS?productionOrderId=" + productionOrderId + "&update_success";
     }
 
     @PostMapping("/confirmCustomizedDepositBySS")
@@ -887,14 +964,39 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewRequestsforManager")
-    public String getAllRequestsForManager(Model model, HttpSession session) {
-        List<ProductionOrder> requestProductionOrders = productionOrderService.getProductionOrderByStatus("Requested");
-        List<ProductionOrder> createdProductionOrders = productionOrderService.getProductionOrderByStatus("Created");
+    public String getAllRequestsForManager(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        Pageable pageable = PageRequest.of(page, 2); // 2 items per page
+
+        List<ProductionOrder> requestProductionOrders = productionOrderService.getAllOrdersByStatus("Requested",
+                sortDirection);
+        List<ProductionOrder> createdProductionOrders = productionOrderService.getAllOrdersByStatus("Created",
+                sortDirection);
 
         List<ProductionOrder> allProductionOrders = new ArrayList<>(requestProductionOrders);
         allProductionOrders.addAll(createdProductionOrders);
 
-        model.addAttribute("listRequests", allProductionOrders);
+        // Sort the combined list
+        allProductionOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 2, allProductionOrders.size());
+        int end = Math.min((start + 2), allProductionOrders.size());
+        List<ProductionOrder> paginatedList = allProductionOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 2),
+                allProductionOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
         return "employee/manager/viewRequest";
     }
 
@@ -919,6 +1021,16 @@ public class ProductionOrderController {
             productService.deleteProductById(productId);
             deleteImages(productionOrder.getCustomer().getCustomer_Id(), productionOrderId);
         } else {
+            Diamond diamond = diamondService.getDiamondByProductId(productId);
+            ProductMaterial productMaterial = productMaterialService.getProductMaterialByProduct_id(productId);
+            if (diamond == null && productMaterial != null) {
+                deleteRelatedEntities(productId);
+            } else if (diamond != null && productMaterial == null) {
+                resetDiamondProductId(productId);
+            } else if (diamond != null && productMaterial != null) {
+                resetDiamondProductId(productId);
+                deleteRelatedEntities(productId);
+            }
             productionOrderService.deleteProductionOrderById(productionOrderId);
             productService.deleteProductById(productId);
             deleteImages(productionOrder.getCustomer().getCustomer_Id(),
@@ -983,23 +1095,39 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewQuotesforManager")
-    public String getAllQuotesForManager(Model model, HttpSession session) {
-        List<ProductionOrder> listQuotes = productionOrderService.getProductionOrderByStatus("Quoted");
-        List<ProductionOrder> listQuotes2 = productionOrderService.getProductionOrderByStatus("Quoted(NA)");
-        List<ProductionOrder> listQuotes3 = productionOrderService.getProductionOrderByStatus("Quoted(WC)");
-        List<ProductionOrder> listQuotes4 = productionOrderService
-                .getProductionOrderByStatus("Quoted(RJ)");
-        List<ProductionOrder> listQuotes5 = productionOrderService
-                .getProductionOrderByStatus("Quoted(CRJ)");
+    public String getAllQuotesForManager(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
 
-        List<ProductionOrder> lists = new ArrayList<>();
+        List<ProductionOrder> combinedList = new ArrayList<>();
 
-        lists.addAll(listQuotes);
-        lists.addAll(listQuotes2);
-        lists.addAll(listQuotes3);
-        lists.addAll(listQuotes4);
-        lists.addAll(listQuotes5);
-        model.addAttribute("listQuotes", lists);
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(NA)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(WC)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(RJ)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Quoted(CRJ)", sortDirection));
+
+        // Sort the combined list
+        combinedList.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 10, combinedList.size());
+        int end = Math.min((start + 10), combinedList.size());
+        List<ProductionOrder> paginatedList = combinedList.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 10),
+                combinedList.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/manager/viewQuote";
     }
 
@@ -1014,6 +1142,10 @@ public class ProductionOrderController {
             if (employee != null) {
                 employees.add(employee);
             }
+        }
+        if (productionOrder.getSales_Staff() != null) {
+            Employee savedEmployee = employeeService.getEmployeeById(productionOrder.getSales_Staff());
+            model.addAttribute("savedEmployee", savedEmployee);
         }
         List<String> imagesByCustomerId = null;
         try {
@@ -1038,7 +1170,7 @@ public class ProductionOrderController {
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
         Material material = materialService.getMaterialById(pm.getId().getMaterial_Id());
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListById(material.getMaterial_Id());
+        MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(material.getMaterial_Id());
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
 
         List<DiamondPriceList> dpls = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),
@@ -1083,36 +1215,39 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewOrdersforManager")
-    public String getAllOrdersForManager(Model model, HttpSession session) {
-        List<ProductionOrder> listOrders = productionOrderService.getProductionOrderByStatus("Ordered");
-        List<ProductionOrder> listOrder2 = productionOrderService.getProductionOrderByStatus("Ordered(NP)");
-        List<ProductionOrder> listOrder3 = productionOrderService.getProductionOrderByStatus("Confirmed");
-        List<ProductionOrder> listOrder4 = productionOrderService.getProductionOrderByStatus("Delivering");
-        List<ProductionOrder> listOrder5 = productionOrderService.getProductionOrderByStatus("Delivered");
-        List<ProductionOrder> listOrder6 = productionOrderService.getProductionOrderByStatus("Completed");
-        List<ProductionOrder> listOrder7 = productionOrderService
-                .getProductionOrderByStatus("Last Payment In Confirm");
-        List<ProductionOrder> listOrder8 = productionOrderService.getProductionOrderByStatus("Deposit In Confirm");
-        List<ProductionOrder> listOrder9 = productionOrderService.getProductionOrderByStatus("C in Category");
-        List<ProductionOrder> listOrder10 = productionOrderService.getProductionOrderByStatus("C in Material");
-        List<ProductionOrder> listOrder11 = productionOrderService
-                .getProductionOrderByStatus("C in Diamond");
-        List<ProductionOrder> listOrder12 = productionOrderService.getProductionOrderByStatus("C In Final Note");
-        List<ProductionOrder> lists = new ArrayList<>();
-        lists.addAll(listOrders);
-        lists.addAll(listOrder2);
-        lists.addAll(listOrder3);
-        lists.addAll(listOrder4);
-        lists.addAll(listOrder5);
-        lists.addAll(listOrder6);
-        lists.addAll(listOrder7);
-        lists.addAll(listOrder8);
-        lists.addAll(listOrder9);
-        lists.addAll(listOrder10);
-        lists.addAll(listOrder11);
-        lists.addAll(listOrder12);
+    public String getAllOrdersForManager(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        List<ProductionOrder> combinedList = new ArrayList<>();
 
-        model.addAttribute("listOrders", lists);
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered(NP)", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Confirmed", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Delivering", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Delivered", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Completed", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Last Payment In Confirm", sortDirection));
+
+        // Sort the combined list
+        combinedList.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 10, combinedList.size());
+        int end = Math.min((start + 10), combinedList.size());
+        List<ProductionOrder> paginatedList = combinedList.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 10),
+                combinedList.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
         return "employee/manager/viewOrder";
     }
 
@@ -1224,28 +1359,41 @@ public class ProductionOrderController {
         return "employee/sales_staff/prepareQuotePage";
     }
 
-    @GetMapping("/viewMaterialAndGem")
-    public String getViewAssets(Model model) {
-        List<Material> material = materialService.getAllMaterials();
-        model.addAttribute("material", material);
-        return "employee/sales_staff/materialAndGem";
-    }
-
     @GetMapping("/viewRequestsforDE")
-    public String getAllRequestsForDE(Model model, HttpSession session) {
+    public String getAllRequestsForDE(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
         String employeeID = (String) session.getAttribute("employeeId");
-        List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Ordered");
-        List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Ordered(NP)");
 
-        List<ProductionOrder> allOrders = new ArrayList<>();
-        allOrders.addAll(createdOrders);
-        allOrders.addAll(requestedOrders);
+        List<ProductionOrder> combinedList = new ArrayList<>();
 
-        List<ProductionOrder> employeeOrders = allOrders.stream()
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered", sortDirection));
+        combinedList.addAll(productionOrderService.getAllOrdersByStatus("Ordered(NP)", sortDirection));
+
+        List<ProductionOrder> employeeOrders = combinedList.stream()
                 .filter(porder -> employeeID.equalsIgnoreCase(porder.getDesign_Staff()))
                 .collect(Collectors.toList());
+        // Sort the combined list
+        employeeOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
 
-        model.addAttribute("listRequests", employeeOrders);
+        // Paginate the combined list
+        int start = Math.min(page * 10, employeeOrders.size());
+        int end = Math.min((start + 10), employeeOrders.size());
+        List<ProductionOrder> paginatedList = employeeOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 10),
+                employeeOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/design_staff/viewRequest";
     }
 
@@ -1332,14 +1480,21 @@ public class ProductionOrderController {
 
     @GetMapping("/viewAllDesign")
     public String viewAllDesign(
+            @RequestParam(defaultValue = "0") int page,
             HttpSession session,
             Model model) {
 
-        Map<String, List<String>> imagesByStaffId = new HashMap<>();
-
         Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndDEId("Ordered",
+        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByDEEmployeeId(
                 employee.getEmployee_Id());
+
+        // Paginate the production orders list
+        int pageSize = 2;
+        int start = Math.min(page * pageSize, productionOrders.size());
+        int end = Math.min(start + pageSize, productionOrders.size());
+        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
+
+        Map<String, List<String>> imagesByStaffId = new HashMap<>();
         try {
             imagesByStaffId = imageService.getImgOrderedByStaffId(employee.getEmployee_Id());
             System.out.println(imagesByStaffId);
@@ -1347,8 +1502,19 @@ public class ProductionOrderController {
             ex.printStackTrace();
         }
 
+        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
+        for (ProductionOrder order : paginatedList) {
+            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
+                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
+                        imagesByStaffId.get(order.getProduction_Order_Id()));
+            }
+        }
+
+        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
+                productionOrders.size());
+
+        model.addAttribute("pageOrders", productionOrdersPage);
         model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("listRequests", productionOrders);
         model.addAttribute("employee", employee);
         return "employee/design_staff/viewAllDesign";
     }
@@ -1376,7 +1542,42 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewRequestsforPR")
-    public String getAllRequestsForPR() {
+    public String getAllRequestsForPR(
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            Model model, HttpSession session) {
+        String employeeID = (String) session.getAttribute("employeeId");
+        List<ProductionOrder> createdOrders = productionOrderService.getProductionOrderByStatus("Confirmed");
+        List<ProductionOrder> requestedOrders = productionOrderService.getProductionOrderByStatus("Completed");
+
+        List<ProductionOrder> allOrders = new ArrayList<>();
+        allOrders.addAll(createdOrders);
+        allOrders.addAll(requestedOrders);
+
+        List<ProductionOrder> employeeOrders = allOrders.stream()
+                .filter(porder -> employeeID.equalsIgnoreCase(porder.getProduction_Staff()))
+                .collect(Collectors.toList());
+
+        // Sort the combined list
+        employeeOrders.sort((o1, o2) -> {
+            if ("ASC".equalsIgnoreCase(sortDirection)) {
+                return o1.getDate().compareTo(o2.getDate());
+            } else {
+                return o2.getDate().compareTo(o1.getDate());
+            }
+        });
+
+        // Paginate the combined list
+        int start = Math.min(page * 10, employeeOrders.size());
+        int end = Math.min((start + 10), employeeOrders.size());
+        List<ProductionOrder> paginatedList = employeeOrders.subList(start, end);
+
+        Page<ProductionOrder> combinedPage = new PageImpl<>(paginatedList, PageRequest.of(page, 10),
+                employeeOrders.size());
+
+        model.addAttribute("pageOrders", combinedPage);
+        model.addAttribute("sortDirection", sortDirection);
+
         return "employee/production_staff/viewRequest";
     }
 
@@ -1399,13 +1600,8 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewInformationRequestForPR")
-    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId) {
-        return "employee/production_staff/viewInforRequest";
-    }
-
-    @GetMapping("/viewInformationRequestJSForPR")
-    @ResponseBody
-    public Map<String, Object> viewInformationRequestJSForPR(@RequestParam("productionOrderId") String productionOrderId) {
+    public String getRequestsForPR(@RequestParam("productionOrderId") String productionOrderId, Model model)
+            throws IOException {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
         List<String> imagesByCustomerId = null;
         Map<String, List<String>> imagesByStaffId = new HashMap<>();
@@ -1417,10 +1613,12 @@ public class ProductionOrderController {
         try {
             imagesByCustomerId = imageService.getImgByCustomerID(productionOrder.getCustomer().getCustomer_Id(),
                     productionOrder.getProduction_Order_Id());
-            if (employeeDE != null && !employeeDE.getFull_Name().equals("None")) {
+            if (employeeDE != null) {
                 imagesByStaffId = imageService.getImgOrderedByStaffId(employeeDE.getEmployee_Id());
             }
-            imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
+            if (employeePR != null) {
+                imagesByPRId = imageService.getImgOrderedByPRStaffId(employeePR.getEmployee_Id());
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -1432,17 +1630,27 @@ public class ProductionOrderController {
         Diamond diamond = diamondService.getDiamondByProductId(product.getProduct_Id());
         Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("productMaterial", productMaterial);
-        response.put("material", material);
-        response.put("diamond", diamond);
+        String cateUrl = imageService
+                .getImgByCateogryID(String.valueOf(product.getCategory().getCategory_Id()));
+        String materialUrl = imageService
+                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
+        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
 
-        response.put("imagesByStaffId", imagesByStaffId);
-        response.put("imagesByPRId", imagesByPRId);
-        response.put("imagesByCustomerId", imagesByCustomerId);
-        response.put("listRequests", productionOrder);
-        response.put("employee", employeePR);
-        return response;
+        model.addAttribute("productMaterial", productMaterial);
+        model.addAttribute("material", material);
+        model.addAttribute("diamond", diamond);
+        model.addAttribute("cateUrl", cateUrl);
+        model.addAttribute("materialUrl", materialUrl);
+        model.addAttribute("diamondUrl", diamondUrl);
+
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
+        model.addAttribute("imagesByPRId", imagesByPRId);
+        model.addAttribute("customer", customer);
+        model.addAttribute("imagesByCustomerId", imagesByCustomerId);
+        model.addAttribute("imagesByStaffId", imagesByStaffId);
+        model.addAttribute("listRequests", productionOrder);
+        model.addAttribute("employee", employeePR);
+        return "employee/production_staff/viewInforRequest";
     }
 
     @PostMapping("/uploadPhotoForPR")
@@ -1465,15 +1673,20 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/viewAllPhotos")
-    public String viewAllPhotos(
-            HttpSession session,
-            Model model) {
+    public String viewAllPhotos(@RequestParam(defaultValue = "0") int page, HttpSession session, Model model) {
+        String employeeId = (String) session.getAttribute("employeeId");
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        List<ProductionOrder> productionOrders = productionOrderService
+                .getProductionOrderByPREmployeeId(employee.getEmployee_Id());
+
+        // Paginate the production orders list
+        int pageSize = 2;
+        int start = Math.min(page * pageSize, productionOrders.size());
+        int end = Math.min(start + pageSize, productionOrders.size());
+
+        List<ProductionOrder> paginatedList = productionOrders.subList(start, end);
 
         Map<String, List<String>> imagesByStaffId = new HashMap<>();
-
-        Employee employee = employeeService.getEmployeeById((String) session.getAttribute("employeeId"));
-        List<ProductionOrder> productionOrders = productionOrderService.getProductionOrderByStatusAndDEId("Ordered",
-                employee.getEmployee_Id());
         try {
             imagesByStaffId = imageService.getImgOrderedByPRStaffId(employee.getEmployee_Id());
             System.out.println(imagesByStaffId);
@@ -1481,9 +1694,22 @@ public class ProductionOrderController {
             ex.printStackTrace();
         }
 
-        model.addAttribute("imagesByStaffId", imagesByStaffId);
-        model.addAttribute("listRequests", productionOrders);
+        // Filter images by paginated production order list
+        Map<String, List<String>> paginatedImagesByStaffId = new HashMap<>();
+        for (ProductionOrder order : paginatedList) {
+            if (imagesByStaffId.containsKey(order.getProduction_Order_Id())) {
+                paginatedImagesByStaffId.put(order.getProduction_Order_Id(),
+                        imagesByStaffId.get(order.getProduction_Order_Id()));
+            }
+        }
+
+        Page<ProductionOrder> productionOrdersPage = new PageImpl<>(paginatedList, PageRequest.of(page, pageSize),
+                productionOrders.size());
+
+        model.addAttribute("imagesByStaffId", paginatedImagesByStaffId);
+        model.addAttribute("pageOrders", productionOrdersPage);
         model.addAttribute("employee", employee);
+
         return "employee/production_staff/viewAllProgressPhoto";
     }
 
@@ -1523,7 +1749,7 @@ public class ProductionOrderController {
                 .getProductMaterialByProductId(productionOrder.getProduct().getProduct_Id());
 
         Material material = materialService.getMaterialById(pm.getId().getMaterial_Id());
-        MaterialPriceList mpl = materialPriceListService.getMaterialPriceListById(material.getMaterial_Id());
+        MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(material.getMaterial_Id());
         Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
 
         List<DiamondPriceList> dpls = diamondPriceListService.findPriceListByCriteria(diamond.getCarat_Weight(),
@@ -1605,11 +1831,8 @@ public class ProductionOrderController {
     @GetMapping("/customerPaymentOrder")
     public String getCustomerPaymentOrder(@RequestParam("production_Order_Id") String productionOrderId) {
         ProductionOrder productionOrder = productionOrderService.getProductionOrderById(productionOrderId);
-
         productionOrder.setStatus("Ordered");
-
         productionOrderService.saveProductionOrder(productionOrder);
-
         return "customer/allUserOrder";
     }
 

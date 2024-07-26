@@ -19,7 +19,7 @@
   <!-- Main contents -->
   <div class="container my-3">
     <div class="row">
-      <h1>All Diamonds Price</h1>
+      <h3 th:text="'The Diamond Price is Updated To ' + ${formattedDate}" class="text-center my-3"></h3>
     </div>
     <div class="table-responsive">
       <table class="table table-hover">
@@ -33,7 +33,6 @@
             <th>Clarity</th>
             <th>Cut</th>
             <th>Price</th>
-            <th>Effective Date</th>
           </tr>
         </thead>
         <tbody>
@@ -46,7 +45,6 @@
             <td th:text="${diamondPriceList.clarity}"></td>
             <td th:text="${diamondPriceList.cut}"></td>
             <td th:text="${diamondPriceList.price}"></td>
-            <td th:text="${#dates.format(diamondPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
           </tr>
         </tbody>
       </table>

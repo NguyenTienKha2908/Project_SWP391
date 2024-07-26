@@ -160,13 +160,13 @@
                     </div>
                 </nav>
                 <div class="container my-3">
+                    <h3 th:text="'The Material Price is Updated To ' + ${formattedDate}" class="text-center my-3"></h3>
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Material</th>
                                     <th>Price</th>
-                                    <th>Effective Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -174,7 +174,6 @@
                                 <tr th:each="materialPriceList : ${listMaterialPriceLists}">
                                     <td th:text="${materialPriceList.material.material_Name}"></td>
                                     <td th:text="${materialPriceList.price}"></td>
-                                    <td th:text="${#dates.format(materialPriceList.eff_Date, 'yyyy-MM-dd')}"></td>
                                     <td>
                                         <a
                                             th:href="@{/showFormForUpdateMaterialPriceList/{id}(id=${materialPriceList.id})}">Edit</a>
@@ -184,6 +183,22 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div>
+                        <ul class="pagination d-flex justify-content-center align-item-center">
+                            <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                                <a th:href="@{/materialPriceLists(page=${currentPage - 1}, size=${size})}">Previous</a>
+                            </li>
+                            <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                                th:class="${i-1 == currentPage} ? 'page-item active-pg' : 'page-item'">
+                                <a th:href="@{/materialPriceLists(page=${i - 1}, size=${size})}" th:text="${i}"></a>
+                            </li>
+                            <li th:class="${currentPage + 1 >= totalPages} ? 'page-item disabled' : 'page-item'">
+                                <a th:href="@{/materialPriceLists(page=${currentPage + 1}, size=${size})}">Next</a>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>

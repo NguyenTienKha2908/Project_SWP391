@@ -1,6 +1,6 @@
 package com.jewelry.KiraJewelry.models;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,6 +51,6 @@ public class DiamondPriceList {
 
     // @PastOrPresent
     @Column(name = "eff_date")
-    private Date eff_Date;
+    private LocalDateTime eff_Date;
 
 }

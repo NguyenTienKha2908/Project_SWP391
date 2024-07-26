@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry.controllers.Material;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,12 +29,16 @@ public class MaterialController {
     private MaterialService materialService;
 
     @GetMapping("/materials")
-    public String viewMaterialsPage(Model model) {
-        // Get all materials
-        List<Material> allMaterials = materialService.getAllMaterials();
+    public String viewMaterialsPage(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            Model model) {
 
-        // Add lists to the model
-        model.addAttribute("listMaterials", allMaterials);
+        Page<Material> allMaterials = materialService.getMaterialsPaginated(page, size);
+
+        model.addAttribute("currentPage", allMaterials.getNumber());
+        model.addAttribute("totalPages", allMaterials.getTotalPages());
+        model.addAttribute("listMaterials", allMaterials.getContent());
         return "employee/manager/Material/materials";
     }
 
@@ -184,10 +189,14 @@ public class MaterialController {
     }
 
     @GetMapping("/viewCustomerMaterialsPage")
-    public String viewCustomerMaterialsPage(Model model, HttpServletRequest request) {
-        List<Material> allMaterials = materialService.getAllMaterials();
-        model.addAttribute("listMaterials", allMaterials);
-        model.addAttribute("requestURI", request.getRequestURI());
+    public String viewCustomerMaterialsPage(
+             @RequestParam(name = "page", defaultValue = "0") int page,
+             @RequestParam(name = "size", defaultValue = "10") int size,
+             Model model){
+        Page<Material> materialPage = materialService.getMaterialsPaginated(page, size);
+        model.addAttribute("listMaterials", materialPage.getContent());
+        model.addAttribute("currentPage", materialPage.getNumber());
+        model.addAttribute("totalPages", materialPage.getTotalPages());
         return "price/customerMaterialsPage";
     }
 }
