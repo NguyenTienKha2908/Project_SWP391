@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ManagerDashboardController {
@@ -32,7 +33,10 @@ public class ManagerDashboardController {
         
 
         // Fetch all production orders
-        List<ProductionOrder> productionOrders = productionOrderService.getAllProductionOrders();
+        List<ProductionOrder> productionOrders = productionOrderService.getAllProductionOrders()
+        .stream()
+        .filter(order -> order.getCustomer() != null)
+        .collect(Collectors.toList());
         model.addAttribute("productionOrders", productionOrders);
 
         return "employee/manager/managerDashboard";

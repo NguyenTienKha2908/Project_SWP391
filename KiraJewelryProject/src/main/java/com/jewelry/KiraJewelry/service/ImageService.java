@@ -43,10 +43,10 @@ public class ImageService {
             .load();
 
     // Add to when run deploy
-    private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    // private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
     // Add to when run local
-    // String firebaseServiceKey = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
-    // String firebaseURL = Paths.get("src", "main", "resources", firebaseServiceKey).toString();
+    String firebaseServiceKey = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    String firebaseURL = Paths.get("src", "main", "resources", firebaseServiceKey).toString();
     // Add to when run local
 
 
